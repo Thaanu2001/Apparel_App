@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -76,6 +76,9 @@ flutter:
       weight: 800
     - asset: fonts/sf/SF-Pro-Display-Black.ttf
       weight: 900
+  - family:  Sidebaricons
+    fonts:
+    - asset: fonts/icons/Sidebaricons.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
