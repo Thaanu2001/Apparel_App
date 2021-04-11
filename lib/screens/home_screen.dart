@@ -3,14 +3,69 @@ import 'package:flutter/material.dart';
 import 'package:Apparel_App/services/sidebaricons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'dart:ui' show ImageFilter;
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  AnimationController _anicontroller, _scaleController;
+
+  Future getWomenProducts() async {
+    //* Get vehicle documents
+    var firestore = FirebaseFirestore.instance;
+    QuerySnapshot qn = await firestore
+        .collection("products")
+        .doc("women")
+        .collection("women")
+        .orderBy("upload-time", descending: true)
+        .get();
+
+    return qn.docs;
+  }
+
+  @override
+  void initState() {
+    //* Flutter pull to refresh
+    _anicontroller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
+    _scaleController =
+        AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
+    _refreshController.headerMode.addListener(() {
+      if (_refreshController.headerStatus == RefreshStatus.idle) {
+        _scaleController.value = 0.0;
+        _anicontroller.reset();
+      } else if (_refreshController.headerStatus == RefreshStatus.refreshing) {
+        _anicontroller.repeat();
+      }
+    });
+    super.initState();
+  }
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    setState(() {});
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length+1).toString());
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,73 +280,119 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 6,
           ),
-          ScrollGlowDisabler(
-            //* Top Tab Bar ------------------------------------------------------------------------------
-            child: DefaultTabController(
-              length: 4, // length of tabs
-              initialIndex: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    child: TabBar(
-                      //* Tab bar customize
-                      isScrollable: false,
-                      indicatorColor: Colors.transparent,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: Color(0xffA4A4A4),
-                      labelStyle: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                      unselectedLabelStyle: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                      tabs: [
-                        Tab(text: 'Women'),
-                        Tab(text: 'Men'),
-                        Tab(text: 'Kids'),
-                        Tab(text: 'Stores'),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //* Tab Content
-                    height: 400,
-                    child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
+          Flexible(
+            child: ScrollGlowDisabler(
+              //* Pull to refresh
+              child: SmartRefresher(
+                enablePullDown: true,
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: ScrollGlowDisabler(
+                  //* Top Tab Bar ------------------------------------------------------------------------------
+                  child: DefaultTabController(
+                    length: 4, // length of tabs
+                    initialIndex: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        WomenSection(),
                         Container(
-                          child: Center(
-                            child: Text('Display Tab 2',
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                          child: TabBar(
+                            //* Tab bar customize
+                            isScrollable: false,
+                            indicatorColor: Colors.transparent,
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Color(0xffA4A4A4),
+                            labelStyle: TextStyle(
+                                fontFamily: 'sf',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                            unselectedLabelStyle: TextStyle(
+                                fontFamily: 'sf',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                            tabs: [
+                              Tab(text: 'Women'),
+                              Tab(text: 'Men'),
+                              Tab(text: 'Kids'),
+                              Tab(text: 'Stores'),
+                            ],
                           ),
                         ),
                         Container(
-                          child: Center(
-                            child: Text('Display Tab 3',
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        Container(
-                          child: Center(
-                            child: Text('Display Tab 4',
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                          //* Tab Content
+                          height: 400,
+                          child: TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
+                            children: <Widget>[
+                              womenSection(),
+                              Container(
+                                child: Center(
+                                  child: Text('Display Tab 2',
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                              Container(
+                                child: Center(
+                                  child: Text('Display Tab 3',
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                              Container(
+                                child: Center(
+                                  child: Text('Display Tab 4',
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
+                header: CustomHeader(
+                  //* Pull to refresh header --------------------------------------------------------------------
+                  refreshStyle: RefreshStyle.Behind,
+                  onOffsetChange: (offset) {
+                    if (_refreshController.headerMode.value !=
+                        RefreshStatus.refreshing)
+                      _scaleController.value = offset / 80.0;
+                  },
+                  builder: (c, m) {
+                    return Container(
+                      child: FadeTransition(
+                        opacity: _scaleController,
+                        child: ScaleTransition(
+                          child: SpinKitFadingCircle(
+                            size: 30.0,
+                            // color: Color(0xffA4A4A4),
+                            // animationController: _anicontroller,
+                            itemBuilder: (_, int index) {
+                              return DecoratedBox(
+                                decoration: BoxDecoration(
+                                    color: Color(0xffA4A4A4),
+                                    borderRadius: BorderRadius.circular(50)),
+                              );
+                            },
+                          ),
+                          scale: _scaleController,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                    );
+                  },
+                ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
