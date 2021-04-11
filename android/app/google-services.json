@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "344538994711",
+    "project_id": "apparel-app-56384",
+    "storage_bucket": "apparel-app-56384.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344538994711:android:985fa9562cfd78fb3a2452",
+        "android_client_info": {
+          "package_name": "com.example.Apparel_App"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344538994711-ib6pbtup71b9son66pukjjq3fc67tr8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaq70m3ovTuLfJL8aG8daDJ2VW2QdaAaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344538994711-ib6pbtup71b9son66pukjjq3fc67tr8i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

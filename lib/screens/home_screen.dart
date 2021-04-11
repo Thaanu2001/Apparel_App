@@ -1,6 +1,8 @@
+import 'package:Apparel_App/sections/women_section.dart';
 import 'package:flutter/material.dart';
 import 'package:Apparel_App/services/sidebaricons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
+import 'dart:ui' show ImageFilter;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       key: scaffoldKey,
+      drawerScrimColor: Colors.transparent,
       //* Floating shopping cart button ---------------------------------------------------------------------------
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -28,106 +31,54 @@ class _HomeScreenState extends State<HomeScreen> {
         //* Side drawer ---------------------------------------------------------------------------------------------
         data: Theme.of(context).copyWith(
             // Set the transparency here
-            canvasColor: Colors.grey[300].withOpacity(0.9)),
+            canvasColor: Colors.white.withOpacity(0.5)),
         child: Container(
-          width: 250,
-          child: Drawer(
-            child: Column(
-              // Important: Remove any padding from the ListView.
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  height: 100,
-                  width: double.infinity,
-                  child: DrawerHeader(
-                    child: Text(
-                      //* Drawer header
-                      'Gadget Doctor',
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 22,
+            width: 240,
+            child: Stack(children: [
+              ClipRect(
+                child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+                    child: Container(
+                      height: 600,
+                      width: 250,
+                      child: Text(" "),
+                    )),
+              ),
+              Drawer(
+                child: Column(
+                  // Important: Remove any padding from the ListView.
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      height: 100,
+                      width: double.infinity,
+                      child: DrawerHeader(
+                        child: Text(
+                          //* Drawer header
+                          'Gadget Doctor',
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 22,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 30),
-                  leading: Icon(
-                    Sidebaricons.bag,
-                    size: 22,
-                    color: Colors.black,
-                  ),
-                  title: Align(
-                    alignment: Alignment(-1.2, 0),
-                    child: Text(
-                      'My Orders',
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 30),
-                  leading: Icon(
-                    Icons.format_list_bulleted_rounded,
-                    color: Colors.black,
-                  ),
-                  title: Align(
-                    alignment: Alignment(-1.2, 0),
-                    child: Text(
-                      'Wish List',
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.only(left: 32),
-                  leading: Icon(
-                    Sidebaricons.settings,
-                    size: 22,
-                    color: Colors.black,
-                  ),
-                  title: Align(
-                    alignment: Alignment(-1.2, 0),
-                    child: Text(
-                      'Settings',
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                Expanded(
-                  //* Sign Out button
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ListTile(
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 30),
                       leading: Icon(
-                        Icons.logout,
+                        Sidebaricons.bag,
+                        size: 22,
                         color: Colors.black,
                       ),
-                      contentPadding: EdgeInsets.fromLTRB(30, 0, 0, 5),
-                      title: Transform.translate(
-                        offset: Offset(-15, 0),
+                      title: Align(
+                        alignment: Alignment(-1.2, 0),
                         child: Text(
-                          'Sign Out',
+                          'My Orders',
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 20,
@@ -137,12 +88,74 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {},
                     ),
-                  ),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 30),
+                      leading: Icon(
+                        Icons.format_list_bulleted_rounded,
+                        color: Colors.black,
+                      ),
+                      title: Align(
+                        alignment: Alignment(-1.2, 0),
+                        child: Text(
+                          'Wish List',
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 32),
+                      leading: Icon(
+                        Sidebaricons.settings,
+                        size: 22,
+                        color: Colors.black,
+                      ),
+                      title: Align(
+                        alignment: Alignment(-1.2, 0),
+                        child: Text(
+                          'Settings',
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                    Expanded(
+                      //* Sign Out button
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.logout,
+                            color: Colors.black,
+                          ),
+                          contentPadding: EdgeInsets.fromLTRB(30, 0, 0, 5),
+                          title: Transform.translate(
+                            offset: Offset(-15, 0),
+                            child: Text(
+                              'Sign Out',
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
+            ])),
       ),
       backgroundColor: Color(0xffF3F3F3),
       body: Column(
@@ -250,13 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TabBarView(
                       physics: NeverScrollableScrollPhysics(),
                       children: <Widget>[
-                        Container(
-                          child: Center(
-                            child: Text('Display Tab 1',
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
+                        WomenSection(),
                         Container(
                           child: Center(
                             child: Text('Display Tab 2',
