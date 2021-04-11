@@ -15,6 +15,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       key: scaffoldKey,
+      //* Floating shopping cart button ---------------------------------------------------------------------------
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        child: const Icon(Sidebaricons.shopping_cart, size: 28),
+        backgroundColor: Color(0xff646464),
+        elevation: 4,
+      ),
       drawer: Theme(
         //* Side drawer ---------------------------------------------------------------------------------------------
         data: Theme.of(context).copyWith(

@@ -25,4 +25,6 @@ class Sidebaricons {
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData bag =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData shopping_cart =
+      IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
