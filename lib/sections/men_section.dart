@@ -58,9 +58,26 @@ menSection() {
                   itemBuilder: (_, index) {
                     return Container(
                       width: double.infinity,
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      decoration: BoxDecoration(
+                        //* Main Card shadow
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        // the box shawdow property allows for fine tuning as aposed to shadowColor
+                        boxShadow: [
+                          new BoxShadow(
+                            color: Colors.black26,
+                            // offset, the X,Y coordinates to offset the shadow
+                            offset: new Offset(5.0, 5.0),
+                            // blurRadius, the higher the number the more smeared look
+                            blurRadius: 36.0,
+                            spreadRadius: -23,
+                          )
+                        ],
+                      ),
                       child: Card(
                         //* Product Card ----------------------------------------------------------------------
+                        margin: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
