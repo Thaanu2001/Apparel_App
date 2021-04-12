@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-womenSection() {
-  Future getWomenProducts() async {
-    //* Get Women Product documents
+menSection() {
+  Future getMenProducts() async {
+    //* Get Men Product documents
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qn = await firestore
         .collection("products")
-        .doc("women")
-        .collection("women")
+        .doc("men")
+        .collection("men")
         .orderBy("upload-time", descending: true)
         .get();
 
@@ -29,7 +29,7 @@ womenSection() {
         Container(
           //* Recent Products -----------------------------------------------------------------------------
           child: FutureBuilder(
-            future: getWomenProducts(),
+            future: getMenProducts(),
             builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(

@@ -1,3 +1,5 @@
+import 'package:Apparel_App/sections/men_section.dart';
+import 'package:Apparel_App/sections/stores_section.dart';
 import 'package:Apparel_App/sections/women_section.dart';
 import 'package:flutter/material.dart';
 import 'package:Apparel_App/services/sidebaricons_icons.dart';
@@ -322,27 +324,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ),
                         Container(
                           //* Tab Content
-                          height: 400,
+                          height: 500,
                           child: TabBarView(
                             physics: NeverScrollableScrollPhysics(),
                             children: <Widget>[
-                              womenSection(),
-                              Container(
-                                child: Center(
-                                  child: Text('Display Tab 2',
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              Container(
-                                child: Center(
-                                  child: Text('Display Tab 3',
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
+                              womenSection(), //* Womens Section
+                              menSection(), //* Mens Section
                               Container(
                                 child: Center(
                                   child: Text('Display Tab 4',
@@ -351,6 +338,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ),
+                              storesSection(), //* Stores Section
                             ],
                           ),
                         ),
