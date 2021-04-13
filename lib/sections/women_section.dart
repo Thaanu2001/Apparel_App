@@ -1,10 +1,11 @@
+import 'package:Apparel_App/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-womenSection() {
+womenSection(context) {
+  //* Get Women Product documents
   Future getWomenProducts() async {
-    //* Get Women Product documents
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qn = await firestore
         .collection("products")
@@ -26,8 +27,8 @@ womenSection() {
           style: TextStyle(
               fontFamily: 'sf', fontSize: 26, fontWeight: FontWeight.w700),
         ),
+        //* Recent Products -----------------------------------------------------------------------------
         Container(
-          //* Recent Products -----------------------------------------------------------------------------
           child: FutureBuilder(
             future: getWomenProducts(),
             builder: (_, snapshot) {
@@ -35,8 +36,8 @@ womenSection() {
                 return Container(
                   width: double.infinity,
                   padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  //* Loading Card ----------------------------------------------------------------------
                   child: Card(
-                    //* Loading Card ----------------------------------------------------------------------
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
@@ -59,8 +60,8 @@ womenSection() {
                     return Container(
                       width: double.infinity,
                       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      //* Main Card shadow
                       decoration: BoxDecoration(
-                        //* Main Card shadow
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10.0),
                         // the box shawdow property allows for fine tuning as aposed to shadowColor
@@ -75,8 +76,8 @@ womenSection() {
                           )
                         ],
                       ),
+                      //* Product Card ----------------------------------------------------------------------
                       child: Card(
-                        //* Product Card ----------------------------------------------------------------------
                         margin: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -91,14 +92,16 @@ womenSection() {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  //* Product Image
+                                    //* Product Image
+                                    child: Hero(
+                                  tag: snapshot.data[index].id,
                                   child: Image.network(
                                     snapshot.data[index].data()["images"][0],
                                     // width: 90,
                                     height: 110,
                                     fit: BoxFit.fill,
                                   ),
-                                ),
+                                )),
                                 SizedBox(width: 15),
                                 Flexible(
                                   //* Product details
@@ -156,7 +159,19 @@ womenSection() {
                               ],
                             ),
                           ),
-                          onTap: () {},
+                          //* Navigate to product details screen ----------------------------------------------------------------------------
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        ProductDetailsScreen(
+                                            productData: snapshot.data[index]),
+                                transitionDuration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     );
