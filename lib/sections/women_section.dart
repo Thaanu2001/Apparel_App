@@ -129,17 +129,53 @@ womenSection(context) {
                                             fontWeight: FontWeight.w300),
                                       ),
                                       SizedBox(height: 6),
-                                      Text(
-                                        "Rs. " +
-                                            NumberFormat('###,000')
-                                                .format(snapshot.data[index]
-                                                    .data()["price"])
-                                                .toString(),
-                                        style: TextStyle(
-                                            fontFamily: 'sf',
-                                            fontSize: 16,
-                                            color: Color(0xff808080),
-                                            fontWeight: FontWeight.w700),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Rs. " +
+                                                NumberFormat('###,000')
+                                                    .format((snapshot
+                                                                    .data[index]
+                                                                    .data()[
+                                                                "discount"] !=
+                                                            0)
+                                                        ? ((snapshot.data[index]
+                                                                    .data()[
+                                                                "price"]) *
+                                                            ((100 -
+                                                                    snapshot.data[index]
+                                                                            .data()[
+                                                                        "discount"]) /
+                                                                100))
+                                                        : snapshot.data[index]
+                                                            .data()["price"])
+                                                    .toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'sf',
+                                                fontSize: 16,
+                                                color: Color(0xff808080),
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          SizedBox(width: 5),
+                                          if (snapshot.data[index]
+                                                  .data()["discount"] !=
+                                              0)
+                                            Text(
+                                              "Rs. " +
+                                                  NumberFormat('###,000')
+                                                      .format(snapshot
+                                                          .data[index]
+                                                          .data()["price"])
+                                                      .toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'sf',
+                                                  fontSize: 12,
+                                                  color: Color(0xaa808080),
+                                                  fontWeight: FontWeight.w500,
+                                                  decoration: TextDecoration
+                                                      .lineThrough),
+                                            ),
+                                        ],
                                       ),
                                       SizedBox(height: 2),
                                       Text(

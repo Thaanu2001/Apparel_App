@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/services/sidebaricons_icons.dart';
+import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
+import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
@@ -260,206 +262,354 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           SizedBox(
             height: 10,
           ),
-          Container(
-            child: Hero(
-              tag: widget.productData.id,
-              child: Stack(
+          Flexible(
+            child: ScrollGlowDisabler(
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
-                  //* Image carousel slider -------------------------------------------------------------
-                  CarouselSlider(
-                    items: imageSliders,
-                    options: CarouselOptions(
-                        initialPage: _current,
-                        viewportFraction: 1,
-                        height: MediaQuery.of(context).size.width,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            _current = index;
-                          });
-                        }),
-                  ),
-                  //* Image count indicator
                   Container(
-                    alignment: Alignment.bottomCenter,
-                    height: MediaQuery.of(context).size.width,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      color: Colors.white54,
-                      elevation: 0,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        child: Wrap(
-                          children: imgList.map((url) {
-                            int index = imgList.indexOf(url);
-                            return Container(
-                              width: 8.0,
-                              height: 8.0,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 0.0, horizontal: 2.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _current == index
-                                    ? Color.fromRGBO(0, 0, 0, 0.9)
-                                    : Color.fromRGBO(0, 0, 0, 0.4),
+                    child: Hero(
+                      tag: widget.productData.id,
+                      child: Stack(
+                        children: [
+                          //* Image carousel slider -------------------------------------------------------------
+                          CarouselSlider(
+                            items: imageSliders,
+                            options: CarouselOptions(
+                                initialPage: _current,
+                                viewportFraction: 1,
+                                height: MediaQuery.of(context).size.width,
+                                onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _current = index;
+                                  });
+                                }),
+                          ),
+                          //* Image count indicator
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: MediaQuery.of(context).size.width,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
-                            );
-                          }).toList(),
-                        ),
+                              color: Colors.white54,
+                              elevation: 0,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Wrap(
+                                  children: imgList.map((url) {
+                                    int index = imgList.indexOf(url);
+                                    return Container(
+                                      width: 8.0,
+                                      height: 8.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 0.0, horizontal: 2.0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == index
+                                            ? Color.fromRGBO(0, 0, 0, 0.9)
+                                            : Color.fromRGBO(0, 0, 0, 0.4),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    width: double.infinity,
+                    padding: EdgeInsets.fromLTRB(20, 14, 20, 10),
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //* Product Name
+                        Text(
+                          widget.productData.data()["product-name"],
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(height: 3),
+                        //* Price
+                        Text(
+                          "Rs. " +
+                              NumberFormat('###,000')
+                                  .format((widget.productData
+                                              .data()["discount"] !=
+                                          0)
+                                      ? ((widget.productData.data()["price"]) *
+                                          ((100 -
+                                                  widget.productData
+                                                      .data()["discount"]) /
+                                              100))
+                                      : widget.productData.data()["price"])
+                                  .toString(),
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 22,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w800),
+                        ),
+                        //* Discount old price
+                        if (widget.productData.data()["discount"] != 0)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Rs. " +
+                                    NumberFormat('###,000')
+                                        .format(
+                                            widget.productData.data()["price"])
+                                        .toString(),
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 14,
+                                    color: Color(0xffacacac),
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "-" +
+                                    widget.productData
+                                        .data()["discount"]
+                                        .toString() +
+                                    "%",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 12,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 6),
+                        //* Delivery details
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Home Delivery, 5 - 8 Days",
+                              style: TextStyle(
+                                fontFamily: 'sf',
+                                fontSize: 12,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Rs. " +
+                                  NumberFormat('###,000')
+                                      .format((widget.productData
+                                          .data()["delivery-price"]))
+                                      .toString(),
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 12,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          height: 25,
+                          thickness: 1.4,
+                          color: Color(0XFFF3F3F3),
+                        ),
+                        //* Product Details ----------------------------------------------------------------------
+                        InkWell(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //* Product Details Section
+                              Text(
+                                "Product Details",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    flex: 4,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (widget.productData
+                                            .data()["product-details"]["brand"]
+                                            .contains("brand"))
+                                          //* Brand Title
+                                          Text(
+                                            "Brand",
+                                            style: TextStyle(
+                                                fontFamily: 'sf',
+                                                fontSize: 14,
+                                                height: 1.4,
+                                                color: Color(0xff808080),
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        //* Type Title
+                                        Text(
+                                          "Type",
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 14,
+                                              height: 1.4,
+                                              color: Color(0xff808080),
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        //* Material Type
+                                        Text(
+                                          "Material",
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 14,
+                                              height: 1.4,
+                                              color: Color(0xff808080),
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    flex: 9,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //* Brand
+                                        Text(
+                                          widget.productData
+                                                  .data()["product-details"]
+                                              ["brand"],
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 14,
+                                              height: 1.4,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        //* Type
+                                        Text(
+                                          widget.productData
+                                                  .data()["product-details"]
+                                              ["type"],
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 14,
+                                              height: 1.4,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        //* Material
+                                        Text(
+                                          widget.productData
+                                                  .data()["product-details"]
+                                              ["material"],
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 14,
+                                              height: 1.4,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Color(0xffc5c5c5),
+                                    size: 20,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            productDetailsModal(context, widget.productData);
+                          },
+                        ),
+                        Divider(
+                          height: 25,
+                          thickness: 1.4,
+                          color: Color(0XFFF3F3F3),
+                        ),
+                        //* Product Description Section
+                        InkWell(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //* Product Description Topic
+                                    Text(
+                                      "Product Description",
+                                      style: TextStyle(
+                                          fontFamily: 'sf',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    SizedBox(height: 4),
+                                    //* Product Description
+                                    Text(
+                                      widget.productData.data()["description"],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontFamily: 'sf',
+                                          fontSize: 14,
+                                          height: 1.4,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Color(0xffc5c5c5),
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            productDescriptionModal(
+                                context, widget.productData);
+                          },
+                        ),
+                        SizedBox(height: 5),
+                        Divider(
+                          height: 25,
+                          thickness: 1.4,
+                          color: Color(0XFFF3F3F3),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.topLeft,
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(20, 14, 20, 10),
-            decoration: BoxDecoration(color: Colors.white),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //* Product Name
-                Text(
-                  widget.productData.data()["product-name"],
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
-                ),
-                SizedBox(height: 3),
-                //* Price
-                Text(
-                  "Rs. " +
-                      NumberFormat('###,000')
-                          .format(widget.productData.data()["price"])
-                          .toString(),
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 22,
-                      color: Color(0xff808080),
-                      fontWeight: FontWeight.w800),
-                ),
-                Divider(
-                  height: 18,
-                  thickness: 1.4,
-                  color: Color(0XFFF3F3F3),
-                ),
-                //* Product Details ----------------------------------------------------------------------
-                InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Product Details",
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      // SizedBox(height: 4),
-                      Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.tight,
-                            flex: 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (widget.productData
-                                    .data()["product-details"]["brand"]
-                                    .contains("brand"))
-                                  Text(
-                                    "Brand",
-                                    style: TextStyle(
-                                        fontFamily: 'sf',
-                                        fontSize: 14,
-                                        height: 1.4,
-                                        color: Color(0xff808080),
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                Text(
-                                  "Colour",
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Color(0xff808080),
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  "Material",
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Color(0xff808080),
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Flexible(
-                            fit: FlexFit.tight,
-                            flex: 9,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //* Brand
-                                Text(
-                                  widget.productData.data()["product-details"]
-                                      ["brand"],
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                //* Color
-                                Text(
-                                  widget.productData.data()["product-details"]
-                                      ["color"],
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                //* Material
-                                Text(
-                                  widget.productData.data()["product-details"]
-                                      ["material"],
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      height: 1.4,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffc5c5c5),
-                            size: 20,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  onTap: () {
-                    productDetailsModal(context, widget.productData);
-                  },
-                ),
-              ],
             ),
           ),
         ],

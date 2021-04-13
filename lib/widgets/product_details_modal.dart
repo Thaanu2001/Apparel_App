@@ -63,22 +63,19 @@ productDetailsModal(context, productData) {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (productData
-                            .data()["product-details"]["brand"]
-                            .contains("brand"))
-                          //* Brand Topic
-                          Text(
-                            "Brand",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Color Topic
+                        //* Brand Topic
                         Text(
-                          "Colour",
+                          "Brand",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 14,
+                              height: 2,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w500),
+                        ),
+                        //* Brand Topic
+                        Text(
+                          "Type",
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 14,
@@ -96,61 +93,36 @@ productDetailsModal(context, productData) {
                               color: Color(0xff808080),
                               fontWeight: FontWeight.w500),
                         ),
+                        //* Color Topic
+                        Text(
+                          "Colour",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 14,
+                              height: 2,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w500),
+                        ),
                         //* Clothing Style Topic
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("clothing-style"))
-                          Text(
-                            "Clothing Style",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Sleeves Topic
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("sleeves"))
-                          Text(
-                            "Sleeves",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Collar Type Topic
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("collar-type"))
-                          Text(
-                            "Collar Type",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w500),
-                          ),
+                        Text(
+                          "Clothing Style",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 14,
+                              height: 2,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w500),
+                        ),
                         //* Pattern Topic
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("pattern"))
-                          Text(
-                            "Pattern",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        // Container(
-                        //   height: 300,
-                        // )
+                        Text(
+                          "Pattern",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 14,
+                              height: 2,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
                   ),
@@ -170,9 +142,9 @@ productDetailsModal(context, productData) {
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
-                        //* Color
+                        //* Type
                         Text(
-                          productData.data()["product-details"]["color"],
+                          productData.data()["product-details"]["type"],
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 14,
@@ -190,61 +162,38 @@ productDetailsModal(context, productData) {
                               color: Colors.black,
                               fontWeight: FontWeight.w500),
                         ),
-                        //* Clothing Style
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("clothing-style"))
-                          Text(
-                            productData.data()["product-details"]
-                                ["clothing-style"],
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Sleeves
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("sleeves"))
-                          Text(
-                            productData.data()["product-details"]["sleeves"],
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Collar Type
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("collar-type"))
-                          Text(
-                            productData.data()["product-details"]
-                                ["collar-type"],
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 14,
-                                height: 2,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        //* Pattern
-                        if (productData
-                            .data()["product-details"]
-                            .containsKey("pattern"))
-                          Text(
-                            productData.data()["product-details"]["pattern"],
-                            style: TextStyle(
+                        //* Color
+                        Text(
+                          productData.data()["product-details"]["color"],
+                          style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 14,
                               height: 2,
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500),
+                        ),
+                        //* Clothing Style
+                        Text(
+                          productData.data()["product-details"]
+                              ["clothing-style"],
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 14,
+                              height: 2,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        //* Pattern
+                        Text(
+                          productData.data()["product-details"]["pattern"],
+                          style: TextStyle(
+                            fontFamily: 'sf',
+                            fontSize: 14,
+                            height: 2,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
+                        ),
                       ],
                     ),
                   ),
