@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xff646464),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
+        canvasColor: Colors.transparent,
       ),
       home: HomeScreen(),
     );

@@ -107,6 +107,7 @@ menSection() {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 5),
+                                      //* Product name
                                       Text(
                                         snapshot.data[index]
                                             .data()["product-name"],
@@ -116,6 +117,7 @@ menSection() {
                                             color: Colors.black),
                                       ),
                                       SizedBox(height: 2),
+                                      //* Store Name
                                       Text(
                                         snapshot.data[index]
                                             .data()["store-name"],
@@ -126,6 +128,7 @@ menSection() {
                                             fontWeight: FontWeight.w300),
                                       ),
                                       SizedBox(height: 6),
+                                      //* Product Price
                                       Text(
                                         "Rs. " +
                                             NumberFormat('###,000')
