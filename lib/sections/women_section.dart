@@ -203,7 +203,8 @@ womenSection(context) {
                                 pageBuilder:
                                     (context, animation1, animation2) =>
                                         ProductDetailsScreen(
-                                            productData: snapshot.data[index]),
+                                            productData: snapshot.data[index],
+                                            category: "women"),
                                 transitionDuration: Duration(milliseconds: 500),
                               ),
                             );
