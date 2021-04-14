@@ -8,10 +8,11 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qn = await firestore
         .collection("products")
-        .doc("women")
-        .collection("women")
+        .doc(category)
+        .collection(category)
         .where("product-details.clothing-style", isEqualTo: clothingStyle)
         .where("product-details.color", isEqualTo: color)
+        .limit(8)
         // .orderBy("upload-time", descending: true)
         .get();
 

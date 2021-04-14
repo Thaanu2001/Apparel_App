@@ -1,4 +1,5 @@
 import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:Apparel_App/transitions/sliding_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -94,6 +95,11 @@ womenSection(context) {
                                 Container(
                                     //* Product Image
                                     child: Hero(
+                                  placeholderBuilder:
+                                      (context, heroSize, child) {
+                                    return Opacity(opacity: 1, child: child);
+                                  },
+                                  transitionOnUserGestures: true,
                                   tag: snapshot.data[index].id,
                                   child: Image.network(
                                     snapshot.data[index].data()["images"][0],
@@ -197,17 +203,23 @@ womenSection(context) {
                           ),
                           //* Navigate to product details screen ----------------------------------------------------------------------------
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        ProductDetailsScreen(
-                                            productData: snapshot.data[index],
-                                            category: "women"),
-                                transitionDuration: Duration(milliseconds: 500),
-                              ),
+                            Route route = SlidingTransition(
+                              widget: ProductDetailsScreen(
+                                  productData: snapshot.data[index],
+                                  category: "women"),
                             );
+                            Navigator.push(context, route);
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     pageBuilder:
+                            //         (context, animation1, animation2) =>
+                            //             ProductDetailsScreen(
+                            //                 productData: snapshot.data[index],
+                            //                 category: "women"),
+                            //     transitionDuration: Duration(milliseconds: 400),
+                            //   ),
+                            // );
                           },
                         ),
                       ),

@@ -83,9 +83,9 @@ flutter:
       weight: 800
     - asset: fonts/sf/SF-Pro-Display-Black.ttf
       weight: 900
-  - family:  Sidebaricons
+  - family:  Customicons
     fonts:
-    - asset: fonts/icons/Sidebaricons.ttf
+    - asset: fonts/icons/Customicons.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

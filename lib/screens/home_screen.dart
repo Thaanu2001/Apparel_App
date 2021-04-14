@@ -2,7 +2,7 @@ import 'package:Apparel_App/sections/men_section.dart';
 import 'package:Apparel_App/sections/stores_section.dart';
 import 'package:Apparel_App/sections/women_section.dart';
 import 'package:flutter/material.dart';
-import 'package:Apparel_App/services/sidebaricons_icons.dart';
+import 'package:Apparel_App/services/Customicons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'dart:ui' show ImageFilter;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           // Add your onPressed code here!
         },
-        child: const Icon(Sidebaricons.shopping_cart, size: 28),
+        child: const Icon(Customicons.shopping_cart, size: 28),
         backgroundColor: Color(0xff646464),
         elevation: 4,
       ),
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.only(left: 30),
                       leading: Icon(
-                        Sidebaricons.bag,
+                        Customicons.bag,
                         size: 22,
                         color: Colors.black,
                       ),
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.only(left: 32),
                       leading: Icon(
-                        Sidebaricons.settings,
+                        Customicons.settings,
                         size: 22,
                         color: Colors.black,
                       ),
