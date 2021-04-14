@@ -10,7 +10,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 
 List imgList;
-bool bla;
 
 class ProductDetailsScreen extends StatefulWidget {
   final productData; //* Get product data  from firstore document
@@ -24,26 +23,28 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  List imageList = imgList;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   int _current = 0;
 
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
-  var banner;
+  var similarProducts;
 
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
     });
-    // _scrollPosition = _scrollController.position.pixels;
   }
 
   @override
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+
     super.initState();
-    banner = similarProductsList(
+
+    similarProducts = similarProductsList(
         context: context,
         category: widget.category,
         color: widget.productData.data()["product-details"]["color"],
@@ -55,7 +56,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   //* Image list for slider -------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    List<Widget> imageSliders = imgList
+    List<Widget> imageSliders = imageList
         .map((item) => Container(
                 child: GestureDetector(
               child: Image.network(item, fit: BoxFit.cover, width: 2000),
@@ -369,8 +370,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Container(
                                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                 child: Wrap(
-                                  children: imgList.map((url) {
-                                    int index = imgList.indexOf(url);
+                                  children: imageList.map((url) {
+                                    int index = imageList.indexOf(url);
                                     return Container(
                                       width: 8.0,
                                       height: 8.0,
@@ -501,8 +502,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               Divider(
                                 height: 25,
-                                thickness: 1.4,
-                                color: Color(0XFFF3F3F3),
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
                               ),
                               //* Product Details ----------------------------------------------------------------------
                               InkWell(
@@ -531,24 +532,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    if (widget.productData
-                                                        .data()[
-                                                            "product-details"]
-                                                            ["brand"]
-                                                        .contains("brand"))
-                                                      //* Brand Title
-                                                      Text(
-                                                        "Brand",
-                                                        style: TextStyle(
-                                                            fontFamily: 'sf',
-                                                            fontSize: 14,
-                                                            height: 1.4,
-                                                            color: Color(
-                                                                0xff808080),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
+                                                    //* Brand Title
+                                                    Text(
+                                                      "Brand",
+                                                      style: TextStyle(
+                                                          fontFamily: 'sf',
+                                                          fontSize: 14,
+                                                          height: 1.4,
+                                                          color:
+                                                              Color(0xff808080),
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
                                                     //* Type Title
                                                     Text(
                                                       "Type",
@@ -644,8 +639,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                               Divider(
                                 height: 25,
-                                thickness: 1.4,
-                                color: Color(0XFFF3F3F3),
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
                               ),
                               //* Product Description Section ------------------------------------------------------
                               InkWell(
@@ -702,8 +697,57 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               SizedBox(height: 5),
                               Divider(
                                 height: 25,
-                                thickness: 1.4,
-                                color: Color(0XFFF3F3F3),
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
+                              ),
+                              //* Buy Now button -------------------------------------------------------------------
+                              Container(
+                                width: double.infinity,
+                                child: FlatButton(
+                                  padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  highlightColor: Color(0xff2e2e2e),
+                                  color: Colors.black,
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Buy Now",
+                                    style: TextStyle(
+                                        fontFamily: 'sf',
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                              //* Add to cart button -------------------------------------------------------------------
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(top: 4, bottom: 4),
+                                child: FlatButton(
+                                  padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                          color: Colors.black, width: 3)),
+                                  highlightColor: Color(0xffe4e4e4),
+                                  // color: Colors.black,
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Add to Cart",
+                                    style: TextStyle(
+                                        fontFamily: 'sf',
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                              Divider(
+                                height: 25,
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
                               ),
                               //* Similar Products Section ------------------------------------------------------------
                             ],
@@ -724,21 +768,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     fontWeight: FontWeight.w700),
                               ),
                               SizedBox(height: 4),
-                              banner,
-                              // similarProductsList(
-                              //     context: context,
-                              //     category: widget.category,
-                              //     color: widget.productData
-                              //         .data()["product-details"]["color"],
-                              //     clothingStyle: widget.productData
-                              //             .data()["product-details"]
-                              //         ["clothing_style"],
-                              //     productId: widget.productData.id),
-                              // SizedBox(height: 5),
+                              //* Similar products list
+                              similarProducts,
                               Divider(
                                 height: 25,
-                                thickness: 1.4,
-                                color: Color(0XFFF3F3F3),
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
                               ),
                               Container(
                                 height: 100,

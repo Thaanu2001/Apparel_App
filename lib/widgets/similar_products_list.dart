@@ -1,3 +1,5 @@
+import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:Apparel_App/transitions/sliding_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -50,86 +52,96 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
             // physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.length,
             itemBuilder: (_, index) {
-              if (productId != snapshot.data[index].id)
-                return Container(
-                  height: 300,
-                  // width: double.infinity,
-                  margin: EdgeInsets.fromLTRB(0, 5, 12, 5),
-                  //* Product Card ----------------------------------------------------------------------
-                  child: Card(
-                    margin: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    color: Color(0xffF3F3F3),
-                    elevation: 0,
-                    child: InkWell(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      child: Container(
-                        width: 150,
-                        padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //* Product Image
-                            Container(
-                              child: Image.network(
-                                snapshot.data[index].data()["images"][0],
-                                width: double.infinity,
-                                fit: BoxFit.contain,
-                              ),
+              return (productId != snapshot.data[index].id)
+                  ? Container(
+                      height: 300,
+                      // width: double.infinity,
+                      margin: EdgeInsets.fromLTRB(0, 5, 12, 5),
+                      //* Product Card ----------------------------------------------------------------------
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        color: Color(0xffF3F3F3),
+                        elevation: 0,
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: Container(
+                            width: 150,
+                            padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //* Product Image
+                                Container(
+                                  child: Image.network(
+                                    snapshot.data[index].data()["images"][0],
+                                    width: double.infinity,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                SizedBox(height: 6),
+                                //* Product name
+                                Text(
+                                  snapshot.data[index].data()["product-name"],
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontFamily: 'sf',
+                                      fontSize: 14,
+                                      color: Colors.black),
+                                ),
+                                SizedBox(height: 4),
+                                //* Product price
+                                Text(
+                                  "Rs. " +
+                                      NumberFormat('###,000')
+                                          .format((snapshot.data[index]
+                                                      .data()["discount"] !=
+                                                  0)
+                                              ? ((snapshot.data[index]
+                                                      .data()["price"]) *
+                                                  ((100 -
+                                                          snapshot.data[index]
+                                                                  .data()[
+                                                              "discount"]) /
+                                                      100))
+                                              : snapshot.data[index]
+                                                  .data()["price"])
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontFamily: 'sf',
+                                      fontSize: 14,
+                                      color: Color(0xff808080),
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                SizedBox(height: 2),
+                                //* Product sold quantity
+                                Text(
+                                  snapshot.data[index].data()["store-name"],
+                                  style: TextStyle(
+                                      fontFamily: 'sf',
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 6),
-                            //* Product name
-                            Text(
-                              snapshot.data[index].data()["product-name"],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 14,
-                                  color: Colors.black),
-                            ),
-                            SizedBox(height: 4),
-                            //* Product price
-                            Text(
-                              "Rs. " +
-                                  NumberFormat('###,000')
-                                      .format((snapshot.data[index]
-                                                  .data()["discount"] !=
-                                              0)
-                                          ? ((snapshot.data[index]
-                                                  .data()["price"]) *
-                                              ((100 -
-                                                      snapshot.data[index]
-                                                          .data()["discount"]) /
-                                                  100))
-                                          : snapshot.data[index]
-                                              .data()["price"])
-                                      .toString(),
-                              style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 14,
-                                  color: Color(0xff808080),
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(height: 2),
-                            //* Product sold quantity
-                            Text(
-                              snapshot.data[index].data()["store-name"],
-                              style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w300),
-                            ),
-                          ],
+                          ),
+                          //* Navigate to product details page
+                          onTap: () {
+                            Route route = SlidingTransition(
+                              widget: ProductDetailsScreen(
+                                  productData: snapshot.data[index],
+                                  category: category),
+                            );
+                            Navigator.push(context, route);
+                          },
                         ),
                       ),
-                      onTap: () {},
-                    ),
-                  ),
-                );
+                    )
+                  : Container();
             },
           );
         }
