@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
+import 'package:Apparel_App/widgets/buy_now_modal.dart';
 import 'package:Apparel_App/widgets/other_products_list.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
@@ -727,7 +728,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   highlightColor: Color(0xff2e2e2e),
                                   color: Colors.black,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    buyNowModal(context, widget.productData);
+                                  },
                                   child: Text(
                                     "Buy Now",
                                     style: TextStyle(
