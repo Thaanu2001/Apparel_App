@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
+import 'package:Apparel_App/widgets/other_products_list.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
@@ -9,6 +10,7 @@ import 'package:Apparel_App/widgets/similar_products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 List imgList;
 
@@ -31,6 +33,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
   var similarProducts;
+  var otherProducts;
   var sellerCard;
 
   _scrollListener() {
@@ -46,15 +49,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     super.initState();
 
+    //* Similar products list
     similarProducts = similarProductsList(
         context: context,
         category: widget.category,
         color: widget.productData.data()["product-details"]["color"],
         clothingStyle: widget.productData.data()["product-details"]
-            ["clothing_style"],
+            ["clothing-style"],
         productId: widget.productData.id);
-    print(widget.productData.data()["store-id"]);
+
+    //* Seller Data Card
     sellerCard = storeCard(widget.productData.data()["store-id"]);
+
+    //* Seller's other products list
+    otherProducts = otherProductsList(
+        context: context,
+        category: widget.category,
+        storeId: widget.productData.data()["store-id"],
+        productId: widget.productData.id);
   }
 
   //* Image list for slider -------------------------------------------------------------------------------
@@ -231,10 +243,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
+            padding: EdgeInsets.fromLTRB(0, 50, 20, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(width: 15),
                 //* Back icon ---------------------------------------------------------------------------
                 Flexible(
                   flex: 1,
@@ -757,13 +770,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         //* Similar Products Section ------------------------------------------------------------
-                        Container(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //* Similar Products Topic
-                              Text(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //* Similar Products Topic
+                            Container(
+                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: Text(
                                 "Similar Products",
                                 style: TextStyle(
                                     fontFamily: 'sf',
@@ -771,16 +784,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.w700),
                               ),
-                              SizedBox(height: 4),
-                              //* Similar products list
-                              similarProducts,
-                              Divider(
-                                height: 25,
-                                thickness: 1.6,
-                                color: Color(0XFFE3E3E3),
-                              ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(height: 4),
+                            //* Similar products list
+                            similarProducts,
+                            Divider(
+                              height: 25,
+                              thickness: 1.6,
+                              color: Color(0XFFE3E3E3),
+                            ),
+                          ],
                         ),
                         //* About the Seller Section ------------------------------------------------------------
                         Container(
@@ -805,11 +818,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 thickness: 1.6,
                                 color: Color(0XFFE3E3E3),
                               ),
-                              Container(
-                                height: 100,
-                              )
                             ],
                           ),
+                        ),
+                        //* Seller's other products Section ------------------------------------------------------------
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //* Other Products Topic
+                            Container(
+                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: Text(
+                                "Seller's Other Products",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            //* Other products list
+                            otherProducts,
+                            SizedBox(height: 10)
+                          ],
                         ),
                       ],
                     ),

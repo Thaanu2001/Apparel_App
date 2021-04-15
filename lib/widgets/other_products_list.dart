@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-similarProductsList({context, category, color, clothingStyle, productId}) {
+otherProductsList({context, category, storeId, productId}) {
   //* Get Similar Product documents
   Future getSimilarProducts() async {
     var firestore = FirebaseFirestore.instance;
@@ -12,8 +12,7 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
         .collection("products")
         .doc(category)
         .collection(category)
-        .where("product-details.clothing-style", isEqualTo: clothingStyle)
-        // .where("product-details.color", isEqualTo: color)
+        .where("store-id", isEqualTo: storeId)
         .limit(8)
         // .orderBy("upload-time", descending: true)
         .get();
@@ -49,7 +48,6 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.fromLTRB(20, 0, 8, 0),
             shrinkWrap: true,
-            // physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.length,
             itemBuilder: (_, index) {
               return (productId != snapshot.data[index].id)
@@ -117,9 +115,12 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
                                       fontWeight: FontWeight.w700),
                                 ),
                                 SizedBox(height: 2),
-                                //* Product store name
+                                //* Product sold quantity
                                 Text(
-                                  snapshot.data[index].data()["store-name"],
+                                  snapshot.data[index]
+                                          .data()["sold"]
+                                          .toString() +
+                                      " Sold",
                                   style: TextStyle(
                                       fontFamily: 'sf',
                                       fontSize: 12,
