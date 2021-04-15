@@ -44,22 +44,6 @@ storeCard(storeId) {
             Map<String, dynamic> data = snapshot.data.data();
             return Container(
               width: double.infinity,
-              //* Main Card shadow
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.circular(10.0),
-              //   // the box shawdow property allows for fine tuning as aposed to shadowColor
-              //   boxShadow: [
-              //     new BoxShadow(
-              //       color: Colors.black26,
-              //       // offset, the X,Y coordinates to offset the shadow
-              //       offset: new Offset(5.0, 5.0),
-              //       // blurRadius, the higher the number the more smeared look
-              //       blurRadius: 36.0,
-              //       spreadRadius: -23,
-              //     )
-              //   ],
-              // ),
               margin: EdgeInsets.fromLTRB(0, 5, 0, 4),
               child: Card(
                 //* Product Card ----------------------------------------------------------------------
@@ -69,146 +53,141 @@ storeCard(storeId) {
                 ),
                 color: Color(0xffF3F3F3),
                 elevation: 0,
-                child: InkWell(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10)),
-                        //* Store cover stack --------------------------------------------------------
-                        child: Stack(
-                          children: [
-                            //* Cover Image
-                            Image.network(
-                              data["cover-image"],
-                              width: double.infinity,
-                              height: 120,
-                              fit: BoxFit.cover,
-                            ),
-                            //* Cover Gradient
-                            Container(
-                              width: double.infinity,
-                              height: 120,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black12,
-                                    // Colors.transparent,
-                                    Colors.black87,
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              height: 120,
-                              padding: EdgeInsets.all(12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  //* Store logo
-                                  new Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: new DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: new NetworkImage(
-                                          data["logo"],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  //* Store name
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        data["store-name"],
-                                        style: TextStyle(
-                                            fontFamily: 'sf',
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Text(
-                                        "98% Positive Rating",
-                                        style: TextStyle(
-                                            fontFamily: 'sf',
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
-                                  ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          topLeft: Radius.circular(10)),
+                      //* Store cover stack --------------------------------------------------------
+                      child: Stack(
+                        children: [
+                          //* Cover Image
+                          Image.network(
+                            data["cover-image"],
+                            width: double.infinity,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
+                          //* Cover Gradient
+                          Container(
+                            width: double.infinity,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black12,
+                                  // Colors.transparent,
+                                  Colors.black87,
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      //* View Products button -------------------------------------------------------------------
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: FlatButton(
-                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 3)),
-                          highlightColor: Color(0xffe4e4e4),
-                          // color: Colors.black,
-                          onPressed: () {},
-                          child: Text(
-                            "View Products",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
                           ),
-                        ),
-                      ),
-                      //* Contact Seller button -------------------------------------------------------------------
-                      Container(
-                        width: double.infinity,
-                        // padding: EdgeInsets.only(top: 4, bottom: 4),
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
-                        child: FlatButton(
-                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 3)),
-                          highlightColor: Color(0xffe4e4e4),
-                          // color: Colors.black,
-                          onPressed: () {},
-                          child: Text(
-                            "Contact Seller",
-                            style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
+                          Container(
+                            alignment: Alignment.bottomLeft,
+                            height: 120,
+                            padding: EdgeInsets.all(12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                //* Store logo
+                                new Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: new NetworkImage(
+                                        data["logo"],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                //* Store name
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data["store-name"],
+                                      style: TextStyle(
+                                          fontFamily: 'sf',
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      "98% Positive Rating",
+                                      style: TextStyle(
+                                          fontFamily: 'sf',
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                    //* View Store Profile button -------------------------------------------------------------------
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(color: Colors.black, width: 2)),
+                        highlightColor: Color(0xffe4e4e4),
+                        // color: Colors.black,
+                        onPressed: () {},
+                        child: Text(
+                          "View Store Profile",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
-                      // Container(
-                      //     width: double.infinity,
-                      //     child: featureProducts(storeId))
-                    ],
-                  ),
-                  onTap: () {},
+                    ),
+                    //* Contact Seller button -------------------------------------------------------------------
+                    Container(
+                      width: double.infinity,
+                      // padding: EdgeInsets.only(top: 4, bottom: 4),
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
+                      child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(color: Colors.black, width: 2)),
+                        highlightColor: Color(0xffe4e4e4),
+                        // color: Colors.black,
+                        onPressed: () {},
+                        child: Text(
+                          "Contact Seller",
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    // Container(
+                    //     width: double.infinity,
+                    //     child: featureProducts(storeId))
+                  ],
                 ),
               ),
             );

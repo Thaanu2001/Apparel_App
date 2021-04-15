@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 productDescriptionModal(context, productData) {
   showModalBottomSheet(
@@ -22,21 +23,74 @@ productDescriptionModal(context, productData) {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //* Product Image
                   Image.network(
                     productData.data()["images"][0],
                     height: 100,
                   ),
+                  SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(
-                        productData.data()["product-name"],
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //* Name
+                        Text(
+                          productData.data()["product-name"],
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(height: 3),
+                        //* Price
+                        Text(
+                          "Rs. " +
+                              NumberFormat('###,000')
+                                  .format((productData.data()["discount"] != 0)
+                                      ? ((productData.data()["price"]) *
+                                          ((100 -
+                                                  productData
+                                                      .data()["discount"]) /
+                                              100))
+                                      : productData.data()["price"])
+                                  .toString(),
+                          style: TextStyle(
+                              fontFamily: 'sf',
+                              fontSize: 18,
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w700),
+                        ),
+                        //* Discount old price
+                        if (productData.data()["discount"] != 0)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Rs. " +
+                                    NumberFormat('###,000')
+                                        .format(productData.data()["price"])
+                                        .toString(),
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 12,
+                                    color: Color(0xffacacac),
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "-" +
+                                    productData.data()["discount"].toString() +
+                                    "%",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 10,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
                   ),
                 ],

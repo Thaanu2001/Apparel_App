@@ -747,7 +747,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       side: BorderSide(
-                                          color: Colors.black, width: 3)),
+                                          color: Colors.black, width: 2)),
                                   highlightColor: Color(0xffe4e4e4),
                                   // color: Colors.black,
                                   onPressed: () {},
