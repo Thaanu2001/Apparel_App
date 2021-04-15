@@ -4,6 +4,7 @@ import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
+import 'package:Apparel_App/widgets/seller_card.dart';
 import 'package:Apparel_App/widgets/similar_products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -30,6 +31,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
   var similarProducts;
+  var sellerCard;
 
   _scrollListener() {
     setState(() {
@@ -51,6 +53,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         clothingStyle: widget.productData.data()["product-details"]
             ["clothing_style"],
         productId: widget.productData.id);
+    print(widget.productData.data()["store-id"]);
+    sellerCard = storeCard(widget.productData.data()["store-id"]);
   }
 
   //* Image list for slider -------------------------------------------------------------------------------
@@ -749,10 +753,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 thickness: 1.6,
                                 color: Color(0XFFE3E3E3),
                               ),
-                              //* Similar Products Section ------------------------------------------------------------
                             ],
                           ),
                         ),
+                        //* Similar Products Section ------------------------------------------------------------
                         Container(
                           padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                           child: Column(
@@ -770,6 +774,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               SizedBox(height: 4),
                               //* Similar products list
                               similarProducts,
+                              Divider(
+                                height: 25,
+                                thickness: 1.6,
+                                color: Color(0XFFE3E3E3),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //* About the Seller Section ------------------------------------------------------------
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //* About the Seller Topic
+                              Text(
+                                "About the Seller",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(height: 4),
+                              //* About the Seller Card
+                              sellerCard,
                               Divider(
                                 height: 25,
                                 thickness: 1.6,

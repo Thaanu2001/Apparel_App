@@ -14,191 +14,169 @@ storesSection() {
     return qn.docs;
   }
 
-  ScrollController controller;
-  ScrollPhysics physics = AlwaysScrollableScrollPhysics();
-
-  return NotificationListener<ScrollEndNotification>(
-    onNotification: (scrollEnd) {
-      var metrics = scrollEnd.metrics;
-      if (metrics.atEdge) {
-        if (metrics.pixels == 0) {
-          print('At top');
-          // physics = NeverScrollableScrollPhysics();
-        } else
-          print('At bottom');
-      }
-      return true;
-    },
-    child: SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20, 5, 20, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // shrinkWrap: true,
-          // physics: AlwaysScrollableScrollPhysics(),
-          children: [
-            Text(
-              'Most popular',
-              style: TextStyle(
-                  fontFamily: 'sf', fontSize: 26, fontWeight: FontWeight.w700),
-            ),
-            //* Recent Products -----------------------------------------------------------------------------
-            Container(
-              child: FutureBuilder(
-                future: getStores(),
-                builder: (_, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      //* Loading Card ----------------------------------------------------------------------
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                        color: Colors.white,
-                        elevation: 0,
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.only(top: 20, bottom: 20),
-                          height: 110,
-                        ),
+  return SingleChildScrollView(
+    child: Container(
+      padding: EdgeInsets.fromLTRB(20, 5, 20, 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Most popular',
+            style: TextStyle(
+                fontFamily: 'sf', fontSize: 26, fontWeight: FontWeight.w700),
+          ),
+          //* Recent Products -----------------------------------------------------------------------------
+          Container(
+            child: FutureBuilder(
+              future: getStores(),
+              builder: (_, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    //* Loading Card ----------------------------------------------------------------------
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                       ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (_, index) {
-                        return Container(
-                          width: double.infinity,
-                          //* Main Card shadow
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                            // the box shawdow property allows for fine tuning as aposed to shadowColor
-                            boxShadow: [
-                              new BoxShadow(
-                                color: Colors.black26,
-                                // offset, the X,Y coordinates to offset the shadow
-                                offset: new Offset(5.0, 5.0),
-                                // blurRadius, the higher the number the more smeared look
-                                blurRadius: 36.0,
-                                spreadRadius: -23,
-                              )
-                            ],
+                      color: Colors.white,
+                      elevation: 0,
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: 20, bottom: 20),
+                        height: 110,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (_, index) {
+                      return Container(
+                        width: double.infinity,
+                        //* Main Card shadow
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          // the box shawdow property allows for fine tuning as aposed to shadowColor
+                          boxShadow: [
+                            new BoxShadow(
+                              color: Colors.black26,
+                              // offset, the X,Y coordinates to offset the shadow
+                              offset: new Offset(5.0, 5.0),
+                              // blurRadius, the higher the number the more smeared look
+                              blurRadius: 36.0,
+                              spreadRadius: -23,
+                            )
+                          ],
+                        ),
+                        margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                        child: Card(
+                          //* Product Card ----------------------------------------------------------------------
+                          margin: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                          child: Card(
-                            //* Product Card ----------------------------------------------------------------------
-                            margin: EdgeInsets.zero,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            color: Colors.white,
-                            elevation: 0,
-                            child: InkWell(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              child: Column(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        topLeft: Radius.circular(10)),
-                                    //* Store cover stack --------------------------------------------------------
-                                    child: Stack(
-                                      children: [
-                                        //* Cover Image
-                                        Image.network(
-                                          snapshot.data[index]
-                                              .data()["cover-image"],
-                                          width: double.infinity,
-                                          height: 120,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        //* Cover Gradient
-                                        Container(
-                                          width: double.infinity,
-                                          height: 120,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.transparent,
-                                                Colors.black12,
-                                                // Colors.transparent,
-                                                Colors.black87,
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          alignment: Alignment.bottomLeft,
-                                          height: 120,
-                                          padding: EdgeInsets.all(12),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              //* Store logo
-                                              new Container(
-                                                width: 50,
-                                                height: 50,
-                                                decoration: new BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: new DecorationImage(
-                                                    fit: BoxFit.fill,
-                                                    image: new NetworkImage(
-                                                      snapshot.data[index]
-                                                          .data()["logo"],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 12,
-                                              ),
-                                              //* Store name
-                                              Text(
-                                                snapshot.data[index]
-                                                    .data()["store-name"],
-                                                style: TextStyle(
-                                                    fontFamily: 'sf',
-                                                    fontSize: 20,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
+                          color: Colors.white,
+                          elevation: 0,
+                          child: InkWell(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10)),
+                                  //* Store cover stack --------------------------------------------------------
+                                  child: Stack(
+                                    children: [
+                                      //* Cover Image
+                                      Image.network(
+                                        snapshot.data[index]
+                                            .data()["cover-image"],
+                                        width: double.infinity,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      //* Cover Gradient
+                                      Container(
+                                        width: double.infinity,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.black12,
+                                              // Colors.transparent,
+                                              Colors.black87,
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.bottomLeft,
+                                        height: 120,
+                                        padding: EdgeInsets.all(12),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            //* Store logo
+                                            new Container(
+                                              width: 50,
+                                              height: 50,
+                                              decoration: new BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: new DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: new NetworkImage(
+                                                    snapshot.data[index]
+                                                        .data()["logo"],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 12,
+                                            ),
+                                            //* Store name
+                                            Text(
+                                              snapshot.data[index]
+                                                  .data()["store-name"],
+                                              style: TextStyle(
+                                                  fontFamily: 'sf',
+                                                  fontSize: 20,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                      width: double.infinity,
-                                      child: featureProducts(
-                                          snapshot.data[index].id))
-                                ],
-                              ),
-                              onTap: () {},
+                                ),
+                                Container(
+                                    width: double.infinity,
+                                    child: featureProducts(
+                                        snapshot.data[index].id))
+                              ],
                             ),
+                            onTap: () {},
                           ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );
