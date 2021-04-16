@@ -106,7 +106,7 @@ womenSection(context) {
                                       snapshot.data[index].data()["images"][0],
                                       // width: 90,
                                       height: 110,
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.cover,
                                     ),
                                   )),
                                   SizedBox(width: 15),

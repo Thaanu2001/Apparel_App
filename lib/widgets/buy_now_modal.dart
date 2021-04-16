@@ -1,3 +1,4 @@
+import 'package:Apparel_App/screens/purchase_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -48,9 +49,12 @@ buyNowModal(context, productData) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //* Product Image
-                    Image.network(
-                      productData.data()["images"][0],
-                      height: 100,
+                    Hero(
+                      tag: 'test',
+                      child: Image.network(
+                        productData.data()["images"][0],
+                        height: 100,
+                      ),
                     ),
                     SizedBox(width: 10),
                     Flexible(
@@ -142,7 +146,7 @@ buyNowModal(context, productData) {
                               fontSize: 16,
                             ),
                             filled: true,
-                            labelText: 'Select Size',
+                            labelText: 'Size',
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -200,8 +204,18 @@ buyNowModal(context, productData) {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.black),
-                        child: Icon(Customicons.measuring_tape,
-                            color: Colors.white),
+                        child: InkWell(
+                          child: Icon(Customicons.measuring_tape,
+                              color: Colors.white),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PurchaseScreen(productData: productData)),
+                            );
+                          },
+                        ),
                       ),
                     )
                   ],
@@ -312,6 +326,30 @@ buyNowModal(context, productData) {
                         color: Colors.red,
                         fontWeight: FontWeight.w500),
                   ),
+                //* Continue button -------------------------------------------------------------------
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 10),
+                  child: FlatButton(
+                    padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    highlightColor: Color(0xff2e2e2e),
+                    color: Colors.black,
+                    onPressed: () {
+                      // buyNowModal(context, widget.productData);
+                    },
+                    child: Text(
+                      "Continue",
+                      style: TextStyle(
+                          fontFamily: 'sf',
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

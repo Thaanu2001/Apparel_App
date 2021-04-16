@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
+import 'package:Apparel_App/screens/purchase_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
+import 'package:Apparel_App/transitions/sliding_transition.dart';
 import 'package:Apparel_App/widgets/buy_now_modal.dart';
 import 'package:Apparel_App/widgets/other_products_list.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
@@ -729,7 +731,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   highlightColor: Color(0xff2e2e2e),
                                   color: Colors.black,
                                   onPressed: () {
-                                    buyNowModal(context, widget.productData);
+                                    Route route = SlidingTransition(
+                                      widget: PurchaseScreen(
+                                        productData: widget.productData,
+                                        isBuyNow: true,
+                                      ),
+                                    );
+                                    Navigator.push(context, route);
                                   },
                                   child: Text(
                                     "Buy Now",
@@ -753,7 +761,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           color: Colors.black, width: 2)),
                                   highlightColor: Color(0xffe4e4e4),
                                   // color: Colors.black,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Route route = SlidingTransition(
+                                      widget: PurchaseScreen(
+                                        productData: widget.productData,
+                                        isBuyNow: false,
+                                      ),
+                                    );
+                                    Navigator.push(context, route);
+                                  },
                                   child: Text(
                                     "Add to Cart",
                                     style: TextStyle(
