@@ -1,4 +1,5 @@
 import 'package:Apparel_App/services/customicons_icons.dart';
+import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,21 +21,55 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   List<String> sizeList = [];
   bool expanded = false;
 
+  var size = {
+    'size': ['Small', 'Medium', 'Large', 'X-Large', 'XX-Large'],
+    'qty': [8, 10, 0, 12, 10]
+  };
+
+  //* Get Size list for Drop down
   getSizeList() {
-    print(widget.productData.data()["size"].length);
+    print(widget.productData['size-table']);
+    print(widget.productData["size"].length);
+    var sortedKeys = widget.productData["size"].keys.toList()..sort();
+    print(sortedKeys);
+
     for (int count = 0;
-        count < widget.productData.data()["size"].length;
+        count < widget.productData['size']["size"].length;
         count++) {
-      if (widget.productData.data()["size"]
-              [widget.productData.data()["size"].keys.elementAt(count)] !=
-          0) {
-        sizeList.add(widget.productData.data()["size"].keys.elementAt(count));
+      if (size['qty'][count] != 0) {
+        sizeList.add(widget.productData['size']["size"][count]);
       } else {
-        sizeList.add(widget.productData.data()["size"].keys.elementAt(count) +
+        sizeList.add(widget.productData['size']["size"][count].toString() +
             " (Sold out)");
       }
     }
+    // for (int count = 0; count < widget.productData["size"].length; count++) {
+    //   if (widget.productData["size"]
+    //           [widget.productData["size"].keys.elementAt(count)] !=
+    //       0) {
+    //     sizeList.add(widget.productData["size"].keys.elementAt(count));
+    //   } else {
+    //     sizeList.add(
+    //         widget.productData["size"].keys.elementAt(count) + " (Sold out)");
+    //   }
+    // }
     print(sizeList);
+  }
+
+  //* Table topic text widget
+  tableTopicWidget(
+      {@required text, @required isBold, textAlign = TextAlign.center}) {
+    return Container(
+      padding: EdgeInsets.only(
+          top: 4, bottom: 4, left: (textAlign == TextAlign.left) ? 4 : 0),
+      child: Text(
+        text,
+        textAlign: textAlign,
+        style: TextStyle(
+            fontFamily: 'sf',
+            fontWeight: (isBold) ? FontWeight.w700 : FontWeight.w400),
+      ),
+    );
   }
 
   @override
@@ -70,7 +105,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   Hero(
                     tag: 'test',
                     child: Image.network(
-                      widget.productData.data()["images"][0],
+                      widget.productData["images"][0],
                       height: 120,
                     ),
                   ),
@@ -81,7 +116,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       children: [
                         //* Name
                         Text(
-                          widget.productData.data()["product-name"],
+                          widget.productData["product-name"],
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 18,
@@ -92,15 +127,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         Text(
                           "Rs. " +
                               NumberFormat('###,000')
-                                  .format((widget.productData
-                                              .data()["discount"] !=
-                                          0)
-                                      ? ((widget.productData.data()["price"]) *
+                                  .format((widget.productData["discount"] != 0)
+                                      ? ((widget.productData["price"]) *
                                           ((100 -
-                                                  widget.productData
-                                                      .data()["discount"]) /
+                                                  widget.productData[
+                                                      "discount"]) /
                                               100))
-                                      : widget.productData.data()["price"])
+                                      : widget.productData["price"])
                                   .toString(),
                           style: TextStyle(
                               fontFamily: 'sf',
@@ -109,15 +142,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               fontWeight: FontWeight.w800),
                         ),
                         //* Discount old price
-                        if (widget.productData.data()["discount"] != 0)
+                        if (widget.productData["discount"] != 0)
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Rs. " +
                                     NumberFormat('###,000')
-                                        .format(
-                                            widget.productData.data()["price"])
+                                        .format(widget.productData["price"])
                                         .toString(),
                                 style: TextStyle(
                                     fontFamily: 'sf',
@@ -129,9 +161,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               SizedBox(width: 4),
                               Text(
                                 "-" +
-                                    widget.productData
-                                        .data()["discount"]
-                                        .toString() +
+                                    widget.productData["discount"].toString() +
                                     "%",
                                 style: TextStyle(
                                     fontFamily: 'sf',
@@ -182,15 +212,17 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                 onTap: () {
                                   if (selectedSize == null ||
                                       _quantity <
-                                          widget.productData.data()["size"]
-                                              [selectedSize]) {
+                                          widget.productData["size"]["qty"][
+                                              widget.productData["size"]["size"]
+                                                  .indexOf(selectedSize)]) {
                                     setState(() {
                                       errorVisible = false;
                                       _quantity++;
                                     });
                                     if (_quantity ==
-                                        widget.productData.data()["size"]
-                                            [selectedSize]) {
+                                        widget.productData["size"]["qty"][widget
+                                            .productData["size"]["size"]
+                                            .indexOf(selectedSize)]) {
                                       setState(() {
                                         errorVisible = true;
                                         errorMsg = 'Maximum quantity reached';
@@ -236,7 +268,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 items: sizeList.map((String value) {
                   return new DropdownMenuItem<String>(
                     value: value,
-                    onTap: () => null,
                     child: Text(
                       value,
                       style: TextStyle(
@@ -253,10 +284,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 key: _key,
                 onChanged: (value) {
                   if ((!value.contains('(Sold out)'))) {
-                    if (_quantity > widget.productData.data()["size"][value]) {
+                    if (_quantity >
+                        widget.productData["size"]["qty"][widget
+                            .productData["size"]["size"]
+                            .indexOf(value)]) {
                       setState(() {
                         print('here');
-                        _quantity = widget.productData.data()["size"][value];
+                        _quantity = widget.productData["size"]["qty"]
+                            [widget.productData["size"]["size"].indexOf(value)];
                         errorVisible = true;
                         errorMsg = 'Maximum quantity reached';
                       });
@@ -264,7 +299,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       setState(() {
                         selectedSize = value;
                         errorVisible = false;
-                        // _quantity = 1;
+                        if (_quantity == 0) _quantity = 1;
                       });
                     }
                   } else {
@@ -326,13 +361,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //               errorMsg = 'Please select size first';
             //             });
             //           } else if (_quantity <
-            //               widget.productData.data()["size"][selectedSize]) {
+            //               widget.productData["size"][selectedSize]) {
             //             setState(() {
             //               errorVisible = false;
             //               _quantity++;
             //             });
             //             if (_quantity ==
-            //                 widget.productData.data()["size"][selectedSize]) {
+            //                 widget.productData["size"][selectedSize]) {
             //               setState(() {
             //                 errorVisible = true;
             //                 errorMsg = 'Maximum quantity reached';
@@ -386,6 +421,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //     onTap: () {},
             //   ),
             // ),
+            //
             //* Size Chart Section
             Theme(
               data: Theme.of(context).copyWith(
@@ -409,48 +445,117 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   ),
                   children: <Widget>[
                     //* Size chart content
-                    Table(
-                      border: TableBorder.all(),
-                      children: [
-                        TableRow(children: [
-                          Column(children: [
-                            Icon(
-                              Icons.account_box,
-                              size: 20,
-                            ),
-                            Text('My Account')
-                          ]),
-                          Column(children: [
-                            Icon(
-                              Icons.settings,
-                              size: 20,
-                            ),
-                            Text('Settings')
-                          ]),
-                          Column(children: [
-                            Icon(
-                              Icons.lightbulb_outline,
-                              size: 20,
-                            ),
-                            Text('Ideas')
-                          ]),
-                        ]),
-                        TableRow(children: [
-                          Icon(
-                            Icons.cake,
-                            size: 20,
+                    Container(
+                      width: double.infinity,
+                      child: ScrollGlowDisabler(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              // Text('Recent Claims'),
+                              Table(
+                                border: TableBorder.all(color: Colors.black),
+                                //* Column Width
+                                columnWidths: {
+                                  0: FixedColumnWidth(70.0),
+                                  1: FixedColumnWidth(70.0),
+                                  2: FixedColumnWidth(70.0),
+                                  3: FixedColumnWidth(70.0),
+                                  4: FixedColumnWidth(70.0),
+                                  5: FixedColumnWidth(70.0),
+                                  6: FixedColumnWidth(70.0),
+                                  7: FixedColumnWidth(70.0),
+                                  8: FixedColumnWidth(70.0),
+                                },
+                                children: [
+                                  //* Table Topics
+                                  TableRow(
+                                    children: [
+                                      tableTopicWidget(
+                                          text: 'Topic',
+                                          isBold: true,
+                                          textAlign: TextAlign.left),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('XXS'))
+                                        tableTopicWidget(
+                                            text: 'XXS', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('XS'))
+                                        tableTopicWidget(
+                                            text: 'XS', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('S'))
+                                        tableTopicWidget(
+                                            text: 'S', isBold: true),
+                                      tableTopicWidget(text: 'M', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('L'))
+                                        tableTopicWidget(
+                                            text: 'L', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('XL'))
+                                        tableTopicWidget(
+                                            text: 'XL', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('XXL'))
+                                        tableTopicWidget(
+                                            text: 'XXL', isBold: true),
+                                      if (widget.productData['size-table'][0]
+                                          .containsKey('XXXL'))
+                                        tableTopicWidget(
+                                            text: 'XXXL', isBold: true),
+                                    ],
+                                  ),
+                                  //* Table Content
+                                  for (var item
+                                      in widget.productData['size-table'])
+                                    TableRow(
+                                      children: [
+                                        tableTopicWidget(
+                                            text: item['Topic'],
+                                            isBold: true,
+                                            textAlign: TextAlign.left),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('XXS'))
+                                          tableTopicWidget(
+                                              text: item['XXS'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('XS'))
+                                          tableTopicWidget(
+                                              text: item['XS'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('S'))
+                                          tableTopicWidget(
+                                              text: item['S'], isBold: false),
+                                        tableTopicWidget(
+                                            text: item['M'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('L'))
+                                          tableTopicWidget(
+                                              text: item['L'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('XL'))
+                                          tableTopicWidget(
+                                              text: item['XL'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('XXL'))
+                                          tableTopicWidget(
+                                              text: item['XXL'], isBold: false),
+                                        if (widget.productData['size-table'][0]
+                                            .containsKey('XXXL'))
+                                          tableTopicWidget(
+                                              text: item['XXL'], isBold: false),
+                                      ],
+                                    )
+                                ],
+                              ),
+                            ],
                           ),
-                          Icon(
-                            Icons.voice_chat,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.add_location,
-                            size: 20,
-                          ),
-                        ]),
-                      ],
+                        ),
+                      ),
                     ),
+                    SizedBox(height: 15)
                   ],
                 ),
               ),
@@ -458,7 +563,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //* Continue button -------------------------------------------------------------------
             Container(
               width: double.infinity,
-              padding: EdgeInsets.only(top: 0, left: 20),
+              padding: EdgeInsets.only(left: 20),
               child: FlatButton(
                 padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                 shape: RoundedRectangleBorder(
