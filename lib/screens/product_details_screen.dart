@@ -1,19 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:intl/intl.dart';
 import 'dart:ui';
+
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/screens/purchase_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/transitions/sliding_transition.dart';
-import 'package:Apparel_App/widgets/buy_now_modal.dart';
 import 'package:Apparel_App/widgets/other_products_list.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:Apparel_App/widgets/seller_card.dart';
 import 'package:Apparel_App/widgets/similar_products_list.dart';
-import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:intl/intl.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 
 List imgList;
 

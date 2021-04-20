@@ -1,11 +1,12 @@
-import 'package:Apparel_App/screens/product_details_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:Apparel_App/screens/home_screen.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'package:Apparel_App/screens/home_screen.dart';
+import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:Apparel_App/transitions/sliding_transition.dart';
 
 class WomenSection extends StatefulWidget {
   @override

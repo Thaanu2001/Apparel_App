@@ -1,17 +1,12 @@
-import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dart:ui' show ImageFilter;
+
 import 'package:Apparel_App/sections/men_section.dart';
 import 'package:Apparel_App/sections/stores_section.dart';
 import 'package:Apparel_App/sections/women_section.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:Apparel_App/services/Customicons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
-import 'dart:ui' show ImageFilter;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 
 var scaffoldKey = GlobalKey<ScaffoldState>();
 
