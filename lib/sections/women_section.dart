@@ -86,31 +86,15 @@ class _WomenSectionState extends State<WomenSection>
         SnackBar(
           duration: Duration(seconds: 2),
           content: Text('No more products!'),
+          backgroundColor: Color(0xff646464),
         ),
       );
     }
     return null;
   }
 
-  // Future doAsyncStuff() async {
-  //   keepAlive = true;
-  //   updateKeepAlive();
-  //   // Keeping alive...
-
-  //   await Future.delayed(Duration(seconds: 10));
-
-  //   keepAlive = false;
-  //   updateKeepAlive();
-  //   // Can be disposed whenever now.
-  // }
-
-  // @override
-  // bool get wantKeepAlive => keepAlive;
-
   @override
   void initState() {
-    // doAsyncStuff();
-
     //* Flutter pull to refresh
     _anicontroller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 2000));

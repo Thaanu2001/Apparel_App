@@ -17,68 +17,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _tabIndex = 0;
-  // ScrollController controller;
-  // DocumentSnapshot _lastVisible;
-  // bool _isLoading;
-  // List<DocumentSnapshot> _data = new List<DocumentSnapshot>();
-  // RefreshController _refreshController =
-  //     RefreshController(initialRefresh: false);
-  // AnimationController _anicontroller, _scaleController;
-
-  // //* Pull to refresh on refresh
-  // void _onRefresh() async {
-  //   // monitor network fetch
-  //   await Future.delayed(Duration(milliseconds: 1000));
-  //   // if failed,use refreshFailed()
-  //   setState(() {
-  //     _data.clear();
-  //     _lastVisible = null;
-  //     _getWomenProducts();
-  //   });
-  //   _refreshController.refreshCompleted();
-  // }
-
-  // //* Pull to refresh on loading
-  // void _onLoading() async {
-  //   // monitor network fetch
-  //   await Future.delayed(Duration(milliseconds: 1000));
-  //   // if failed,use loadFailed(),if no data return,use LoadNodata()
-  //   // items.add((items.length+1).toString());
-  //   if (mounted) setState(() {});
-  //   _refreshController.loadComplete();
-  // }
-
-  // @override
-  // void initState() {
-  //   //* Flutter pull to refresh
-  //   _anicontroller = AnimationController(
-  //       vsync: this, duration: Duration(milliseconds: 2000));
-  //   _scaleController =
-  //       AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
-  //   _refreshController.headerMode.addListener(() {
-  //     if (_refreshController.headerStatus == RefreshStatus.idle) {
-  //       _scaleController.value = 0.0;
-  //       _anicontroller.reset();
-  //     } else if (_refreshController.headerStatus == RefreshStatus.refreshing) {
-  //       _anicontroller.repeat();
-  //     }
-  //   });
-
-  //   controller = new ScrollController()..addListener(_scrollListener);
-  //   super.initState();
-
-  //   _isLoading = true;
-  //   _getWomenProducts();
-  // }
-
-  // @override
-  // void dispose() {
-  //   controller.removeListener(_scrollListener);
-  //   _refreshController.dispose();
-  //   _scaleController.dispose();
-  //   _anicontroller.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.bold)),
                               ),
                             ),
-                            storesSection(), //* Stores Section
+                            StoresSection(), //* Stores Section
                           ],
                         ),
                       ),
