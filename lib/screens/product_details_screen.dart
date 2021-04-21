@@ -1,7 +1,9 @@
+import 'package:Apparel_App/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/screens/purchase_screen.dart';
@@ -13,6 +15,7 @@ import 'package:Apparel_App/widgets/product_details_modal.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:Apparel_App/widgets/seller_card.dart';
 import 'package:Apparel_App/widgets/similar_products_list.dart';
+import 'package:Apparel_App/services/auth_service.dart';
 
 List imgList;
 
@@ -729,14 +732,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   highlightColor: Color(0xff2e2e2e),
                                   color: Colors.black,
-                                  onPressed: () {
-                                    Route route = SlidingTransition(
-                                      widget: PurchaseScreen(
-                                        productData: widget.productData,
-                                        isBuyNow: true,
-                                      ),
-                                    );
-                                    Navigator.push(context, route);
+                                  onPressed: () async {
+                                    if (FirebaseAuth
+                                            .instance.currentUser?.uid ==
+                                        null) {
+                                      Route route = SlidingTransition(
+                                        widget: SignInScreen(
+                                          route: SlidingTransition(
+                                            widget: PurchaseScreen(
+                                              productData: widget.productData,
+                                              isBuyNow: true,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                      Navigator.push(context, route);
+                                    } else {
+                                      Route route = SlidingTransition(
+                                        widget: PurchaseScreen(
+                                          productData: widget.productData,
+                                          isBuyNow: true,
+                                        ),
+                                      );
+                                      Navigator.push(context, route);
+                                    }
                                   },
                                   child: Text(
                                     "Buy Now",
