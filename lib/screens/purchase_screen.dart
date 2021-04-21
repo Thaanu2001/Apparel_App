@@ -175,10 +175,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         Container(
                           margin: EdgeInsets.fromLTRB(0, 2, 0, 4),
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          // decoration: BoxDecoration(
-                          //   border: Border.all(color: Colors.black, width: 2),
-                          //   borderRadius: BorderRadius.circular(10),
-                          // ),
                           width: 100,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,7 +215,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                       errorVisible = false;
                                       _quantity++;
                                     });
-                                    if (_quantity ==
+                                    if (selectedSize == null) {
+                                    } else if (_quantity ==
                                         widget.productData["size"]["qty"][widget
                                             .productData["size"]["size"]
                                             .indexOf(selectedSize)]) {
@@ -289,7 +286,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                             .productData["size"]["size"]
                             .indexOf(value)]) {
                       setState(() {
-                        print('here');
+                        selectedSize = value;
                         _quantity = widget.productData["size"]["qty"]
                             [widget.productData["size"]["size"].indexOf(value)];
                         errorVisible = true;

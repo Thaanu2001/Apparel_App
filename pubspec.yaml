@@ -35,6 +35,7 @@ dev_dependencies:
   cloud_firestore:
   firebase_core:
   firebase_auth:
+  flutter_facebook_auth:
   google_sign_in:
   intl:
   pull_to_refresh: 1.6.3

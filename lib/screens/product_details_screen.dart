@@ -780,13 +780,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   highlightColor: Color(0xffe4e4e4),
                                   // color: Colors.black,
                                   onPressed: () {
-                                    Route route = SlidingTransition(
-                                      widget: PurchaseScreen(
-                                        productData: widget.productData,
-                                        isBuyNow: false,
-                                      ),
-                                    );
-                                    Navigator.push(context, route);
+                                    if (FirebaseAuth
+                                            .instance.currentUser?.uid ==
+                                        null) {
+                                      Route route = SlidingTransition(
+                                        widget: SignInScreen(
+                                          route: SlidingTransition(
+                                            widget: PurchaseScreen(
+                                              productData: widget.productData,
+                                              isBuyNow: false,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                      Navigator.push(context, route);
+                                    } else {
+                                      Route route = SlidingTransition(
+                                        widget: PurchaseScreen(
+                                          productData: widget.productData,
+                                          isBuyNow: false,
+                                        ),
+                                      );
+                                      Navigator.push(context, route);
+                                    }
                                   },
                                   child: Text(
                                     "Add to Cart",

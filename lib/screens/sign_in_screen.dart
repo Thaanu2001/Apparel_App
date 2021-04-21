@@ -1,5 +1,7 @@
-import 'package:Apparel_App/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:Apparel_App/services/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
   final Route route;
@@ -88,8 +90,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         highlightColor: Color(0xffe4e4e4),
                         // color: Colors.black,
                         onPressed: () async {
-                          await AuthService().signInWithGoogle();
-                          Navigator.push(context, widget.route);
+                          var userData = await AuthService().signInWithGoogle();
+                          AuthService().checkUser(userData);
+                          print(userData.user.displayName);
+                          if (FirebaseAuth.instance.currentUser?.uid != null) {
+                            Navigator.pushReplacement(context, widget.route);
+                          }
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +132,15 @@ class _SignInScreenState extends State<SignInScreen> {
                             side: BorderSide(color: Colors.black, width: 2)),
                         highlightColor: Color(0xffe4e4e4),
                         // color: Colors.black,
-                        onPressed: () {},
+                        onPressed: () async {
+                          var userData =
+                              await AuthService().signInWithFacebook();
+                          AuthService().checkUser(userData);
+                          print(userData.user.displayName);
+                          if (FirebaseAuth.instance.currentUser?.uid != null) {
+                            Navigator.pushReplacement(context, widget.route);
+                          }
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
