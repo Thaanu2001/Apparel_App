@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
-import 'package:Apparel_App/screens/sign_up_screen.dart';
+import 'package:Apparel_App/screens/auth/sign_up_screen.dart';
 import 'package:Apparel_App/transitions/sliding_transition.dart';
 
 class SignInScreen extends StatefulWidget {

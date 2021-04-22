@@ -1,4 +1,4 @@
-import 'package:Apparel_App/screens/sign_in_screen.dart';
+import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
