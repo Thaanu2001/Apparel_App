@@ -1,3 +1,4 @@
+import 'package:Apparel_App/screens/auth/email_sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -64,7 +65,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         highlightColor: Color(0xff2e2e2e),
                         color: Colors.black,
-                        onPressed: () {},
+                        onPressed: () {
+                          Route route = SlidingTransition(
+                            widget: EmailSignUpScreen(route: widget.route),
+                          );
+                          Navigator.push(context, route);
+                        },
                         child: Text(
                           "Create with your Email",
                           style: TextStyle(
