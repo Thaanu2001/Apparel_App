@@ -1,19 +1,19 @@
-import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
-import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
+import 'package:Apparel_App/services/dismiss_keyboard.dart';
+import 'package:Apparel_App/screens/auth/sign_up_screen.dart';
 import 'package:Apparel_App/transitions/sliding_transition.dart';
 
-class EmailSignUpScreen extends StatefulWidget {
+class EmailSignInScreen extends StatefulWidget {
   final Route route;
-  EmailSignUpScreen({@required this.route});
+  EmailSignInScreen({@required this.route});
 
   @override
-  _EmailSignUpScreenState createState() => _EmailSignUpScreenState();
+  _EmailSignInScreenState createState() => _EmailSignInScreenState();
 }
 
-class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
+class _EmailSignInScreenState extends State<EmailSignInScreen> {
   final firstName = TextEditingController();
   final lastName = TextEditingController();
   final email = TextEditingController();
@@ -38,12 +38,12 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                 onTap: () => Navigator.pop(context),
               ),
             ),
-            //* Sign up Topic --------------------------------------------------------------------
+            //* Sign in Topic --------------------------------------------------------------------
             Container(
               // alignment: Alignment.center,
               padding: EdgeInsets.fromLTRB(20, 0, 0, 15),
               child: Text(
-                'Create an account',
+                'Sign in',
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 20,
@@ -57,62 +57,6 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    //* First Name textfield ---------------------------------------------------------
-                    TextField(
-                      controller: firstName,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                      decoration: new InputDecoration(
-                        labelText: 'First Name',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
-                        // filled: true,
-                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        isDense: true,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    //* Last Name textfield ---------------------------------------------------------
-                    TextField(
-                      controller: lastName,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                      decoration: new InputDecoration(
-                        labelText: 'Last Name',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
-                        // filled: true,
-                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        isDense: true,
-                      ),
-                    ),
-                    SizedBox(height: 15),
                     //* Email textfield ---------------------------------------------------------
                     TextField(
                       controller: email,
@@ -169,28 +113,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         isDense: true,
                       ),
                     ),
-                    Container(
-                      //* Terms Service message ----------------------------------------------------------------------------------
-                      alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: InkWell(
-                        child: Container(
-                          width: double.infinity,
-                          // padding: EdgeInsets.fromLTRB(30, 5, 30, 8),
-                          child: Text(
-                            'By clicking Sign Up, you agree to our Terms of Service Policy.',
-                            style: TextStyle(
-                              fontFamily: 'sf',
-                              color: Colors.black,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        onTap: () {},
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    //* Sign up with Email button -------------------------------------------------------------------
+                    SizedBox(height: 15),
+                    //* Sign in with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
                       child: FlatButton(
@@ -202,22 +126,37 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         color: Colors.black,
                         onPressed: () async {
                           dismissKeyboard(context);
-                          await AuthService().signIn(
+                          await AuthService().logIn(
                             email.text,
                             password.text,
-                            "${firstName.text} ${lastName.text}",
                             context,
                             widget.route,
                           );
                         },
                         child: Text(
-                          "Sign Up",
+                          "Sign in",
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w600),
                         ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Container(
+                      //* Password reset Button ----------------------------------------------------------------------------------
+                      margin: EdgeInsets.fromLTRB(30, 5, 30, 8),
+                      child: InkWell(
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(30, 5, 30, 8),
+                          child: Text(
+                            'Forgot password?',
+                            style: TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        onTap: () {},
                       ),
                     ),
                     Flexible(
@@ -228,14 +167,14 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         margin: EdgeInsets.fromLTRB(30, 5, 30, 20),
                         child: InkWell(
                           child: Text(
-                            'Already have an account? Log in',
+                            'Create an account',
                             style: TextStyle(color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
                           onTap: () {
                             Navigator.pop(context);
                             Route route = SlidingTransition(
-                              widget: SignInScreen(route: widget.route),
+                              widget: SignUpScreen(route: widget.route),
                             );
                             Navigator.pushReplacement(context, route);
                           },

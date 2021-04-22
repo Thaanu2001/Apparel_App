@@ -46,32 +46,26 @@ class AuthService {
     }
   }
 
-  // logIn(email, password, context) async {
-  //   //* User Log In ----------------------------------------------------------------------------------------------------
-  //   try {
-  //     final user = await FirebaseAuth.instance
-  //         .signInWithEmailAndPassword(email: email, password: password);
+  logIn(email, password, context, route) async {
+    //* User Log In ----------------------------------------------------------------------------------------------------
+    try {
+      final user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
-  //     if (user != null) {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         PageRouteBuilder(
-  //           pageBuilder: (context, animation1, animation2) => GadgetDoctor(),
-  //           transitionDuration: Duration(seconds: 0),
-  //         ),
-  //       );
-  //       dismissKeyboard(context);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'user-not-found') {
-  //       errorMessage = 'No user found for that email.';
-  //       error = true;
-  //     } else if (e.code == 'wrong-password') {
-  //       errorMessage = 'Wrong password provided for that user.';
-  //       error = true;
-  //     }
-  //   }
-  // }
+      if (user != null) {
+        Navigator.pop(context);
+        Navigator.pushReplacement(context, route);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for that email.';
+        error = true;
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password provided for that user.';
+        error = true;
+      }
+    }
+  }
 
   signOut(context) async {
     //* Sign Out ----------------------------------------------------------------------------------------------------------
