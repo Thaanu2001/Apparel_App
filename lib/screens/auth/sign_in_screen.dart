@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
+import 'package:Apparel_App/screens/sign_up_screen.dart';
+import 'package:Apparel_App/transitions/sliding_transition.dart';
 
 class SignInScreen extends StatefulWidget {
   final Route route;
@@ -45,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
             //* Main image ----------------------------------------------------------------------------
             Container(
               padding: EdgeInsets.fromLTRB(50, 30, 50, 10),
-              child: Image.asset('lib/assets/login_screen_image.png'),
+              child: Image.asset('lib/assets/login_screen_image.webp'),
             ),
             Flexible(
               child: Container(
@@ -168,7 +169,12 @@ class _SignInScreenState extends State<SignInScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Route route = SlidingTransition(
+                            widget: SignUpScreen(route: widget.route),
+                          );
+                          Navigator.pushReplacement(context, route);
+                        },
                       ),
                     ),
                     SizedBox(height: 8),
