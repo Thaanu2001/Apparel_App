@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
-import 'package:Apparel_App/screens/sign_up_screen.dart';
+import 'package:Apparel_App/screens/sign_in_screen.dart';
 import 'package:Apparel_App/transitions/sliding_transition.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   final Route route;
-  SignInScreen({@required this.route});
+  SignUpScreen({@required this.route});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +30,12 @@ class _SignInScreenState extends State<SignInScreen> {
                 onTap: () => Navigator.pop(context),
               ),
             ),
-            //* Sign in Topic --------------------------------------------------------------------
+            //* Sign up Topic --------------------------------------------------------------------
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
               child: Text(
-                'Sign in',
+                'Create an account',
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 26,
@@ -54,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    //* Sign in with Email button -------------------------------------------------------------------
+                    //* Sign up with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
                       child: FlatButton(
@@ -66,7 +66,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         color: Colors.black,
                         onPressed: () {},
                         child: Text(
-                          "Sign in with Email",
+                          "Create with your Email",
                           style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 16,
@@ -79,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 30,
                       thickness: 1,
                     ),
-                    //* Sign in with google button -------------------------------------------------------------------
+                    //* Sign up with google button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 4, bottom: 4),
@@ -105,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               width: 8,
                             ),
                             Text(
-                              'Sign in with Google',
+                              'Create with Google',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'sf',
@@ -118,7 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                     ),
-                    //* Sign in with facebook button -------------------------------------------------------------------
+                    //* Sign up with facebook button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 4, bottom: 4),
@@ -143,7 +143,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               width: 8,
                             ),
                             Text(
-                              'Sign in with Facebook',
+                              'Create with Facebook',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'sf',
@@ -164,14 +164,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Container(
                           padding: EdgeInsets.fromLTRB(30, 5, 30, 8),
                           child: Text(
-                            'Don\'t have an account?\nSign up',
+                            'Already have an account?\nSign in',
                             style: TextStyle(color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
                         ),
                         onTap: () {
                           Route route = SlidingTransition(
-                            widget: SignUpScreen(route: widget.route),
+                            widget: SignInScreen(route: widget.route),
                           );
                           Navigator.pushReplacement(context, route);
                         },
