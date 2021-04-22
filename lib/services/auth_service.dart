@@ -22,34 +22,29 @@ class AuthService {
   //   );
   // }
 
-  // signIn(email, password, context) async {
-  //   //* User Sign In ----------------------------------------------------------------------------------------------------
-  //   try {
-  //     final user = await FirebaseAuth.instance
-  //         .createUserWithEmailAndPassword(email: email, password: password);
+  signIn(email, password, name, context, route) async {
+    //* User Sign In ----------------------------------------------------------------------------------------------------
+    try {
+      final user = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      user.user.updateProfile(displayName: name);
 
-  //     if (user != null) {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         PageRouteBuilder(
-  //           pageBuilder: (context, animation1, animation2) => GadgetDoctor(),
-  //           transitionDuration: Duration(seconds: 0),
-  //         ),
-  //       );
-  //       dismissKeyboard(context);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'weak-password') {
-  //       errorMessage = 'The password provided is too weak.';
-  //       error = true;
-  //     } else if (e.code == 'email-already-in-use') {
-  //       errorMessage = 'The account already exists.';
-  //       error = true;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+      if (user != null) {
+        Navigator.pop(context);
+        Navigator.pushReplacement(context, route);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        errorMessage = 'The password provided is too weak.';
+        error = true;
+      } else if (e.code == 'email-already-in-use') {
+        errorMessage = 'The account already exists.';
+        error = true;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // logIn(email, password, context) async {
   //   //* User Log In ----------------------------------------------------------------------------------------------------

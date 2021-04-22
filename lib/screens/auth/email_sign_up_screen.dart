@@ -1,3 +1,4 @@
+import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -143,6 +144,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Password textfield ---------------------------------------------------------
                     TextField(
                       controller: password,
+                      obscureText: true,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 15,
@@ -198,7 +200,16 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         ),
                         highlightColor: Color(0xff2e2e2e),
                         color: Colors.black,
-                        onPressed: () {},
+                        onPressed: () async {
+                          dismissKeyboard(context);
+                          await AuthService().signIn(
+                            email.text,
+                            password.text,
+                            "${firstName.text} ${lastName.text}",
+                            context,
+                            widget.route,
+                          );
+                        },
                         child: Text(
                           "Sign Up",
                           style: TextStyle(
