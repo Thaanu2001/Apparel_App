@@ -90,12 +90,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         highlightColor: Color(0xffe4e4e4),
                         // color: Colors.black,
                         onPressed: () async {
-                          var userData = await AuthService().signInWithGoogle();
-                          AuthService().checkUser(userData);
-                          print(userData.user.displayName);
-                          if (FirebaseAuth.instance.currentUser?.uid != null) {
-                            Navigator.pushReplacement(context, widget.route);
-                          }
+                          await AuthService()
+                              .signInWithGoogle(context, widget.route);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -131,15 +127,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             borderRadius: BorderRadius.circular(10),
                             side: BorderSide(color: Colors.black, width: 2)),
                         highlightColor: Color(0xffe4e4e4),
-                        // color: Colors.black,
                         onPressed: () async {
-                          var userData =
-                              await AuthService().signInWithFacebook();
-                          AuthService().checkUser(userData);
-                          print(userData.user.displayName);
-                          if (FirebaseAuth.instance.currentUser?.uid != null) {
-                            Navigator.pushReplacement(context, widget.route);
-                          }
+                          await AuthService()
+                              .signInWithFacebook(context, widget.route);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
