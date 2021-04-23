@@ -30,6 +30,12 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    error = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -135,7 +141,21 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    (error)
+                        ? Container(
+                            //* Error message Text -------------------------------------------------------------------------------
+                            padding: EdgeInsets.fromLTRB(0, 5, 30, 10),
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              errorMessage,
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 14,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : SizedBox(height: 15),
                     //* Sign in with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
@@ -148,12 +168,18 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                         color: Colors.black,
                         onPressed: () async {
                           dismissKeyboard(context);
-                          await AuthService().logIn(
-                            email.text,
-                            password.text,
-                            context,
-                            widget.route,
-                          );
+                          if (email.text == '' || password.text == '') {
+                            errorMessage = 'Enter your email and password';
+                            error = true;
+                          } else {
+                            await AuthService().signIn(
+                              email.text,
+                              password.text,
+                              context,
+                              widget.route,
+                            );
+                          }
+                          setState(() {});
                         },
                         child: Text(
                           "Sign in",

@@ -30,6 +30,12 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    error = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -192,6 +198,21 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         ),
                       ),
                     ),
+                    (error)
+                        ? Container(
+                            //* Error message Text -------------------------------------------------------------------------------
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              errorMessage,
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 14,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : Container(),
                     Container(
                       //* Terms Service message ----------------------------------------------------------------------------------
                       alignment: Alignment.bottomCenter,
@@ -225,13 +246,22 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                         color: Colors.black,
                         onPressed: () async {
                           dismissKeyboard(context);
-                          await AuthService().signIn(
-                            email.text,
-                            password.text,
-                            "${firstName.text} ${lastName.text}",
-                            context,
-                            widget.route,
-                          );
+                          if (firstName.text == '' ||
+                              lastName.text == '' ||
+                              email.text == '' ||
+                              password.text == '') {
+                            errorMessage = 'Please fill all the details';
+                            error = true;
+                          } else {
+                            await AuthService().signUp(
+                              email.text,
+                              password.text,
+                              "${firstName.text} ${lastName.text}",
+                              context,
+                              widget.route,
+                            );
+                          }
+                          setState(() {});
                         },
                         child: Text(
                           "Sign Up",
