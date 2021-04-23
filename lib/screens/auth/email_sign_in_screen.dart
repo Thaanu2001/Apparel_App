@@ -1,3 +1,4 @@
+import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -19,6 +20,14 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
   bool termsAccept = false;
+  bool _obscurePassword = true;
+
+  //* Show password
+  void _showPassword() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,6 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
             ),
             //* Sign in Topic --------------------------------------------------------------------
             Container(
-              // alignment: Alignment.center,
               padding: EdgeInsets.fromLTRB(20, 0, 0, 15),
               child: Text(
                 'Sign in',
@@ -88,7 +96,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     //* Password textfield ---------------------------------------------------------
                     TextField(
                       controller: password,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 15,
@@ -111,6 +119,20 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
+                        suffixIcon: InkWell(
+                          onTap: _showPassword,
+                          child: Icon(
+                            _obscurePassword
+                                ? Customicons.eye_off
+                                : Customicons.eye,
+                            size: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                        suffixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          maxHeight: 20,
+                        ),
                       ),
                     ),
                     SizedBox(height: 15),

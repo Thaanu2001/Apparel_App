@@ -1,3 +1,4 @@
+import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,14 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
   bool termsAccept = false;
+  bool _obscurePassword = true;
+
+  //* Show Password
+  void _showPassword() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +153,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Password textfield ---------------------------------------------------------
                     TextField(
                       controller: password,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 15,
@@ -167,6 +176,20 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
+                        suffixIcon: InkWell(
+                          onTap: _showPassword,
+                          child: Icon(
+                            _obscurePassword
+                                ? Customicons.eye_off
+                                : Customicons.eye,
+                            size: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                        suffixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          maxHeight: 20,
+                        ),
                       ),
                     ),
                     Container(

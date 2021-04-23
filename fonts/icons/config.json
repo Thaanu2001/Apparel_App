@@ -77,6 +77,18 @@
       ]
     },
     {
+      "uid": "e45a3da2ebde8bc8e30a873f3bd51f30",
+      "css": "eye",
+      "code": 59394,
+      "src": "elusive"
+    },
+    {
+      "uid": "d218294e6f9f7191f6b0b3d1ff6239ff",
+      "css": "eye-off",
+      "code": 59395,
+      "src": "elusive"
+    },
+    {
       "uid": "34ba5ff62977a7b5ab2088504ee19ec1",
       "css": "delivery-truck",
       "code": 59393,

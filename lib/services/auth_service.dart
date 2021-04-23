@@ -183,18 +183,27 @@ class AuthService {
         .collection('users')
         .doc(userData.user.uid)
         .get()
-        .then((DocumentSnapshot documentSnapshot) async {
-      if (!documentSnapshot.exists) {
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(userData.user.uid)
-            .set({
-          'name': userData.user.displayName,
-          'email': userData.user.email,
-          'phone-number': userData.user.phoneNumber
-        });
-      }
-    });
+        .then(
+      (DocumentSnapshot documentSnapshot) async {
+        if (!documentSnapshot.exists) {
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userData.user.uid)
+              .set({
+            'name': userData.user.displayName,
+            'email': userData.user.email,
+            'phone-number': userData.user.phoneNumber,
+            'account-created': DateTime.now(),
+            'last-signin': DateTime.now()
+          });
+        } else {
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userData.user.uid)
+              .update({'last-signin': DateTime.now()});
+        }
+      },
+    );
   }
 
   popup({context, email, onPressed}) {
