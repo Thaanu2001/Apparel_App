@@ -18,8 +18,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   GlobalKey<FormFieldState> _key = GlobalKey();
   String selectedSize;
   int _quantity = 0;
-  String errorMsg;
-  bool errorVisible = false;
+  String _errorMsg;
+  bool _errorVisible = false;
   List<String> sizeList = [];
   bool expanded = false;
 
@@ -183,9 +183,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                 child: Icon(Icons.remove_circle_outline_rounded,
                                     size: 23),
                                 onTap: () {
-                                  if (_quantity > 0) {
+                                  if (_quantity > 1) {
                                     setState(() {
-                                      errorVisible = false;
+                                      _errorVisible = false;
                                       _quantity--;
                                     });
                                   }
@@ -211,7 +211,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                               widget.productData["size"]["size"]
                                                   .indexOf(selectedSize)]) {
                                     setState(() {
-                                      errorVisible = false;
+                                      _errorVisible = false;
                                       _quantity++;
                                     });
                                     if (selectedSize == null) {
@@ -220,8 +220,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                             .productData["size"]["size"]
                                             .indexOf(selectedSize)]) {
                                       setState(() {
-                                        errorVisible = true;
-                                        errorMsg = 'Maximum quantity reached';
+                                        _errorVisible = true;
+                                        _errorMsg = 'Maximum quantity reached';
                                       });
                                     }
                                   }
@@ -288,13 +288,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         selectedSize = value;
                         _quantity = widget.productData["size"]["qty"]
                             [widget.productData["size"]["size"].indexOf(value)];
-                        errorVisible = true;
-                        errorMsg = 'Maximum quantity reached';
+                        _errorVisible = true;
+                        _errorMsg = 'Maximum quantity reached';
                       });
                     } else {
                       setState(() {
                         selectedSize = value;
-                        errorVisible = false;
+                        _errorVisible = false;
                         if (_quantity == 0) _quantity = 1;
                       });
                     }
@@ -303,7 +303,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       selectedSize = null;
                       _key.currentState.reset();
                       _quantity = 0;
-                      errorVisible = false;
+                      _errorVisible = false;
                     });
                   }
                 },
@@ -326,13 +326,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //         onTap: () {
             //           if (selectedSize == null) {
             //             setState(() {
-            //               errorVisible = true;
-            //               errorMsg = 'Please select size first';
+            //               _errorVisible = true;
+            //               _errorMsg = 'Please select size first';
             //             });
             //           }
             //           if (_quantity > 0) {
             //             setState(() {
-            //               errorVisible = false;
+            //               _errorVisible = false;
             //               _quantity--;
             //             });
             //           }
@@ -353,20 +353,20 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //         onTap: () {
             //           if (selectedSize == null) {
             //             setState(() {
-            //               errorVisible = true;
-            //               errorMsg = 'Please select size first';
+            //               _errorVisible = true;
+            //               _errorMsg = 'Please select size first';
             //             });
             //           } else if (_quantity <
             //               widget.productData["size"][selectedSize]) {
             //             setState(() {
-            //               errorVisible = false;
+            //               _errorVisible = false;
             //               _quantity++;
             //             });
             //             if (_quantity ==
             //                 widget.productData["size"][selectedSize]) {
             //               setState(() {
-            //                 errorVisible = true;
-            //                 errorMsg = 'Maximum quantity reached';
+            //                 _errorVisible = true;
+            //                 _errorMsg = 'Maximum quantity reached';
             //               });
             //             }
             //           }
@@ -376,11 +376,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             //   ),
             // ),
             //* Quantity error message
-            if (errorVisible)
+            if (_errorVisible)
               Container(
                 padding: EdgeInsets.only(top: 4, left: 20),
                 child: Text(
-                  errorMsg,
+                  _errorMsg,
                   style: TextStyle(
                       fontFamily: 'sf',
                       fontSize: 14,
@@ -540,49 +540,48 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   backgroundColor: Colors.black,
                 ),
                 onPressed: () async {
-                  if (widget.isBuyNow != true) {
-                    List itemData = [
-                      widget.productData.id.toString(),
-                      widget.productData['product-name'],
-                      widget.productData['images'][0],
-                      widget.productData['price'],
-                      widget.productData['discount'],
-                      widget.productData['delivery-price'],
-                      widget.productData['store-name'],
-                      widget.productData['store-id'],
-                      _quantity,
-                      selectedSize
-                    ];
-                    CartItems()
-                        .cartItems(itemData: itemData, quantity: _quantity);
+                  if (_quantity == 0 || selectedSize == null) {
+                    setState(() {
+                      _errorMsg = 'Select size and quantity';
+                      _errorVisible = true;
+                    });
+                  } else {
+                    if (widget.isBuyNow != true) {
+                      List itemData = [
+                        widget.productData.id.toString(),
+                        widget.productData['product-name'],
+                        widget.productData['images'][0],
+                        widget.productData['price'],
+                        widget.productData['discount'],
+                        widget.productData['delivery-price'],
+                        widget.productData['store-name'],
+                        widget.productData['store-id'],
+                        _quantity,
+                        selectedSize
+                      ];
+                      CartItems()
+                          .cartItems(itemData: itemData, quantity: _quantity);
 
-                    print(itemData.length);
+                      print(itemData.length);
 
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: Duration(seconds: 2),
-                        content: Row(
-                          children: [
-                            Icon(
-                              Icons.done_rounded,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 10),
-                            Text("Product added to cart successfully"),
-                          ],
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: Duration(seconds: 2),
+                          content: Row(
+                            children: [
+                              Icon(
+                                Icons.done_rounded,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 10),
+                              Text("Product added to cart successfully"),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   }
-
-                  // print(itemData.keys.elementAt(itemData.length - 1));
-                  // String encodedItemData = json.encode(itemData);
-                  // print(encodedItemData);
-                  // Map i = json.decode(encodedItemData);
-                  // print(i);
-                  // LocalStorage('test')
-                  //     .setItem('key', widget.productData.data());
                 },
                 child: Text(
                   (widget.isBuyNow == true) ? "Continue" : "Add to Cart",

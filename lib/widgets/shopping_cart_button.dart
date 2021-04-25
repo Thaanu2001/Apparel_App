@@ -38,7 +38,7 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
               elevation: 4,
             ),
             //* count bubble
-            if (value != null)
+            if (value != 0 && value != null)
               Container(
                 padding: EdgeInsets.all(2),
                 decoration: new BoxDecoration(
