@@ -1,3 +1,5 @@
+import 'package:Apparel_App/screens/shopping_cart_screen.dart';
+import 'package:Apparel_App/transitions/slide_top_transition.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/customicons_icons.dart';
@@ -27,18 +29,24 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
     return ValueListenableBuilder<int>(
       valueListenable: cartQuantity,
       builder: (BuildContext context, int value, Widget child) {
-        return Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            //* Floating button
-            FloatingActionButton(
-              onPressed: () {},
-              child: const Icon(Customicons.shopping_cart, size: 28),
-              backgroundColor: Color(0xff646464),
-              elevation: 4,
-            ),
-            //* count bubble
-            if (value != 0 && value != null)
+        if (value != 0 && value != null)
+          return Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              //* Floating button
+              FloatingActionButton(
+                onPressed: () {
+                  // CartItems().removeCartData();
+                  Route route = SlideTopTransition(
+                    widget: ShoppingCartScreen(),
+                  );
+                  Navigator.push(context, route);
+                },
+                child: const Icon(Customicons.shopping_cart, size: 28),
+                backgroundColor: Color(0xff646464),
+                elevation: 4,
+              ),
+              //* count bubble
               Container(
                 padding: EdgeInsets.all(2),
                 decoration: new BoxDecoration(
@@ -59,8 +67,10 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
                   textAlign: TextAlign.center,
                 ),
               ),
-          ],
-        );
+            ],
+          );
+        else
+          return Container();
       },
     );
   }

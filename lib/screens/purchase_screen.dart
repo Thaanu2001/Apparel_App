@@ -45,16 +45,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             " (Sold out)");
       }
     }
-    // for (int count = 0; count < widget.productData["size"].length; count++) {
-    //   if (widget.productData["size"]
-    //           [widget.productData["size"].keys.elementAt(count)] !=
-    //       0) {
-    //     sizeList.add(widget.productData["size"].keys.elementAt(count));
-    //   } else {
-    //     sizeList.add(
-    //         widget.productData["size"].keys.elementAt(count) + " (Sold out)");
-    //   }
-    // }
     print(sizeList);
   }
 
@@ -85,11 +75,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        decoration: new BoxDecoration(
-            color: Colors.white,
-            borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(10.0),
-                topRight: const Radius.circular(10.0))),
         padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Wrap(
@@ -557,7 +542,10 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         widget.productData['store-name'],
                         widget.productData['store-id'],
                         _quantity,
-                        selectedSize
+                        selectedSize,
+                        widget.productData["size"]["qty"][widget
+                            .productData["size"]["size"]
+                            .indexOf(selectedSize)]
                       ];
                       CartItems()
                           .cartItems(itemData: itemData, quantity: _quantity);
@@ -580,6 +568,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           ),
                         ),
                       );
+                    } else {
+                      CartItems().removeCartData();
                     }
                   }
                 },

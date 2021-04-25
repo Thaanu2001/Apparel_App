@@ -35,6 +35,31 @@ class CartItems {
     }
   }
 
+  //* Get cart item list from shared preferences
+  getCartItemsList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedItemData = prefs.getString('cartItems');
+    Map<String, dynamic> itemDataMap = json.decode(encodedItemData);
+    var sortedItemData = Map.fromEntries(itemDataMap.entries.toList()
+      ..sort((a, b) =>
+          a.value[6].toLowerCase().compareTo(b.value[6].toLowerCase())));
+    return sortedItemData;
+  }
+
+  //* Update changes of the cart to shared preferences
+  updateCart({itemDataMap, quantity, quantityDiff}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedItemData = json.encode(itemDataMap);
+    await prefs.setString('cartItems', encodedItemData);
+    if (quantity != null) {
+      cartQuantity.value -= quantity;
+      await prefs.setInt('cartItemQuantity', cartQuantity.value);
+    } else {
+      cartQuantity.value += quantityDiff;
+      await prefs.setInt('cartItemQuantity', cartQuantity.value);
+    }
+  }
+
   //* Get number of items in cart ------------------------------------------------------------------------
   getCount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
