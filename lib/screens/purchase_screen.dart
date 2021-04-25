@@ -1,7 +1,9 @@
-import 'package:Apparel_App/services/customicons_icons.dart';
-import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
+import 'package:Apparel_App/services/cart_items.dart';
 
 class PurchaseScreen extends StatefulWidget {
   final productData;
@@ -102,12 +104,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //* Product Image
-                  Hero(
-                    tag: 'test',
-                    child: Image.network(
-                      widget.productData["images"][0],
-                      height: 120,
-                    ),
+                  Image.network(
+                    widget.productData["images"][0],
+                    height: 120,
                   ),
                   SizedBox(width: 10),
                   Flexible(
@@ -251,7 +250,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     fontFamily: 'sf',
                     fontSize: 16,
                   ),
-                  filled: true,
+                  filled: false,
                   labelText: 'Size',
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
@@ -389,36 +388,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       fontWeight: FontWeight.w500),
                 ),
               ),
-            //* View Size Chart Section ------------------------------------------------------
-            // Container(
-            //   padding: EdgeInsets.only(top: 10, left: 20),
-            //   child: InkWell(
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         //* View Size Chart Button
-            //         Text(
-            //           "View size chart",
-            //           style: TextStyle(
-            //               fontFamily: 'sf',
-            //               fontSize: 16,
-            //               color: Colors.black,
-            //               fontWeight: FontWeight.w400),
-            //         ),
-            //         Container(
-            //           padding: EdgeInsets.only(left: 10),
-            //           child: Icon(
-            //             Icons.arrow_forward_ios_rounded,
-            //             color: Color(0xffc5c5c5),
-            //             size: 15,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     onTap: () {},
-            //   ),
-            // ),
-            //
             //* Size Chart Section
             Theme(
               data: Theme.of(context).copyWith(
@@ -561,15 +530,59 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             Container(
               width: double.infinity,
               padding: EdgeInsets.only(left: 20),
-              child: FlatButton(
-                padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  primary: Colors.grey,
+                  backgroundColor: Colors.black,
                 ),
-                highlightColor: Color(0xff2e2e2e),
-                color: Colors.black,
-                onPressed: () {
-                  // buyNowModal(context, widget.widget.productData);
+                onPressed: () async {
+                  if (widget.isBuyNow != true) {
+                    List itemData = [
+                      widget.productData.id.toString(),
+                      widget.productData['product-name'],
+                      widget.productData['images'][0],
+                      widget.productData['price'],
+                      widget.productData['discount'],
+                      widget.productData['delivery-price'],
+                      widget.productData['store-name'],
+                      widget.productData['store-id'],
+                      _quantity,
+                      selectedSize
+                    ];
+                    CartItems()
+                        .cartItems(itemData: itemData, quantity: _quantity);
+
+                    print(itemData.length);
+
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Duration(seconds: 2),
+                        content: Row(
+                          children: [
+                            Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 10),
+                            Text("Product added to cart successfully"),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  // print(itemData.keys.elementAt(itemData.length - 1));
+                  // String encodedItemData = json.encode(itemData);
+                  // print(encodedItemData);
+                  // Map i = json.decode(encodedItemData);
+                  // print(i);
+                  // LocalStorage('test')
+                  //     .setItem('key', widget.productData.data());
                 },
                 child: Text(
                   (widget.isBuyNow == true) ? "Continue" : "Add to Cart",

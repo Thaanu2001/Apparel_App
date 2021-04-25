@@ -1,4 +1,3 @@
-import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
@@ -8,14 +7,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Apparel_App/screens/image_zoom_screen.dart';
 import 'package:Apparel_App/screens/purchase_screen.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
 import 'package:Apparel_App/widgets/other_products_list.dart';
 import 'package:Apparel_App/widgets/product_description_modal.dart';
 import 'package:Apparel_App/widgets/product_details_modal.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:Apparel_App/widgets/seller_card.dart';
 import 'package:Apparel_App/widgets/similar_products_list.dart';
-import 'package:Apparel_App/services/auth_service.dart';
+import 'package:Apparel_App/widgets/shopping_cart_button.dart';
+import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
+import 'package:Apparel_App/transitions/slide_top_transition.dart';
 
 List imgList;
 
@@ -101,19 +101,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         .toList();
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       drawerScrimColor: Colors.transparent,
       //* Floating shopping cart button ---------------------------------------------------------------------------
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        child: const Icon(Customicons.shopping_cart, size: 28),
-        backgroundColor: Color(0xff646464),
-        elevation: 4,
-      ),
-
+      floatingActionButton: ShoppingCartButton(),
       //* Side drawer ---------------------------------------------------------------------------------------------
       drawer: Theme(
         data: Theme.of(context).copyWith(
@@ -725,20 +717,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               //* Buy Now button -------------------------------------------------------------------
                               Container(
                                 width: double.infinity,
-                                child: FlatButton(
-                                  padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    primary: Colors.grey,
+                                    backgroundColor: Colors.black,
                                   ),
-                                  highlightColor: Color(0xff2e2e2e),
-                                  color: Colors.black,
                                   onPressed: () async {
                                     if (FirebaseAuth
                                             .instance.currentUser?.uid ==
                                         null) {
-                                      Route route = SlidingTransition(
+                                      Route route = SlideTopTransition(
                                         widget: SignInScreen(
-                                          route: SlidingTransition(
+                                          route: SlideTopTransition(
                                             widget: PurchaseScreen(
                                               productData: widget.productData,
                                               isBuyNow: true,
@@ -748,7 +742,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       );
                                       Navigator.push(context, route);
                                     } else {
-                                      Route route = SlidingTransition(
+                                      Route route = SlideTopTransition(
                                         widget: PurchaseScreen(
                                           productData: widget.productData,
                                           isBuyNow: true,
@@ -771,21 +765,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.only(top: 4, bottom: 4),
-                                child: FlatButton(
-                                  padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                          color: Colors.black, width: 2)),
-                                  highlightColor: Color(0xffe4e4e4),
-                                  // color: Colors.black,
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    primary: Colors.grey,
+                                    backgroundColor: Colors.white,
+                                  ),
                                   onPressed: () {
                                     if (FirebaseAuth
                                             .instance.currentUser?.uid ==
                                         null) {
-                                      Route route = SlidingTransition(
+                                      Route route = SlideTopTransition(
                                         widget: SignInScreen(
-                                          route: SlidingTransition(
+                                          route: SlideTopTransition(
                                             widget: PurchaseScreen(
                                               productData: widget.productData,
                                               isBuyNow: false,
@@ -795,7 +791,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       );
                                       Navigator.push(context, route);
                                     } else {
-                                      Route route = SlidingTransition(
+                                      Route route = SlideTopTransition(
                                         widget: PurchaseScreen(
                                           productData: widget.productData,
                                           isBuyNow: false,

@@ -143,13 +143,15 @@ storeCard(storeId) {
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.black, width: 2)),
-                        highlightColor: Color(0xffe4e4e4),
-                        // color: Colors.black,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.black, width: 2)),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () {},
                         child: Text(
                           "View Store Profile",
@@ -166,13 +168,15 @@ storeCard(storeId) {
                       width: double.infinity,
                       // padding: EdgeInsets.only(top: 4, bottom: 4),
                       padding: EdgeInsets.fromLTRB(10, 5, 10, 10),
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.black, width: 2)),
-                        highlightColor: Color(0xffe4e4e4),
-                        // color: Colors.black,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.black, width: 2)),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () {},
                         child: Text(
                           "Contact Seller",

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class EmailSignUpScreen extends StatefulWidget {
   final Route route;
@@ -38,7 +38,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
@@ -237,13 +237,15 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Sign up with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.black,
                         ),
-                        highlightColor: Color(0xff2e2e2e),
-                        color: Colors.black,
                         onPressed: () async {
                           dismissKeyboard(context);
                           if (firstName.text == '' ||
@@ -287,7 +289,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                           ),
                           onTap: () {
                             Navigator.pop(context);
-                            Route route = SlidingTransition(
+                            Route route = SlideLeftTransition(
                               widget: SignInScreen(route: widget.route),
                             );
                             Navigator.pushReplacement(context, route);

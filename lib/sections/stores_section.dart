@@ -18,8 +18,8 @@ class _StoresSectionState extends State<StoresSection>
   bool keepAlive = false;
   List _storeIDList = [];
 
-  List<DocumentSnapshot> _storeData = new List<DocumentSnapshot>();
-  List<DocumentSnapshot> _storeProducts = new List<DocumentSnapshot>();
+  List<DocumentSnapshot> _storeData = <DocumentSnapshot>[];
+  List<DocumentSnapshot> _storeProducts = <DocumentSnapshot>[];
   DocumentSnapshot _lastVisible;
 
   RefreshController _refreshController =

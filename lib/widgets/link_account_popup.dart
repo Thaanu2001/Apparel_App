@@ -144,13 +144,15 @@ linkAccountPopup(
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(right: 20),
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.black,
                         ),
-                        highlightColor: Color(0xff2e2e2e),
-                        color: Colors.black,
                         onPressed: (isPassword)
                             ? () async {
                                 try {

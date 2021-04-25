@@ -1,5 +1,5 @@
 import 'package:Apparel_App/screens/product_details_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -131,7 +131,7 @@ similarProductsList({context, category, color, clothingStyle, productId}) {
                           ),
                           //* Navigate to product details page
                           onTap: () {
-                            Route route = SlidingTransition(
+                            Route route = SlideLeftTransition(
                               widget: ProductDetailsScreen(
                                   productData: snapshot.data[index],
                                   category: category),

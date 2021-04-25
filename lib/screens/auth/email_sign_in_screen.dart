@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:Apparel_App/screens/auth/sign_up_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class EmailSignInScreen extends StatefulWidget {
   final Route route;
@@ -38,7 +38,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
@@ -159,7 +159,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     //* Sign in with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
-                      child: FlatButton(
+                      child: RaisedButton(
                         padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -221,7 +221,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                           ),
                           onTap: () {
                             Navigator.pop(context);
-                            Route route = SlidingTransition(
+                            Route route = SlideLeftTransition(
                               widget: SignUpScreen(route: widget.route),
                             );
                             Navigator.pushReplacement(context, route);

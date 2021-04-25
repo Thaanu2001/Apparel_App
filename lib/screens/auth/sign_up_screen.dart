@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class SignUpScreen extends StatefulWidget {
   final Route route;
@@ -17,7 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
@@ -59,15 +59,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     //* Sign up with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.black,
                         ),
-                        highlightColor: Color(0xff2e2e2e),
-                        color: Colors.black,
                         onPressed: () {
-                          Route route = SlidingTransition(
+                          Route route = SlideLeftTransition(
                             widget: EmailSignUpScreen(route: widget.route),
                           );
                           Navigator.push(context, route);
@@ -90,12 +92,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.black, width: 2)),
-                        highlightColor: Color(0xffe4e4e4),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.black, width: 2)),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.white,
+                        ),
                         // color: Colors.black,
                         onPressed: () async {
                           await AuthService()
@@ -129,12 +134,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 4, bottom: 4),
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: Colors.black, width: 2)),
-                        highlightColor: Color(0xffe4e4e4),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.black, width: 2)),
+                          primary: Colors.grey,
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () async {
                           await AuthService()
                               .signInWithFacebook(context, widget.route);
@@ -177,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         onTap: () {
-                          Route route = SlidingTransition(
+                          Route route = SlideLeftTransition(
                             widget: SignInScreen(route: widget.route),
                           );
                           Navigator.pushReplacement(context, route);

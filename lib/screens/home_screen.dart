@@ -8,6 +8,7 @@ import 'package:Apparel_App/sections/women_section.dart';
 import 'package:Apparel_App/services/Customicons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:Apparel_App/services/auth_service.dart';
+import 'package:Apparel_App/widgets/shopping_cart_button.dart';
 
 var scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -22,18 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       drawerScrimColor: Colors.transparent,
       //* Floating shopping cart button ---------------------------------------------------------------------------
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
-        child: const Icon(Customicons.shopping_cart, size: 28),
-        backgroundColor: Color(0xff646464),
-        elevation: 4,
-      ),
+      floatingActionButton: ShoppingCartButton(),
       //* Side drawer ---------------------------------------------------------------------------------------------
       drawer: Theme(
         data: Theme.of(context).copyWith(

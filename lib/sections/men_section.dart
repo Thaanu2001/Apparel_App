@@ -6,7 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:Apparel_App/screens/home_screen.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class MenSection extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _MenSectionState extends State<MenSection> with TickerProviderStateMixin {
   ScrollController controller;
   DocumentSnapshot _lastVisible;
   bool _isLoading;
-  List<DocumentSnapshot> _data = new List<DocumentSnapshot>();
+  List<DocumentSnapshot> _data = <DocumentSnapshot>[];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   AnimationController _anicontroller, _scaleController;
@@ -278,7 +278,7 @@ class _MenSectionState extends State<MenSection> with TickerProviderStateMixin {
                         ),
                         //* Navigate to product details screen ----------------------------------------------------------------------------
                         onTap: () {
-                          Route route = SlidingTransition(
+                          Route route = SlideLeftTransition(
                             widget: ProductDetailsScreen(
                                 productData: document, category: "men"),
                           );

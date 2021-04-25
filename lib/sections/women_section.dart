@@ -6,7 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:Apparel_App/screens/home_screen.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
-import 'package:Apparel_App/transitions/sliding_transition.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class WomenSection extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _WomenSectionState extends State<WomenSection>
   ScrollController controller;
   DocumentSnapshot _lastVisible;
   bool _isLoading;
-  List<DocumentSnapshot> _data = new List<DocumentSnapshot>();
+  List<DocumentSnapshot> _data = <DocumentSnapshot>[];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   AnimationController _anicontroller, _scaleController;
@@ -279,7 +279,7 @@ class _WomenSectionState extends State<WomenSection>
                         ),
                         //* Navigate to product details screen ----------------------------------------------------------------------------
                         onTap: () {
-                          Route route = SlidingTransition(
+                          Route route = SlideLeftTransition(
                             widget: ProductDetailsScreen(
                                 productData: document, category: "women"),
                           );
@@ -293,9 +293,10 @@ class _WomenSectionState extends State<WomenSection>
                   child: new Opacity(
                     opacity: _isLoading ? 1.0 : 0.0,
                     child: new SizedBox(
-                        width: 32.0,
-                        height: 32.0,
-                        child: new CupertinoActivityIndicator()),
+                      width: 32.0,
+                      height: 32.0,
+                      child: new CupertinoActivityIndicator(),
+                    ),
                   ),
                 );
               },

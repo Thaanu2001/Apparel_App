@@ -24,6 +24,16 @@ class AuthService {
   //   );
   // }
 
+  signOut(context) async {
+    //* Sign Out ----------------------------------------------------------------------------------------------------------
+    print(FirebaseAuth.instance.currentUser.providerData[0].providerId);
+    // if (FirebaseAuth.instance.currentUser.providerData[0].providerId ==
+    //     'google.com') await GoogleSignIn().disconnect();
+
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pop();
+  }
+
   signUp(email, password, name, context, route) async {
     //* User Sign Up ----------------------------------------------------------------------------------------------------
     try {
@@ -58,11 +68,11 @@ class AuthService {
             isPassword: false,
             onPressed: () async {
               // Trigger the authentication flow
-              final AccessToken result = await FacebookAuth.instance.login();
+              final LoginResult result = await FacebookAuth.instance.login();
 
               // Create a credential from the access token
               final FacebookAuthCredential facebookAuthCredential =
-                  FacebookAuthProvider.credential(result.token);
+                  FacebookAuthProvider.credential(result.accessToken.token);
 
               // Once signed in, return the UserCredential
               UserCredential userCredential = await FirebaseAuth.instance
@@ -156,16 +166,6 @@ class AuthService {
     }
   }
 
-  signOut(context) async {
-    //* Sign Out ----------------------------------------------------------------------------------------------------------
-    print(FirebaseAuth.instance.currentUser.providerData[0].providerId);
-    // if (FirebaseAuth.instance.currentUser.providerData[0].providerId ==
-    //     'google.com') await GoogleSignIn().disconnect();
-
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pop();
-  }
-
   //* Sign In with Google ---------------------------------------------------------------------------
   signInWithGoogle(context, route) async {
     // Trigger the authentication flow
@@ -209,11 +209,11 @@ class AuthService {
         isPassword: false,
         onPressed: () async {
           // Trigger the authentication flow
-          final AccessToken result = await FacebookAuth.instance.login();
+          final LoginResult result = await FacebookAuth.instance.login();
 
           // Create a credential from the access token
           final FacebookAuthCredential facebookAuthCredential =
-              FacebookAuthProvider.credential(result.token);
+              FacebookAuthProvider.credential(result.accessToken.token);
 
           // Once signed in, return the UserCredential
           UserCredential userCredential = await FirebaseAuth.instance
@@ -236,11 +236,11 @@ class AuthService {
   signInWithFacebook(context, route) async {
     try {
       // Trigger the sign-in flow
-      final AccessToken result = await FacebookAuth.instance.login();
+      final LoginResult result = await FacebookAuth.instance.login();
 
       // Create a credential from the access token
       final FacebookAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(result.token);
+          FacebookAuthProvider.credential(result.accessToken.token);
 
       // Once signed in, return the UserCredential
       UserCredential userCredential = await FirebaseAuth.instance

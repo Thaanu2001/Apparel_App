@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SlidingTransition extends PageRouteBuilder {
+class SlideTopTransition extends PageRouteBuilder {
   Widget widget;
-  SlidingTransition({this.widget})
+  SlideTopTransition({this.widget})
       : super(
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
@@ -14,7 +14,7 @@ class SlidingTransition extends PageRouteBuilder {
                 Animation<double> secondaryAnimation,
                 Widget child) {
               Animation<Offset> custom =
-                  Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                  Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
                       .animate(animation);
               return SlideTransition(position: custom, child: child);
             });
