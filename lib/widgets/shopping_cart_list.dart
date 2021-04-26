@@ -1,7 +1,10 @@
+import 'package:Apparel_App/screens/product_details_screen.dart';
 import 'package:Apparel_App/services/cart_items.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShoppingCartList extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
   Map _cartItemsList;
   ValueNotifier<int> _totalPriceNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> _totalDeliveryNotifier = ValueNotifier<int>(0);
+  DocumentSnapshot productData;
   int _totalPrice = 0;
   int _totalDelivery = 0;
 
@@ -44,6 +48,21 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
     _totalDeliveryNotifier.value = _totalDelivery;
   }
 
+  //* Get document data of scpecific product
+  getItemDocument(index) async {
+    await FirebaseFirestore.instance
+        .collection('products')
+        .doc(_cartItemsList.values.elementAt(index)[11])
+        .collection(_cartItemsList.values.elementAt(index)[11])
+        .doc(_cartItemsList.values.elementAt(index)[0])
+        .get()
+        .then((value) {
+      print(value.data()["product-name"]);
+      productData = value;
+      return value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -58,7 +77,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                   ? (item[3] * ((100 - item[4]) / 100)) * item[8]
                   : item[3] * item[8])
               .round());
-               
+
           //* Get total delivery price
           for (int count = 0; count < _cartItemsList.length; count++) {
             if (count == 0 ||
@@ -149,12 +168,38 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                       children: [
                                         Container(
                                           //* Product Image
-                                          child: Image.network(
-                                            _cartItemsList.values
-                                                .elementAt(index)[2]
-                                                .toString(),
-                                            height: 90,
-                                            fit: BoxFit.cover,
+                                          child: InkWell(
+                                            child: Hero(
+                                              placeholderBuilder:
+                                                  (context, heroSize, child) {
+                                                return Opacity(
+                                                    opacity: 1, child: child);
+                                              },
+                                              transitionOnUserGestures: true,
+                                              tag: _cartItemsList.values
+                                                  .elementAt(index)[0],
+                                              child: Image.network(
+                                                _cartItemsList.values
+                                                    .elementAt(index)[2]
+                                                    .toString(),
+                                                height: 90,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            //* Navigate to product page
+                                            onTap: () async {
+                                              await getItemDocument(index);
+                                              print('tapped');
+                                              Route route = SlideLeftTransition(
+                                                widget: ProductDetailsScreen(
+                                                    productData: productData,
+                                                    category: _cartItemsList
+                                                        .values
+                                                        .elementAt(index)[11]),
+                                              );
+                                              Navigator.pushReplacement(
+                                                  context, route);
+                                            },
                                           ),
                                         ),
                                         SizedBox(width: 15),
@@ -165,14 +210,33 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               //* Product name
-                                              Text(
-                                                _cartItemsList.values
-                                                    .elementAt(index)[1]
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontFamily: 'sf',
-                                                    fontSize: 15,
-                                                    color: Colors.black),
+                                              InkWell(
+                                                child: Text(
+                                                  _cartItemsList.values
+                                                      .elementAt(index)[1]
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      fontFamily: 'sf',
+                                                      fontSize: 15,
+                                                      color: Colors.black),
+                                                ),
+                                                //* Navigate to product page
+                                                onTap: () async {
+                                                  await getItemDocument(index);
+                                                  print('tapped');
+                                                  Route route =
+                                                      SlideLeftTransition(
+                                                    widget: ProductDetailsScreen(
+                                                        productData:
+                                                            productData,
+                                                        category: _cartItemsList
+                                                            .values
+                                                            .elementAt(
+                                                                index)[11]),
+                                                  );
+                                                  Navigator.pushReplacement(
+                                                      context, route);
+                                                },
                                               ),
                                               StatefulBuilder(
                                                 builder: (BuildContext context,
@@ -385,9 +449,9 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                               ),
                                               SizedBox(height: 3),
                                               //* Product remove button
-                                              InkWell(
-                                                child: Container(
-                                                  alignment: Alignment.topRight,
+                                              Container(
+                                                alignment: Alignment.topRight,
+                                                child: InkWell(
                                                   child: Text(
                                                     'Remove',
                                                     style: TextStyle(
@@ -397,24 +461,25 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                         fontWeight:
                                                             FontWeight.w400),
                                                   ),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _cartItemsList.remove(
+                                                          _cartItemsList.keys
+                                                              .elementAt(
+                                                                  index));
+                                                    });
+                                                    CartItems().updateCart(
+                                                        itemDataMap:
+                                                            _cartItemsList,
+                                                        quantity: _quantity);
+                                                    print('items' +
+                                                        _cartItemsList
+                                                            .toString());
+                                                    if (_cartItemsList.isEmpty)
+                                                      Navigator.pop(context);
+                                                    getTotal();
+                                                  },
                                                 ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _cartItemsList.remove(
-                                                        _cartItemsList.keys
-                                                            .elementAt(index));
-                                                  });
-                                                  CartItems().updateCart(
-                                                      itemDataMap:
-                                                          _cartItemsList,
-                                                      quantity: _quantity);
-                                                  print('items' +
-                                                      _cartItemsList
-                                                          .toString());
-                                                  if (_cartItemsList.isEmpty)
-                                                    Navigator.pop(context);
-                                                  getTotal();
-                                                },
                                               ),
                                             ],
                                           ),

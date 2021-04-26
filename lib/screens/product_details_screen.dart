@@ -736,6 +736,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             widget: PurchaseScreen(
                                               productData: widget.productData,
                                               isBuyNow: true,
+                                              category: widget.category,
                                             ),
                                           ),
                                         ),
@@ -746,6 +747,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         widget: PurchaseScreen(
                                           productData: widget.productData,
                                           isBuyNow: true,
+                                          category: widget.category,
                                         ),
                                       );
                                       Navigator.push(context, route);
@@ -785,6 +787,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             widget: PurchaseScreen(
                                               productData: widget.productData,
                                               isBuyNow: false,
+                                              category: widget.category,
                                             ),
                                           ),
                                         ),
@@ -795,6 +798,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         widget: PurchaseScreen(
                                           productData: widget.productData,
                                           isBuyNow: false,
+                                          category: widget.category,
                                         ),
                                       );
                                       Navigator.push(context, route);

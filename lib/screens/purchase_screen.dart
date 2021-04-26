@@ -7,7 +7,11 @@ import 'package:Apparel_App/services/cart_items.dart';
 class PurchaseScreen extends StatefulWidget {
   final productData;
   final isBuyNow;
-  PurchaseScreen({@required this.productData, @required this.isBuyNow});
+  final category;
+  PurchaseScreen(
+      {@required this.productData,
+      @required this.isBuyNow,
+      @required this.category});
 
   @override
   _PurchaseScreenState createState() => _PurchaseScreenState();
@@ -544,7 +548,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         selectedSize,
                         widget.productData["size"]["qty"][widget
                             .productData["size"]["size"]
-                            .indexOf(selectedSize)]
+                            .indexOf(selectedSize)],
+                        widget.category,
                       ];
                       CartItems()
                           .cartItems(itemData: itemData, quantity: _quantity);
