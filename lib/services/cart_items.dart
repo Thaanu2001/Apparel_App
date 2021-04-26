@@ -69,6 +69,13 @@ class CartItems {
 
   //* Delete share preferences data --------------------------------------------------------------------
   removeCartData() async {
+    // Map m = {
+    //   '1': ['2', 33],
+    //   '2': ['32', 55]
+    // };
+    // var c = 0;
+    // m.values.forEach((item) => c += item[1]);
+    // print(c);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('cartItems');
     await prefs.remove('cartItemQuantity');
