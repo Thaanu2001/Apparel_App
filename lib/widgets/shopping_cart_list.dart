@@ -169,22 +169,12 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                         Container(
                                           //* Product Image
                                           child: InkWell(
-                                            child: Hero(
-                                              placeholderBuilder:
-                                                  (context, heroSize, child) {
-                                                return Opacity(
-                                                    opacity: 1, child: child);
-                                              },
-                                              transitionOnUserGestures: true,
-                                              tag: _cartItemsList.values
-                                                  .elementAt(index)[0],
-                                              child: Image.network(
-                                                _cartItemsList.values
-                                                    .elementAt(index)[2]
-                                                    .toString(),
-                                                height: 90,
-                                                fit: BoxFit.cover,
-                                              ),
+                                            child: Image.network(
+                                              _cartItemsList.values
+                                                  .elementAt(index)[2]
+                                                  .toString(),
+                                              height: 90,
+                                              fit: BoxFit.cover,
                                             ),
                                             //* Navigate to product page
                                             onTap: () async {
@@ -472,9 +462,9 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                         itemDataMap:
                                                             _cartItemsList,
                                                         quantity: _quantity);
-                                                    print('items' +
-                                                        _cartItemsList
-                                                            .toString());
+                                                    // print('items' +
+                                                    //     _cartItemsList
+                                                    //         .toString());
                                                     if (_cartItemsList.isEmpty)
                                                       Navigator.pop(context);
                                                     getTotal();

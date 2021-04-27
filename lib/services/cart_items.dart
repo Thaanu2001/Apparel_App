@@ -49,7 +49,12 @@ class CartItems {
   //* Update changes of the cart to shared preferences
   updateCart({itemDataMap, quantity, quantityDiff}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedItemData = json.encode(itemDataMap);
+    Map<String, dynamic> formattedData = {};
+    for (int count = 0; count < itemDataMap.length; count++) {
+      formattedData[(count + 1).toString()] =
+          itemDataMap.values.elementAt(count);
+    }
+    String encodedItemData = json.encode(formattedData);
     await prefs.setString('cartItems', encodedItemData);
     if (quantity != null) {
       cartQuantity.value -= quantity;
