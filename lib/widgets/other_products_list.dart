@@ -25,7 +25,7 @@ otherProductsList({context, category, storeId, productId}) {
     height: 234,
     child: FutureBuilder(
       future: getSimilarProducts(),
-      builder: (_, snapshot) {
+      builder: (_, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
             width: double.infinity,

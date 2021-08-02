@@ -26,9 +26,9 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
   @override
   Widget build(BuildContext context) {
     //* Listen to cart quantity ---------------------------------------------------------------------------
-    return ValueListenableBuilder<int>(
+    return ValueListenableBuilder<int?>(
       valueListenable: cartQuantity,
-      builder: (BuildContext context, int value, Widget child) {
+      builder: (BuildContext context, int? value, Widget? child) {
         if (value != 0 && value != null)
           return Stack(
             alignment: Alignment.bottomLeft,

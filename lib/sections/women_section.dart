@@ -16,13 +16,13 @@ class WomenSection extends StatefulWidget {
 class _WomenSectionState extends State<WomenSection>
     with TickerProviderStateMixin {
   // var scaffoldKey = GlobalKey<ScaffoldState>();
-  ScrollController controller;
-  DocumentSnapshot _lastVisible;
-  bool _isLoading;
+  ScrollController? controller;
+  DocumentSnapshot? _lastVisible;
+  late bool _isLoading;
   List<DocumentSnapshot> _data = <DocumentSnapshot>[];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  AnimationController _anicontroller, _scaleController;
+  late AnimationController _anicontroller, _scaleController;
   bool keepAlive = false;
 
   //* Pull to refresh on refresh
@@ -67,7 +67,7 @@ class _WomenSectionState extends State<WomenSection>
           .doc("women")
           .collection("women")
           .orderBy("upload-time", descending: true)
-          .startAfter([_lastVisible["upload-time"]])
+          .startAfter([_lastVisible!["upload-time"]])
           .limit(5)
           .get();
     }
@@ -100,7 +100,7 @@ class _WomenSectionState extends State<WomenSection>
         vsync: this, duration: Duration(milliseconds: 2000));
     _scaleController =
         AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
-    _refreshController.headerMode.addListener(() {
+    _refreshController.headerMode!.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
         _anicontroller.reset();
@@ -118,7 +118,7 @@ class _WomenSectionState extends State<WomenSection>
 
   @override
   void dispose() {
-    controller.removeListener(_scrollListener);
+    controller!.removeListener(_scrollListener);
     _refreshController.dispose();
     _scaleController.dispose();
     _anicontroller.dispose();
@@ -308,7 +308,7 @@ class _WomenSectionState extends State<WomenSection>
       header: CustomHeader(
         refreshStyle: RefreshStyle.Behind,
         onOffsetChange: (offset) {
-          if (_refreshController.headerMode.value != RefreshStatus.refreshing)
+          if (_refreshController.headerMode!.value != RefreshStatus.refreshing)
             _scaleController.value = offset / 80.0;
         },
         height: 20,
@@ -331,7 +331,7 @@ class _WomenSectionState extends State<WomenSection>
   //* Scroll Listener
   void _scrollListener() {
     if (!_isLoading) {
-      if (controller.position.pixels == controller.position.maxScrollExtent) {
+      if (controller!.position.pixels == controller!.position.maxScrollExtent) {
         setState(() => _isLoading = true);
         _getWomenProducts();
       }

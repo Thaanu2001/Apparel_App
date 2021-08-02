@@ -10,7 +10,7 @@ import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class EmailSignUpScreen extends StatefulWidget {
   final Route route;
-  EmailSignUpScreen({@required this.route});
+  EmailSignUpScreen({required this.route});
 
   @override
   _EmailSignUpScreenState createState() => _EmailSignUpScreenState();
@@ -21,6 +21,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   final lastName = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+  final re_password = TextEditingController();
   bool termsAccept = false;
   bool _obscurePassword = true;
 
@@ -82,6 +83,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* First Name textfield ---------------------------------------------------------
                     TextField(
                       controller: firstName,
+                      autofillHints: [AutofillHints.givenName],
+                      textInputAction: TextInputAction.next,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
@@ -110,6 +113,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Last Name textfield ---------------------------------------------------------
                     TextField(
                       controller: lastName,
+                      autofillHints: [AutofillHints.familyName],
+                      textInputAction: TextInputAction.next,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
@@ -138,6 +143,9 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Email textfield ---------------------------------------------------------
                     TextField(
                       controller: email,
+                      autofillHints: [AutofillHints.email],
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
@@ -166,6 +174,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     //* Password textfield ---------------------------------------------------------
                     TextField(
                       controller: password,
+                      autofillHints: [AutofillHints.newPassword],
+                      textInputAction: TextInputAction.next,
                       obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',
@@ -203,6 +213,37 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                           minWidth: 40,
                           maxHeight: 20,
                         ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    //* Password textfield ---------------------------------------------------------
+                    TextField(
+                      controller: re_password,
+                      autofillHints: [AutofillHints.password],
+                      textInputAction: TextInputAction.done,
+                      obscureText: true,
+                      style: TextStyle(
+                          fontFamily: 'sf',
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400),
+                      decoration: new InputDecoration(
+                        labelText: 'Re-Type Password',
+                        labelStyle:
+                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        // filled: true,
+                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              new BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        isDense: true,
                       ),
                     ),
                     (error)
@@ -261,9 +302,12 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                               password.text == '') {
                             errorMessage = 'Please fill all the details';
                             error = true;
+                          } else if (password.text != re_password.text) {
+                            errorMessage = 'Passwords didn\'t match. Try again';
+                            error = true;
                           } else {
                             await AuthService().signUp(
-                              email.text,
+                              email.text.replaceAll(' ', ''),
                               password.text,
                               "${firstName.text} ${lastName.text}",
                               context,

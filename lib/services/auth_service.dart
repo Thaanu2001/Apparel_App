@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +28,7 @@ class AuthService {
 
   signOut(context) async {
     //* Sign Out ----------------------------------------------------------------------------------------------------------
-    print(FirebaseAuth.instance.currentUser.providerData[0].providerId);
+    print(FirebaseAuth.instance.currentUser!.providerData[0].providerId);
     // if (FirebaseAuth.instance.currentUser.providerData[0].providerId ==
     //     'google.com') await GoogleSignIn().disconnect();
 
@@ -40,7 +42,7 @@ class AuthService {
       final UserCredential user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      user.user.updateProfile(displayName: name);
+      user.user!.updateProfile(displayName: name);
 
       if (user != null) {
         checkUser(userData: user, name: name);
@@ -72,7 +74,8 @@ class AuthService {
 
               // Create a credential from the access token
               final FacebookAuthCredential facebookAuthCredential =
-                  FacebookAuthProvider.credential(result.accessToken.token);
+                  FacebookAuthProvider.credential(result.accessToken!.token)
+                      as FacebookAuthCredential;
 
               // Once signed in, return the UserCredential
               UserCredential userCredential = await FirebaseAuth.instance
@@ -82,7 +85,7 @@ class AuthService {
                   email: email, password: password);
 
               // Link the pending credential with the existing account
-              final UserCredential userData = await userCredential.user
+              final UserCredential userData = await userCredential.user!
                   .linkWithCredential(pendingCredential);
 
               checkUser(userData: userData);
@@ -101,8 +104,8 @@ class AuthService {
             isPassword: false,
             onPressed: () async {
               // Trigger the authentication flow
-              final GoogleSignInAccount googleUser =
-                  await GoogleSignIn().signIn();
+              final GoogleSignInAccount googleUser = await (GoogleSignIn()
+                  .signIn() as FutureOr<GoogleSignInAccount>);
 
               // Obtain the auth details from the request
               final GoogleSignInAuthentication googleAuth =
@@ -113,7 +116,7 @@ class AuthService {
                   GoogleAuthProvider.credential(
                 accessToken: googleAuth.accessToken,
                 idToken: googleAuth.idToken,
-              );
+              ) as GoogleAuthCredential;
               // Once signed in, return the UserCredential
               UserCredential userCredential =
                   await FirebaseAuth.instance.signInWithCredential(credential);
@@ -122,7 +125,7 @@ class AuthService {
                   email: email, password: password);
 
               // Link the pending credential with the existing account
-              final UserCredential userData = await userCredential.user
+              final UserCredential userData = await userCredential.user!
                   .linkWithCredential(pendingCredential);
 
               checkUser(userData: userData);
@@ -169,10 +172,10 @@ class AuthService {
   //* Sign In with Google ---------------------------------------------------------------------------
   signInWithGoogle(context, route) async {
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     List<String> userSignInMethods = await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(googleUser.email);
+        .fetchSignInMethodsForEmail(googleUser!.email);
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
@@ -183,7 +186,7 @@ class AuthService {
         GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
-    );
+    ) as GoogleAuthCredential;
     print(userSignInMethods);
     //* Link with Email & Password account
     if (userSignInMethods.isEmpty || userSignInMethods.contains('google.com')) {
@@ -213,7 +216,8 @@ class AuthService {
 
           // Create a credential from the access token
           final FacebookAuthCredential facebookAuthCredential =
-              FacebookAuthProvider.credential(result.accessToken.token);
+              FacebookAuthProvider.credential(result.accessToken!.token)
+                  as FacebookAuthCredential;
 
           // Once signed in, return the UserCredential
           UserCredential userCredential = await FirebaseAuth.instance
@@ -221,7 +225,7 @@ class AuthService {
 
           // Link the pending credential with the existing account
           final UserCredential userData =
-              await userCredential.user.linkWithCredential(pendingCredential);
+              await userCredential.user!.linkWithCredential(pendingCredential);
 
           checkUser(userData: userData);
 
@@ -240,7 +244,8 @@ class AuthService {
 
       // Create a credential from the access token
       final FacebookAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(result.accessToken.token);
+          FacebookAuthProvider.credential(result.accessToken!.token)
+              as FacebookAuthCredential;
 
       // Once signed in, return the UserCredential
       UserCredential userCredential = await FirebaseAuth.instance
@@ -251,8 +256,8 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
         // The account already exists with a different credential
-        String email = e.email;
-        AuthCredential pendingCredential = e.credential;
+        String email = e.email!;
+        AuthCredential? pendingCredential = e.credential;
 
         // Fetch a list of what sign-in methods exist for the conflicting user
         List<String> userSignInMethods =
@@ -281,8 +286,8 @@ class AuthService {
             signInMethod: 'Facebook',
             onPressed: () async {
               // Trigger the authentication flow
-              final GoogleSignInAccount googleUser =
-                  await GoogleSignIn().signIn();
+              final GoogleSignInAccount googleUser = await (GoogleSignIn()
+                  .signIn() as FutureOr<GoogleSignInAccount>);
 
               // Obtain the auth details from the request
               final GoogleSignInAuthentication googleAuth =
@@ -293,14 +298,14 @@ class AuthService {
                   GoogleAuthProvider.credential(
                 accessToken: googleAuth.accessToken,
                 idToken: googleAuth.idToken,
-              );
+              ) as GoogleAuthCredential;
               // Once signed in, return the UserCredential
               UserCredential userCredential =
                   await FirebaseAuth.instance.signInWithCredential(credential);
 
               // Link the pending credential with the existing account
-              final UserCredential userData = await userCredential.user
-                  .linkWithCredential(pendingCredential);
+              final UserCredential userData = await userCredential.user!
+                  .linkWithCredential(pendingCredential!);
 
               checkUser(userData: userData);
 
@@ -314,7 +319,7 @@ class AuthService {
   }
 
   //* Update user data in firestore -------------------------------------------------------------
-  checkUser({userData, name}) {
+  checkUser({required userData, name}) {
     FirebaseFirestore.instance
         .collection('users')
         .doc(userData.user.uid)

@@ -11,9 +11,9 @@ class PurchaseScreen extends StatefulWidget {
   final isBuyNow;
   final category;
   PurchaseScreen(
-      {@required this.productData,
-      @required this.isBuyNow,
-      @required this.category});
+      {required this.productData,
+      required this.isBuyNow,
+      required this.category});
 
   @override
   _PurchaseScreenState createState() => _PurchaseScreenState();
@@ -21,11 +21,11 @@ class PurchaseScreen extends StatefulWidget {
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
   GlobalKey<FormFieldState> _key = GlobalKey();
-  String selectedSize;
-  int _quantity = 0;
-  String _errorMsg;
+  String? selectedSize;
+  int? _quantity = 0;
+  late String _errorMsg;
   bool _errorVisible = false;
-  List<String> sizeList = [];
+  List<String?> sizeList = [];
   bool expanded = false;
 
   var size = {
@@ -43,7 +43,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     for (int count = 0;
         count < widget.productData['size']["size"].length;
         count++) {
-      if (size['qty'][count] != 0) {
+      if (size['qty']![count] != 0) {
         sizeList.add(widget.productData['size']["size"][count]);
       } else {
         sizeList.add(widget.productData['size']["size"][count].toString() +
@@ -55,7 +55,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   //* Table topic text widget
   tableTopicWidget(
-      {@required text, @required isBold, textAlign = TextAlign.center}) {
+      {required text, required isBold, textAlign = TextAlign.center}) {
     return Container(
       padding: EdgeInsets.only(
           top: 4, bottom: 4, left: (textAlign == TextAlign.left) ? 4 : 0),
@@ -180,10 +180,10 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                 child: Icon(Icons.remove_circle_outline_rounded,
                                     size: 23),
                                 onTap: () {
-                                  if (_quantity > 1) {
+                                  if (_quantity! > 1) {
                                     setState(() {
                                       _errorVisible = false;
-                                      _quantity--;
+                                      _quantity = _quantity! - 1;
                                     });
                                   }
                                 },
@@ -203,13 +203,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                     size: 23),
                                 onTap: () {
                                   if (selectedSize == null ||
-                                      _quantity <
+                                      _quantity! <
                                           widget.productData["size"]["qty"][
                                               widget.productData["size"]["size"]
                                                   .indexOf(selectedSize)]) {
                                     setState(() {
                                       _errorVisible = false;
-                                      _quantity++;
+                                      _quantity = _quantity! + 1;
                                     });
                                     if (selectedSize == null) {
                                     } else if (_quantity ==
@@ -258,11 +258,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 focusColor: Colors.black,
                 dropdownColor: Colors.white,
                 iconEnabledColor: Colors.black,
-                items: sizeList.map((String value) {
+                items: sizeList.map((String? value) {
                   return new DropdownMenuItem<String>(
                     value: value,
                     child: Text(
-                      value,
+                      value!,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
@@ -275,9 +275,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 }).toList(),
                 value: selectedSize,
                 key: _key,
-                onChanged: (value) {
+                onChanged: (dynamic value) {
                   if ((!value.contains('(Sold out)'))) {
-                    if (_quantity >
+                    if (_quantity! >
                         widget.productData["size"]["qty"][widget
                             .productData["size"]["size"]
                             .indexOf(value)]) {
@@ -298,7 +298,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   } else {
                     setState(() {
                       selectedSize = null;
-                      _key.currentState.reset();
+                      _key.currentState!.reset();
                       _quantity = 0;
                       _errorVisible = false;
                     });

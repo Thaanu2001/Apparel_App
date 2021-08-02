@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/customicons_icons.dart';
@@ -6,7 +7,7 @@ import 'package:Apparel_App/services/auth_service.dart';
 
 //* Link accounts popup ------------------------------------------------------------------------
 linkAccountPopup(
-    {context,
+    {required context,
     email,
     onPressed,
     isPassword,
@@ -14,6 +15,7 @@ linkAccountPopup(
     route,
     signInMethod}) {
   bool _obscurePassword = true;
+  bool processingLink = false;
   final _linkPassword = TextEditingController();
 
   error = false;
@@ -84,9 +86,10 @@ linkAccountPopup(
                         child: TextField(
                           controller: _linkPassword,
                           obscureText: _obscurePassword,
+                          autofillHints: [AutofillHints.password],
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 15,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.w400),
                           decoration: new InputDecoration(
@@ -155,6 +158,9 @@ linkAccountPopup(
                         ),
                         onPressed: (isPassword)
                             ? () async {
+                                setState(() {
+                                  processingLink = true;
+                                });
                                 try {
                                   // Sign the user in to their account with the password
                                   UserCredential userCredential =
@@ -166,7 +172,7 @@ linkAccountPopup(
 
                                   // Link the pending credential with the existing account
                                   final UserCredential userData =
-                                      await userCredential.user
+                                      await userCredential.user!
                                           .linkWithCredential(
                                               pendingCredential);
 
@@ -180,18 +186,27 @@ linkAccountPopup(
                                     error = true;
                                   }
                                 }
-                                setState(() {});
+                                setState(() {
+                                  processingLink = false;
+                                });
                               }
                             : onPressed,
-                        child: Text(
-                          "Link your accounts",
-                          style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: (!processingLink)
+                            ? Text(
+                                "Link your accounts",
+                                style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                )),
                       ),
                     ),
                   ],

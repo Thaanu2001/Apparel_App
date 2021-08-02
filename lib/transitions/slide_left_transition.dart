@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SlideLeftTransition extends PageRouteBuilder {
-  Widget widget;
+  Widget? widget;
   SlideLeftTransition({this.widget})
       : super(
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
-              return widget;
+              return widget!;
             },
             transitionDuration: Duration(milliseconds: 250),
             transitionsBuilder: (BuildContext context,

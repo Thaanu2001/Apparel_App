@@ -21,7 +21,7 @@ storeCard(storeId) {
       //* Recent Products -----------------------------------------------------------------------------
       child: FutureBuilder(
         future: stores.doc(storeId).get(),
-        builder: (_, snapshot) {
+        builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               width: double.infinity,

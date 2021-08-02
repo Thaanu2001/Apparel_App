@@ -10,7 +10,7 @@ import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class EmailSignInScreen extends StatefulWidget {
   final Route route;
-  EmailSignInScreen({@required this.route});
+  EmailSignInScreen({required this.route});
 
   @override
   _EmailSignInScreenState createState() => _EmailSignInScreenState();
@@ -81,6 +81,9 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     //* Email textfield ---------------------------------------------------------
                     TextField(
                       controller: email,
+                      autofillHints: [AutofillHints.email],
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
@@ -109,6 +112,8 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     //* Password textfield ---------------------------------------------------------
                     TextField(
                       controller: password,
+                      autofillHints: [AutofillHints.password],
+                      textInputAction: TextInputAction.done,
                       obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',

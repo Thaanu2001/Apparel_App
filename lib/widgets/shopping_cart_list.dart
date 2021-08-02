@@ -12,10 +12,10 @@ class ShoppingCartList extends StatefulWidget {
 }
 
 class _ShoppingCartListState extends State<ShoppingCartList> {
-  Map _cartItemsList;
+  Map? _cartItemsList;
   ValueNotifier<int> _totalPriceNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> _totalDeliveryNotifier = ValueNotifier<int>(0);
-  DocumentSnapshot productData;
+  DocumentSnapshot? productData;
   int _totalPrice = 0;
   int _totalDelivery = 0;
 
@@ -30,17 +30,17 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
   //* Get total price and delivery of checkout items ------------------------------------------------
   getTotal() {
     _totalPrice = 0;
-    _cartItemsList.values.forEach((item) => _totalPrice += ((item[4] != 0)
+    _cartItemsList!.values.forEach((item) => _totalPrice += ((item[4] != 0)
             ? (item[3] * ((100 - item[4]) / 100)) * item[8]
             : item[3] * item[8])
-        .round());
+        .round() as int);
 
     _totalDelivery = 0;
-    for (int count = 0; count < _cartItemsList.length; count++) {
+    for (int count = 0; count < _cartItemsList!.length; count++) {
       if (count == 0 ||
-          _cartItemsList.values.elementAt(count)[6].toString() !=
-              _cartItemsList.values.elementAt(count - 1)[6].toString()) {
-        _totalDelivery += _cartItemsList.values.elementAt(count)[5];
+          _cartItemsList!.values.elementAt(count)[6].toString() !=
+              _cartItemsList!.values.elementAt(count - 1)[6].toString()) {
+        _totalDelivery += _cartItemsList!.values.elementAt(count)[5] as int;
       }
     }
 
@@ -52,12 +52,12 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
   getItemDocument(index) async {
     await FirebaseFirestore.instance
         .collection('products')
-        .doc(_cartItemsList.values.elementAt(index)[11])
-        .collection(_cartItemsList.values.elementAt(index)[11])
-        .doc(_cartItemsList.values.elementAt(index)[0])
+        .doc(_cartItemsList!.values.elementAt(index)[11])
+        .collection(_cartItemsList!.values.elementAt(index)[11])
+        .doc(_cartItemsList!.values.elementAt(index)[0])
         .get()
         .then((value) {
-      print(value.data()["product-name"]);
+      print(value.data()!["product-name"]);
       productData = value;
       return value;
     });
@@ -67,23 +67,25 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: CartItems().getCartItemsList(),
-      builder: (_, snapshot) {
+      builder: (_, AsyncSnapshot snapshot) {
         if (_cartItemsList == null) _cartItemsList = snapshot.data;
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         } else {
           //* Get total price
-          _cartItemsList.values.forEach((item) => _totalPrice += ((item[4] != 0)
-                  ? (item[3] * ((100 - item[4]) / 100)) * item[8]
-                  : item[3] * item[8])
-              .round());
+          _cartItemsList!.values.forEach((item) => _totalPrice +=
+              ((item[4] != 0)
+                      ? (item[3] * ((100 - item[4]) / 100)) * item[8]
+                      : item[3] * item[8])
+                  .round() as int);
 
           //* Get total delivery price
-          for (int count = 0; count < _cartItemsList.length; count++) {
+          for (int count = 0; count < _cartItemsList!.length; count++) {
             if (count == 0 ||
-                _cartItemsList.values.elementAt(count)[6].toString() !=
-                    _cartItemsList.values.elementAt(count - 1)[6].toString()) {
-              _totalDelivery += _cartItemsList.values.elementAt(count)[5];
+                _cartItemsList!.values.elementAt(count)[6].toString() !=
+                    _cartItemsList!.values.elementAt(count - 1)[6].toString()) {
+              _totalDelivery +=
+                  _cartItemsList!.values.elementAt(count)[5] as int;
             }
           }
           return Column(
@@ -101,26 +103,26 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: _cartItemsList.length,
+                        itemCount: _cartItemsList!.length,
                         itemBuilder: (_, int index) {
-                          int _quantity =
-                              _cartItemsList.values.elementAt(index)[8];
+                          int? _quantity =
+                              _cartItemsList!.values.elementAt(index)[8];
                           print(_totalPrice);
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //* Store name -----------------------------------------------------
                               if (index == 0 ||
-                                  _cartItemsList.values
+                                  _cartItemsList!.values
                                           .elementAt(index)[6]
                                           .toString() !=
-                                      _cartItemsList.values
+                                      _cartItemsList!.values
                                           .elementAt(index - 1)[6]
                                           .toString())
                                 Container(
                                   padding: EdgeInsets.only(top: 7),
                                   child: Text(
-                                    _cartItemsList.values
+                                    _cartItemsList!.values
                                         .elementAt(index)[6]
                                         .toString(),
                                     style: TextStyle(
@@ -170,7 +172,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                           //* Product Image
                                           child: InkWell(
                                             child: Image.network(
-                                              _cartItemsList.values
+                                              _cartItemsList!.values
                                                   .elementAt(index)[2]
                                                   .toString(),
                                               height: 90,
@@ -183,7 +185,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                               Route route = SlideLeftTransition(
                                                 widget: ProductDetailsScreen(
                                                     productData: productData,
-                                                    category: _cartItemsList
+                                                    category: _cartItemsList!
                                                         .values
                                                         .elementAt(index)[11]),
                                               );
@@ -202,7 +204,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                               //* Product name
                                               InkWell(
                                                 child: Text(
-                                                  _cartItemsList.values
+                                                  _cartItemsList!.values
                                                       .elementAt(index)[1]
                                                       .toString(),
                                                   style: TextStyle(
@@ -219,10 +221,11 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                     widget: ProductDetailsScreen(
                                                         productData:
                                                             productData,
-                                                        category: _cartItemsList
-                                                            .values
-                                                            .elementAt(
-                                                                index)[11]),
+                                                        category:
+                                                            _cartItemsList!
+                                                                .values
+                                                                .elementAt(
+                                                                    index)[11]),
                                                   );
                                                   Navigator.pushReplacement(
                                                       context, route);
@@ -249,7 +252,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                           children: [
                                                             //* Product size
                                                             Text(
-                                                              _cartItemsList
+                                                              _cartItemsList!
                                                                   .values
                                                                   .elementAt(
                                                                       index)[9]
@@ -280,13 +283,14 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                         size:
                                                                             17),
                                                                     onTap: () {
-                                                                      if (_quantity >
+                                                                      if (_quantity! >
                                                                           1) {
                                                                         setState(
                                                                             () {
-                                                                          _quantity--;
+                                                                          _quantity =
+                                                                              _quantity! - 1;
                                                                         });
-                                                                        _cartItemsList
+                                                                        _cartItemsList!
                                                                             .values
                                                                             .elementAt(index)[8] -= 1;
                                                                         CartItems().updateCart(
@@ -320,16 +324,17 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                         size:
                                                                             17),
                                                                     onTap: () {
-                                                                      if (_quantity <
-                                                                          int.parse(_cartItemsList
+                                                                      if (_quantity! <
+                                                                          int.parse(_cartItemsList!
                                                                               .values
                                                                               .elementAt(index)[10]
                                                                               .toString())) {
                                                                         setState(
                                                                             () {
-                                                                          _quantity++;
+                                                                          _quantity =
+                                                                              _quantity! + 1;
                                                                         });
-                                                                        _cartItemsList
+                                                                        _cartItemsList!
                                                                             .values
                                                                             .elementAt(index)[8] += 1;
                                                                         CartItems().updateCart(
@@ -356,11 +361,11 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                               "Rs. " +
                                                                   NumberFormat(
                                                                           '###,000')
-                                                                      .format((int.parse(_cartItemsList.values.elementAt(index)[4].toString()) != 0)
-                                                                          ? ((int.parse(_cartItemsList.values.elementAt(index)[3].toString())) * ((100 - int.parse(_cartItemsList.values.elementAt(index)[4].toString())) / 100)) *
-                                                                              _quantity
-                                                                          : int.parse(_cartItemsList.values.elementAt(index)[3].toString()) *
-                                                                              _quantity)
+                                                                      .format((int.parse(_cartItemsList!.values.elementAt(index)[4].toString()) != 0)
+                                                                          ? ((int.parse(_cartItemsList!.values.elementAt(index)[3].toString())) * ((100 - int.parse(_cartItemsList!.values.elementAt(index)[4].toString())) / 100)) *
+                                                                              _quantity!
+                                                                          : int.parse(_cartItemsList!.values.elementAt(index)[3].toString()) *
+                                                                              _quantity!)
                                                                       .toString(),
                                                               style: TextStyle(
                                                                   fontFamily:
@@ -383,8 +388,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                 "Rs. " +
                                                                     NumberFormat(
                                                                             '###,000')
-                                                                        .format(int.parse(_cartItemsList.values.elementAt(index)[3].toString()) *
-                                                                            _quantity)
+                                                                        .format(int.parse(_cartItemsList!.values.elementAt(index)[3].toString()) *
+                                                                            _quantity!)
                                                                         .toString(),
                                                                 style: TextStyle(
                                                                     fontFamily:
@@ -407,13 +412,13 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                       .topRight,
                                                               child: Text(
                                                                 (index == 0 ||
-                                                                        _cartItemsList.values.elementAt(index)[6].toString() !=
-                                                                            _cartItemsList.values
+                                                                        _cartItemsList!.values.elementAt(index)[6].toString() !=
+                                                                            _cartItemsList!.values
                                                                                 .elementAt(index - 1)[
                                                                                     6]
                                                                                 .toString())
                                                                     ? '+ ' +
-                                                                        _cartItemsList
+                                                                        _cartItemsList!
                                                                             .values
                                                                             .elementAt(index)[5]
                                                                             .toString()
@@ -453,8 +458,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                   ),
                                                   onTap: () {
                                                     setState(() {
-                                                      _cartItemsList.remove(
-                                                          _cartItemsList.keys
+                                                      _cartItemsList!.remove(
+                                                          _cartItemsList!.keys
                                                               .elementAt(
                                                                   index));
                                                     });
@@ -465,7 +470,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                     // print('items' +
                                                     //     _cartItemsList
                                                     //         .toString());
-                                                    if (_cartItemsList.isEmpty)
+                                                    if (_cartItemsList!.isEmpty)
                                                       Navigator.pop(context);
                                                     getTotal();
                                                   },
@@ -496,7 +501,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
               Container(
                 child: ValueListenableBuilder<int>(
                   valueListenable: _totalPriceNotifier,
-                  builder: (BuildContext context, int price, Widget child) {
+                  builder: (BuildContext context, int price, Widget? child) {
                     return Column(
                       children: [
                         //* Total price of products
@@ -530,7 +535,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                         ValueListenableBuilder<int>(
                           valueListenable: _totalDeliveryNotifier,
                           builder: (BuildContext context, int delivery,
-                              Widget child) {
+                              Widget? child) {
                             return Column(children: [
                               //* Total price of delivery
                               Row(

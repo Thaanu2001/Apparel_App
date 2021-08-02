@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       size: 32,
                       color: Color(0xff646464),
                     ),
-                    onTap: () => scaffoldKey.currentState.openDrawer(),
+                    onTap: () => scaffoldKey.currentState!.openDrawer(),
                   ),
                 ),
                 SizedBox(

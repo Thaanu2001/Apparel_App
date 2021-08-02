@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-ValueNotifier<int> cartQuantity = ValueNotifier<int>(0);
+ValueNotifier<int?> cartQuantity = ValueNotifier<int?>(0);
 
 class CartItems {
   //* Add cart items to share preferences --------------------------------------------------------------
@@ -17,15 +17,15 @@ class CartItems {
       cartQuantity.value = quantity;
     } else {
       //* Adding items from 2nd onwards to the map
-      String encodedItemData = prefs.getString('cartItems');
+      String encodedItemData = prefs.getString('cartItems')!;
       Map<String, dynamic> itemDataMap = json.decode(encodedItemData);
       int mapLength = itemDataMap.length;
       itemDataMap[(mapLength + 1).toString()] = itemData;
       encodedItemData = json.encode(itemDataMap);
       await prefs.setString('cartItems', encodedItemData);
 
-      int totalQuantity = prefs.getInt('cartItemQuantity');
-      totalQuantity += quantity;
+      int totalQuantity = prefs.getInt('cartItemQuantity')!;
+      totalQuantity += quantity as int;
       await prefs.setInt('cartItemQuantity', totalQuantity);
       cartQuantity.value = totalQuantity;
 
@@ -38,7 +38,7 @@ class CartItems {
   //* Get cart item list from shared preferences
   getCartItemsList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedItemData = prefs.getString('cartItems');
+    String encodedItemData = prefs.getString('cartItems')!;
     Map<String, dynamic> itemDataMap = json.decode(encodedItemData);
     var sortedItemData = Map.fromEntries(itemDataMap.entries.toList()
       ..sort((a, b) =>
@@ -47,7 +47,7 @@ class CartItems {
   }
 
   //* Update changes of the cart to shared preferences
-  updateCart({itemDataMap, quantity, quantityDiff}) async {
+  updateCart({required itemDataMap, quantity, quantityDiff}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> formattedData = {};
     for (int count = 0; count < itemDataMap.length; count++) {
@@ -57,18 +57,18 @@ class CartItems {
     String encodedItemData = json.encode(formattedData);
     await prefs.setString('cartItems', encodedItemData);
     if (quantity != null) {
-      cartQuantity.value -= quantity;
-      await prefs.setInt('cartItemQuantity', cartQuantity.value);
+      cartQuantity.value = (quantity as int) - 1;
+      await prefs.setInt('cartItemQuantity', cartQuantity.value!);
     } else {
-      cartQuantity.value += quantityDiff;
-      await prefs.setInt('cartItemQuantity', cartQuantity.value);
+      cartQuantity.value = (quantityDiff as int) + 1;
+      await prefs.setInt('cartItemQuantity', cartQuantity.value!);
     }
   }
 
   //* Get number of items in cart ------------------------------------------------------------------------
   getCount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int totalQuantity = prefs.getInt('cartItemQuantity');
+    int? totalQuantity = prefs.getInt('cartItemQuantity');
     return totalQuantity;
   }
 

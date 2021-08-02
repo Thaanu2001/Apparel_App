@@ -17,12 +17,12 @@ import 'package:Apparel_App/widgets/shopping_cart_button.dart';
 import 'package:Apparel_App/screens/auth/sign_in_screen.dart';
 import 'package:Apparel_App/transitions/slide_top_transition.dart';
 
-List imgList;
+List? imgList;
 
 class ProductDetailsScreen extends StatefulWidget {
   final productData; //* Get product data  from firstore document
   final category;
-  ProductDetailsScreen({@required this.productData, @required this.category}) {
+  ProductDetailsScreen({required this.productData, required this.category}) {
     imgList = productData.data()["images"];
   }
 
@@ -31,7 +31,7 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  List imageList = imgList;
+  List? imageList = imgList;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   int _current = 0;
 
@@ -77,7 +77,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   //* Image list for slider -------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    List<Widget> imageSliders = imageList
+    List<Widget> imageSliders = imageList!
         .map((item) => Container(
                 child: GestureDetector(
               child: Image.network(item, fit: BoxFit.cover, width: 2000),
@@ -340,7 +340,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       transitionOnUserGestures: true,
                       flightShuttleBuilder:
                           (context, anim, direction, fromContext, toContext) {
-                        final Hero toHero = toContext.widget;
+                        final Hero toHero = toContext.widget as Hero;
                         if (direction == HeroFlightDirection.pop &&
                             _scrollController.position.pixels >=
                                 MediaQuery.of(context).size.width * 0.5) {
@@ -384,8 +384,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Container(
                                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                 child: Wrap(
-                                  children: imageList.map((url) {
-                                    int index = imageList.indexOf(url);
+                                  children: imageList!.map((url) {
+                                    int index = imageList!.indexOf(url);
                                     return Container(
                                       width: 8.0,
                                       height: 8.0,

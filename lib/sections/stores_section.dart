@@ -14,18 +14,18 @@ class StoresSection extends StatefulWidget {
 class _StoresSectionState extends State<StoresSection>
     with TickerProviderStateMixin {
   int storeProductsCount = 0;
-  bool _isLoading;
+  late bool _isLoading;
   bool keepAlive = false;
   List _storeIDList = [];
 
   List<DocumentSnapshot> _storeData = <DocumentSnapshot>[];
   List<DocumentSnapshot> _storeProducts = <DocumentSnapshot>[];
-  DocumentSnapshot _lastVisible;
+  DocumentSnapshot? _lastVisible;
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  AnimationController _anicontroller, _scaleController;
-  ScrollController controller;
+  late AnimationController _anicontroller, _scaleController;
+  ScrollController? controller;
 
   //* Pull to refresh on refresh
   void _onRefresh() async {
@@ -66,7 +66,7 @@ class _StoresSectionState extends State<StoresSection>
       qn = await firestore
           .collection("stores")
           .orderBy("sales", descending: true)
-          .startAfter([_lastVisible["sales"]])
+          .startAfter([_lastVisible!["sales"]])
           .limit(2)
           .get();
     }
@@ -119,7 +119,7 @@ class _StoresSectionState extends State<StoresSection>
         vsync: this, duration: Duration(milliseconds: 2000));
     _scaleController =
         AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
-    _refreshController.headerMode.addListener(() {
+    _refreshController.headerMode!.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
         _anicontroller.reset();
@@ -137,7 +137,7 @@ class _StoresSectionState extends State<StoresSection>
 
   @override
   void dispose() {
-    controller.removeListener(_scrollListener);
+    controller!.removeListener(_scrollListener);
     _refreshController.dispose();
     _scaleController.dispose();
     _anicontroller.dispose();
@@ -300,7 +300,7 @@ class _StoresSectionState extends State<StoresSection>
       header: CustomHeader(
         refreshStyle: RefreshStyle.Behind,
         onOffsetChange: (offset) {
-          if (_refreshController.headerMode.value != RefreshStatus.refreshing)
+          if (_refreshController.headerMode!.value != RefreshStatus.refreshing)
             _scaleController.value = offset / 80.0;
         },
         height: 20,
@@ -323,7 +323,7 @@ class _StoresSectionState extends State<StoresSection>
   //* Scroll Listener
   void _scrollListener() {
     if (!_isLoading) {
-      if (controller.position.pixels == controller.position.maxScrollExtent) {
+      if (controller!.position.pixels == controller!.position.maxScrollExtent) {
         setState(() => _isLoading = true);
         _getStores();
       }

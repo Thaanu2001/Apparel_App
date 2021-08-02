@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 class ImageZoom extends StatelessWidget {
   final imageLink;
   final detailedHeroId;
-  ImageZoom({@required this.imageLink, @required this.detailedHeroId});
+  ImageZoom({required this.imageLink, required this.detailedHeroId});
 
   final _transformationController = TransformationController();
-  TapDownDetails _doubleTapDetails;
+  late TapDownDetails _doubleTapDetails;
 
   @override
   Widget build(BuildContext context) {

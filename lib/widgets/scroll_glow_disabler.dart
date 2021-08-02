@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ScrollGlowDisabler extends StatelessWidget {
   final Widget child;
-  ScrollGlowDisabler({@required this.child});
+  ScrollGlowDisabler({required this.child});
 
   @override
   Widget build(BuildContext context) {
