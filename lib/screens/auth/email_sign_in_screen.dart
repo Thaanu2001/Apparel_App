@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:flutter/material.dart';
 
@@ -46,21 +48,26 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(
+                  0, (Platform.isAndroid) ? 35 : 50, 20, 10),
+              margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
               child: InkWell(
-                child: Icon(Icons.arrow_back),
+                child: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  size: 32,
+                  color: Color(0xff646464),
+                ),
                 onTap: () => Navigator.pop(context),
               ),
             ),
             //* Sign in Topic --------------------------------------------------------------------
             Container(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 15),
+              padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
               child: Text(
                 'Sign in',
                 style: TextStyle(
                     fontFamily: 'sf',
-                    fontSize: 20,
+                    fontSize: 22,
                     color: Colors.black,
                     fontWeight: FontWeight.w600),
               ),
@@ -76,7 +83,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                       controller: email,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -105,7 +112,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                       obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -159,13 +166,15 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     //* Sign in with Email button -------------------------------------------------------------------
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
-                        padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Colors.black,
+                          primary: Colors.grey,
                         ),
-                        highlightColor: Color(0xff2e2e2e),
-                        color: Colors.black,
                         onPressed: () async {
                           dismissKeyboard(context);
                           if (email.text == '' || password.text == '') {
@@ -185,7 +194,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                           "Sign in",
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.white,
                               fontWeight: FontWeight.w600),
                         ),
@@ -212,7 +221,8 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                       child: Container(
                         alignment: Alignment.bottomCenter,
                         //* Create Account Button ----------------------------------------------------------------------------------
-                        margin: EdgeInsets.fromLTRB(30, 5, 30, 20),
+                        margin: EdgeInsets.fromLTRB(
+                            30, 5, 30, (Platform.isAndroid) ? 30 : 50),
                         child: InkWell(
                           child: Text(
                             'Create an account',

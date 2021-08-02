@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Apparel_App/widgets/shopping_cart_list.dart';
 import 'package:flutter/material.dart';
 
@@ -12,13 +14,20 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
     return Scaffold(
       backgroundColor: Color(0xffF3F3F3),
       body: Container(
-        padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
+        padding: EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 20, 10),
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             InkWell(
-              child: Icon(Icons.close),
+              child: Container(
+                padding: EdgeInsets.only(left: 10),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 32,
+                  color: Color(0xff646464),
+                ),
+              ),
               onTap: () => Navigator.pop(context),
             ),
             Flexible(
@@ -43,6 +52,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                     SizedBox(height: 4),
                     //* Shopping Cart List -----------------------------------------------------------
                     Flexible(child: ShoppingCartList()),
+                    SizedBox(height: (Platform.isAndroid) ? 0 : 20),
                   ],
                 ),
               ),

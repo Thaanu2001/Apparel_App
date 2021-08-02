@@ -157,7 +157,7 @@ storeCard(storeId) {
                           "View Store Profile",
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.w600),
                         ),
@@ -182,7 +182,7 @@ storeCard(storeId) {
                           "Contact Seller",
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.w600),
                         ),

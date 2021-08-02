@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
@@ -46,22 +48,27 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
+              padding: EdgeInsets.fromLTRB(
+                  0, (Platform.isAndroid) ? 35 : 50, 20, 10),
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: InkWell(
-                child: Icon(Icons.arrow_back),
+                child: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  size: 32,
+                  color: Color(0xff646464),
+                ),
                 onTap: () => Navigator.pop(context),
               ),
             ),
             //* Sign up Topic --------------------------------------------------------------------
             Container(
               // alignment: Alignment.center,
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 15),
+              padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
               child: Text(
                 'Create an account',
                 style: TextStyle(
                     fontFamily: 'sf',
-                    fontSize: 20,
+                    fontSize: 22,
                     color: Colors.black,
                     fontWeight: FontWeight.w600),
               ),
@@ -77,7 +84,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       controller: firstName,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -105,7 +112,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       controller: lastName,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -133,7 +140,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       controller: email,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -162,7 +169,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       obscureText: _obscurePassword,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 15,
+                          fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
@@ -269,7 +276,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                           "Sign Up",
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.white,
                               fontWeight: FontWeight.w600),
                         ),
@@ -280,7 +287,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       child: Container(
                         alignment: Alignment.bottomCenter,
                         //* Create Account Button ----------------------------------------------------------------------------------
-                        margin: EdgeInsets.fromLTRB(30, 5, 30, 20),
+                        margin: EdgeInsets.fromLTRB(
+                            30, 5, 30, (Platform.isAndroid) ? 30 : 50),
                         child: InkWell(
                           child: Text(
                             'Already have an account? Log in',

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Apparel_App/screens/auth/email_sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -25,10 +27,15 @@ class _SignInScreenState extends State<SignInScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(
+                  0, (Platform.isAndroid) ? 35 : 50, 20, 10),
+              margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
               child: InkWell(
-                child: Icon(Icons.close),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 32,
+                  color: Color(0xff646464),
+                ),
                 onTap: () => Navigator.pop(context),
               ),
             ),
@@ -78,7 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           "Sign in with Email",
                           style: TextStyle(
                               fontFamily: 'sf',
-                              fontSize: 16,
+                              fontSize: 18,
                               color: Colors.white,
                               fontWeight: FontWeight.w600),
                         ),
@@ -120,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'sf',
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600),
                               //width: double.infinity,
@@ -161,7 +168,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'sf',
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600),
                               //width: double.infinity,
@@ -173,7 +180,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     Container(
                       //* Sign Up Button ----------------------------------------------------------------------------------
                       alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.fromLTRB(30, 5, 30, 8),
+                      margin: EdgeInsets.fromLTRB(
+                          30, 5, 30, (Platform.isAndroid) ? 15 : 30),
                       child: InkWell(
                         child: Container(
                           padding: EdgeInsets.fromLTRB(30, 5, 30, 8),

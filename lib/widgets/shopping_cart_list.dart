@@ -623,7 +623,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                     "Go to checkout",
                     style: TextStyle(
                         fontFamily: 'sf',
-                        fontSize: 16,
+                        fontSize: 18,
                         color: Colors.white,
                         fontWeight: FontWeight.w600),
                   ),

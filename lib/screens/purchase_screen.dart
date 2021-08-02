@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -78,12 +80,19 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        padding: EdgeInsets.fromLTRB(0, 30, 20, 10),
+        padding: EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 20, 10),
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Wrap(
           children: <Widget>[
             InkWell(
-              child: Icon(Icons.close),
+              child: Container(
+                padding: EdgeInsets.only(left: 10, bottom: 10),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 32,
+                  color: Color(0xff646464),
+                ),
+              ),
               onTap: () => Navigator.pop(context),
             ),
             Container(
@@ -236,7 +245,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   labelStyle: TextStyle(
                     color: Colors.black,
                     fontFamily: 'sf',
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                   filled: false,
                   labelText: 'Size',
@@ -256,7 +265,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       value,
                       style: TextStyle(
                           fontFamily: 'sf',
-                          fontSize: 16,
+                          fontSize: 18,
                           color: (!value.contains('(Sold out)'))
                               ? Colors.black
                               : Color(0xffacacac),
@@ -581,7 +590,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   (widget.isBuyNow == true) ? "Continue" : "Add to Cart",
                   style: TextStyle(
                       fontFamily: 'sf',
-                      fontSize: 16,
+                      fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.w600),
                 ),

@@ -34,8 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
             // Set the transparency here
             canvasColor: Colors.white.withOpacity(0.5)),
         child: Container(
-            width: 240,
-            child: Stack(children: [
+          width: 240,
+          child: Stack(
+            children: [
               ClipRect(
                 child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
@@ -158,7 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            ])),
+            ],
+          ),
+        ),
       ),
       backgroundColor: Color(0xffF3F3F3),
       body: Column(
