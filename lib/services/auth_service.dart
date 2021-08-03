@@ -104,12 +104,12 @@ class AuthService {
             isPassword: false,
             onPressed: () async {
               // Trigger the authentication flow
-              final GoogleSignInAccount googleUser = await (GoogleSignIn()
-                  .signIn() as FutureOr<GoogleSignInAccount>);
+              final GoogleSignInAccount? googleUser =
+                  await GoogleSignIn().signIn();
 
               // Obtain the auth details from the request
               final GoogleSignInAuthentication googleAuth =
-                  await googleUser.authentication;
+                  await googleUser!.authentication;
 
               // Create a new credential
               final GoogleAuthCredential credential =
@@ -171,150 +171,159 @@ class AuthService {
 
   //* Sign In with Google ---------------------------------------------------------------------------
   signInWithGoogle(context, route) async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    List<String> userSignInMethods = await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(googleUser!.email);
+      List<String> userSignInMethods = await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(googleUser!.email);
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-    // Create a new credential
-    final GoogleAuthCredential pendingCredential =
-        GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    ) as GoogleAuthCredential;
-    print(userSignInMethods);
-    //* Link with Email & Password account
-    if (userSignInMethods.isEmpty || userSignInMethods.contains('google.com')) {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(pendingCredential);
-      checkUser(userData: userCredential);
-      Navigator.pushReplacement(context, route);
-    } else if (userSignInMethods.first == 'password') {
-      await linkAccountPopup(
-        context: context,
-        email: googleUser.email,
-        isPassword: true,
-        pendingCredential: pendingCredential,
-        route: route,
-        signInMethod: 'Google',
-      );
-      //* Link with facebook account
-    } else if (userSignInMethods.first == 'facebook.com') {
-      await linkAccountPopup(
-        context: context,
-        email: googleUser.email,
-        signInMethod: 'Google',
-        isPassword: false,
-        onPressed: () async {
-          // Trigger the authentication flow
-          final LoginResult result = await FacebookAuth.instance.login();
+      // Create a new credential
+      final GoogleAuthCredential pendingCredential =
+          GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      ) as GoogleAuthCredential;
+      print(userSignInMethods);
+      //* Link with Email & Password account
+      if (userSignInMethods.isEmpty ||
+          userSignInMethods.contains('google.com')) {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(pendingCredential);
+        checkUser(userData: userCredential);
+        Navigator.pushReplacement(context, route);
+      } else if (userSignInMethods.first == 'password') {
+        await linkAccountPopup(
+          context: context,
+          email: googleUser.email,
+          isPassword: true,
+          pendingCredential: pendingCredential,
+          route: route,
+          signInMethod: 'Google',
+        );
+        //* Link with facebook account
+      } else if (userSignInMethods.first == 'facebook.com') {
+        await linkAccountPopup(
+          context: context,
+          email: googleUser.email,
+          signInMethod: 'Google',
+          isPassword: false,
+          onPressed: () async {
+            // Trigger the authentication flow
+            final LoginResult result = await FacebookAuth.instance.login();
 
-          // Create a credential from the access token
-          final FacebookAuthCredential facebookAuthCredential =
-              FacebookAuthProvider.credential(result.accessToken!.token)
-                  as FacebookAuthCredential;
+            // Create a credential from the access token
+            final FacebookAuthCredential facebookAuthCredential =
+                FacebookAuthProvider.credential(result.accessToken!.token)
+                    as FacebookAuthCredential;
 
-          // Once signed in, return the UserCredential
-          UserCredential userCredential = await FirebaseAuth.instance
-              .signInWithCredential(facebookAuthCredential);
+            // Once signed in, return the UserCredential
+            UserCredential userCredential = await FirebaseAuth.instance
+                .signInWithCredential(facebookAuthCredential);
 
-          // Link the pending credential with the existing account
-          final UserCredential userData =
-              await userCredential.user!.linkWithCredential(pendingCredential);
+            // Link the pending credential with the existing account
+            final UserCredential userData = await userCredential.user!
+                .linkWithCredential(pendingCredential);
 
-          checkUser(userData: userData);
+            checkUser(userData: userData);
 
-          Navigator.pop(context);
-          Navigator.pushReplacement(context, route);
-        },
-      );
+            Navigator.pop(context);
+            Navigator.pushReplacement(context, route);
+          },
+        );
+      }
+    } catch (e) {
+      print('Google sign in error - $e');
     }
   }
 
   //* Sign in with Facebook ----------------------------------------------------------------------------
   signInWithFacebook(context, route) async {
     try {
-      // Trigger the sign-in flow
-      final LoginResult result = await FacebookAuth.instance.login();
+      try {
+        // Trigger the sign-in flow
+        final LoginResult result = await FacebookAuth.instance.login();
 
-      // Create a credential from the access token
-      final FacebookAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(result.accessToken!.token)
-              as FacebookAuthCredential;
+        // Create a credential from the access token
+        final FacebookAuthCredential facebookAuthCredential =
+            FacebookAuthProvider.credential(result.accessToken!.token)
+                as FacebookAuthCredential;
 
-      // Once signed in, return the UserCredential
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(facebookAuthCredential);
+        // Once signed in, return the UserCredential
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
 
-      checkUser(userData: userCredential);
-      Navigator.pushReplacement(context, route);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'account-exists-with-different-credential') {
-        // The account already exists with a different credential
-        String email = e.email!;
-        AuthCredential? pendingCredential = e.credential;
+        checkUser(userData: userCredential);
+        Navigator.pushReplacement(context, route);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // The account already exists with a different credential
+          String email = e.email!;
+          AuthCredential? pendingCredential = e.credential;
 
-        // Fetch a list of what sign-in methods exist for the conflicting user
-        List<String> userSignInMethods =
-            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+          // Fetch a list of what sign-in methods exist for the conflicting user
+          List<String> userSignInMethods =
+              await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
-        // If the user has several sign-in methods,
-        // the first method in the list will be the "recommended" method to use.
-        //* Link with Email & Password account
-        if (userSignInMethods.first == 'password') {
-          await linkAccountPopup(
-            context: context,
-            email: email,
-            isPassword: true,
-            pendingCredential: pendingCredential,
-            route: route,
-            signInMethod: 'Facebook',
-          );
-        }
+          // If the user has several sign-in methods,
+          // the first method in the list will be the "recommended" method to use.
+          //* Link with Email & Password account
+          if (userSignInMethods.first == 'password') {
+            await linkAccountPopup(
+              context: context,
+              email: email,
+              isPassword: true,
+              pendingCredential: pendingCredential,
+              route: route,
+              signInMethod: 'Facebook',
+            );
+          }
 
-        //* Link with Google account
-        if (userSignInMethods.first == 'google.com') {
-          await linkAccountPopup(
-            context: context,
-            email: email,
-            isPassword: false,
-            signInMethod: 'Facebook',
-            onPressed: () async {
-              // Trigger the authentication flow
-              final GoogleSignInAccount googleUser = await (GoogleSignIn()
-                  .signIn() as FutureOr<GoogleSignInAccount>);
+          //* Link with Google account
+          if (userSignInMethods.first == 'google.com') {
+            await linkAccountPopup(
+              context: context,
+              email: email,
+              isPassword: false,
+              signInMethod: 'Facebook',
+              onPressed: () async {
+                // Trigger the authentication flow
+                final GoogleSignInAccount? googleUser =
+                    await GoogleSignIn().signIn();
 
-              // Obtain the auth details from the request
-              final GoogleSignInAuthentication googleAuth =
-                  await googleUser.authentication;
+                // Obtain the auth details from the request
+                final GoogleSignInAuthentication googleAuth =
+                    await googleUser!.authentication;
 
-              // Create a new credential
-              final GoogleAuthCredential credential =
-                  GoogleAuthProvider.credential(
-                accessToken: googleAuth.accessToken,
-                idToken: googleAuth.idToken,
-              ) as GoogleAuthCredential;
-              // Once signed in, return the UserCredential
-              UserCredential userCredential =
-                  await FirebaseAuth.instance.signInWithCredential(credential);
+                // Create a new credential
+                final GoogleAuthCredential credential =
+                    GoogleAuthProvider.credential(
+                  accessToken: googleAuth.accessToken,
+                  idToken: googleAuth.idToken,
+                ) as GoogleAuthCredential;
+                // Once signed in, return the UserCredential
+                UserCredential userCredential = await FirebaseAuth.instance
+                    .signInWithCredential(credential);
 
-              // Link the pending credential with the existing account
-              final UserCredential userData = await userCredential.user!
-                  .linkWithCredential(pendingCredential!);
+                // Link the pending credential with the existing account
+                final UserCredential userData = await userCredential.user!
+                    .linkWithCredential(pendingCredential!);
 
-              checkUser(userData: userData);
+                checkUser(userData: userData);
 
-              Navigator.pop(context);
-              Navigator.pushReplacement(context, route);
-            },
-          );
+                Navigator.pop(context);
+                Navigator.pushReplacement(context, route);
+              },
+            );
+          }
         }
       }
+    } catch (e) {
+      print('Facebook sign in error - $e');
     }
   }
 

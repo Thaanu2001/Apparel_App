@@ -16,6 +16,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  bool authOnProgressGoogle = false;
+  bool authOnProgressFacebook = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,31 +112,47 @@ class _SignInScreenState extends State<SignInScreen> {
                           backgroundColor: Colors.white,
                         ),
                         onPressed: () async {
+                          setState(() {
+                            authOnProgressGoogle = true;
+                          });
+
                           await AuthService()
                               .signInWithGoogle(context, widget.route);
+
+                          setState(() {
+                            authOnProgressGoogle = false;
+                          });
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'lib/assets/logos/google-logo.webp',
-                              width: 19,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'Sign in with Google',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                              //width: double.infinity,
-                            ),
-                          ],
-                        ),
+                        child: (!authOnProgressGoogle)
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'lib/assets/logos/google-logo.webp',
+                                    width: 18,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'Sign in with Google',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'sf',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                    //width: double.infinity,
+                                  ),
+                                ],
+                              )
+                            : SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                ),
+                              ),
                       ),
                     ),
                     //* Sign in with facebook button -------------------------------------------------------------------
@@ -150,31 +169,47 @@ class _SignInScreenState extends State<SignInScreen> {
                           backgroundColor: Colors.white,
                         ),
                         onPressed: () async {
+                          setState(() {
+                            authOnProgressFacebook = true;
+                          });
+
                           await AuthService()
                               .signInWithFacebook(context, widget.route);
+
+                          setState(() {
+                            authOnProgressFacebook = false;
+                          });
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'lib/assets/logos/facebook-logo.webp',
-                              width: 19,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              'Sign in with Facebook',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                              //width: double.infinity,
-                            ),
-                          ],
-                        ),
+                        child: (!authOnProgressFacebook)
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'lib/assets/logos/facebook-logo.webp',
+                                    width: 19,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    'Sign in with Facebook',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'sf',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600),
+                                    //width: double.infinity,
+                                  ),
+                                ],
+                              )
+                            : SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                ),
+                              ),
                       ),
                     ),
                     Container(

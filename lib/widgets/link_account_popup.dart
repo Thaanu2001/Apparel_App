@@ -190,7 +190,18 @@ linkAccountPopup(
                                   processingLink = false;
                                 });
                               }
-                            : onPressed,
+                            : () async {
+                                setState(() {
+                                  processingLink = true;
+                                  print('awaaaaaaaæ');
+                                });
+
+                                await onPressed();
+
+                                setState(() {
+                                  processingLink = false;
+                                });
+                              },
                         child: (!processingLink)
                             ? Text(
                                 "Link your accounts",
@@ -202,11 +213,12 @@ linkAccountPopup(
                                 ),
                               )
                             : SizedBox(
-                                height: 18,
-                                width: 18,
+                                height: 20,
+                                width: 20,
                                 child: CircularProgressIndicator(
                                   color: Colors.grey,
-                                )),
+                                ),
+                              ),
                       ),
                     ),
                   ],

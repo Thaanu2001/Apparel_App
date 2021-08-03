@@ -21,9 +21,10 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   final lastName = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
-  final re_password = TextEditingController();
+  final rePassword = TextEditingController();
   bool termsAccept = false;
   bool _obscurePassword = true;
+  bool authOnProgress = false;
 
   //* Show Password
   void _showPassword() {
@@ -218,7 +219,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                     SizedBox(height: 15),
                     //* Password textfield ---------------------------------------------------------
                     TextField(
-                      controller: re_password,
+                      controller: rePassword,
                       autofillHints: [AutofillHints.password],
                       textInputAction: TextInputAction.done,
                       obscureText: true,
@@ -302,10 +303,13 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                               password.text == '') {
                             errorMessage = 'Please fill all the details';
                             error = true;
-                          } else if (password.text != re_password.text) {
+                          } else if (password.text != rePassword.text) {
                             errorMessage = 'Passwords didn\'t match. Try again';
                             error = true;
                           } else {
+                            setState(() {
+                              authOnProgress = true;
+                            });
                             await AuthService().signUp(
                               email.text.replaceAll(' ', ''),
                               password.text,
@@ -314,16 +318,26 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                               widget.route,
                             );
                           }
-                          setState(() {});
+                          setState(() {
+                            authOnProgress = false;
+                          });
                         },
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
+                        child: (!authOnProgress)
+                            ? Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            : SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                ),
+                              ),
                       ),
                     ),
                     Flexible(

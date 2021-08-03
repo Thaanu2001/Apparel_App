@@ -23,6 +23,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
   final password = TextEditingController();
   bool termsAccept = false;
   bool _obscurePassword = true;
+  bool authOnProgress = false;
 
   //* Show password
   void _showPassword() {
@@ -186,6 +187,10 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                             errorMessage = 'Enter your email and password';
                             error = true;
                           } else {
+                            setState(() {
+                              authOnProgress = true;
+                            });
+
                             await AuthService().signIn(
                               email.text,
                               password.text,
@@ -193,16 +198,27 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                               widget.route,
                             );
                           }
-                          setState(() {});
+                          setState(() {
+                            authOnProgress = false;
+                          });
                         },
-                        child: Text(
-                          "Sign in",
-                          style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
+                        child: (!authOnProgress)
+                            ? Text(
+                                "Sign in",
+                                style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                ),
+                              ),
                       ),
                     ),
                     SizedBox(height: 8),
