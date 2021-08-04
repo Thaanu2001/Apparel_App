@@ -584,8 +584,16 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         ),
                       );
                     } else {
+                      print(_quantity);
+                      print(widget.isBuyNow);
                       Route route = SlideLeftTransition(
-                        widget: CheckoutScreen(),
+                        widget: CheckoutScreen(
+                          productData: widget.productData,
+                          isBuyNow: widget.isBuyNow,
+                          category: widget.category,
+                          quantity: _quantity,
+                          selectedSize: selectedSize,
+                        ),
                       );
                       Navigator.push(context, route);
                     }

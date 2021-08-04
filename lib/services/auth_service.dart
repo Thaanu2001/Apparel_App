@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:Apparel_App/widgets/link_account_popup.dart';
+import 'package:Apparel_App/models/link_account_popup.dart';
 
 bool error = false;
 String errorMessage = '';
