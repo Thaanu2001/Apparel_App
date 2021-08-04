@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:Apparel_App/screens/checkout_screen.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -582,12 +584,15 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         ),
                       );
                     } else {
-                      CartItems().removeCartData();
+                      Route route = SlideLeftTransition(
+                        widget: CheckoutScreen(),
+                      );
+                      Navigator.push(context, route);
                     }
                   }
                 },
                 child: Text(
-                  (widget.isBuyNow == true) ? "Continue" : "Add to Cart",
+                  (widget.isBuyNow == true) ? "Buy Now" : "Add to Cart",
                   style: TextStyle(
                       fontFamily: 'sf',
                       fontSize: 18,

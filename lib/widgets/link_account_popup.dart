@@ -193,7 +193,6 @@ linkAccountPopup(
                             : () async {
                                 setState(() {
                                   processingLink = true;
-                                  print('awaaaaaaaæ');
                                 });
 
                                 await onPressed();
