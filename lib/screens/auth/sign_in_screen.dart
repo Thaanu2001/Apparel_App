@@ -8,8 +8,8 @@ import 'package:Apparel_App/screens/auth/sign_up_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class SignInScreen extends StatefulWidget {
-  final Route route;
-  SignInScreen({required this.route});
+  Route? route;
+  SignInScreen({this.route});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();

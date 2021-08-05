@@ -9,8 +9,8 @@ import 'package:Apparel_App/screens/auth/sign_up_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 
 class EmailSignInScreen extends StatefulWidget {
-  final Route route;
-  EmailSignInScreen({required this.route});
+  Route? route;
+  EmailSignInScreen({this.route});
 
   @override
   _EmailSignInScreenState createState() => _EmailSignInScreenState();

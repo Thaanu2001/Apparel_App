@@ -179,7 +179,10 @@ linkAccountPopup(
                                   AuthService().checkUser(userData: userData);
 
                                   Navigator.pop(context);
-                                  Navigator.pushReplacement(context, route);
+                                  (route != null)
+                                      ? Navigator.pushReplacement(
+                                          context, route)
+                                      : Navigator.pop(context);
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == 'wrong-password') {
                                     errorMessage = 'Wrong password.';

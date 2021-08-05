@@ -20,7 +20,6 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
   //* Get count from shared preferences
   getCartQuantity() async {
     cartQuantity.value = await CartItems().getCount();
-    print('sssssssssssssSßsssssśš' + cartQuantity.value.toString());
     setState(() {});
   }
 

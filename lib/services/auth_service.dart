@@ -37,15 +37,17 @@ class AuthService {
   signUp(email, password, name, context, route) async {
     //* User Sign Up ----------------------------------------------------------------------------------------------------
     try {
-      final UserCredential user = await FirebaseAuth.instance
+      final UserCredential? user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      user.user!.updateProfile(displayName: name);
+      user?.user!.updateDisplayName(name);
 
       if (user != null) {
         checkUser(userData: user, name: name);
         Navigator.pop(context);
-        Navigator.pushReplacement(context, route);
+        (route != null)
+            ? Navigator.pushReplacement(context, route)
+            : Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
       print(e);
@@ -90,7 +92,9 @@ class AuthService {
 
               Navigator.pop(context);
               Navigator.pop(context);
-              Navigator.pushReplacement(context, route);
+              (route != null)
+                  ? Navigator.pushReplacement(context, route)
+                  : Navigator.pop(context);
             },
           );
         } else if (userSignInMethods.first == 'google.com') {
@@ -130,7 +134,9 @@ class AuthService {
 
               Navigator.pop(context);
               Navigator.pop(context);
-              Navigator.pushReplacement(context, route);
+              (route != null)
+                  ? Navigator.pushReplacement(context, route)
+                  : Navigator.pop(context);
             },
           );
         }
@@ -146,14 +152,16 @@ class AuthService {
   signIn(email, password, context, route) async {
     //* User Log In ----------------------------------------------------------------------------------------------------
     try {
-      final user = await FirebaseAuth.instance
+      final UserCredential? user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (user != null) {
         print(user);
         checkUser(userData: user);
         Navigator.pop(context);
-        Navigator.pushReplacement(context, route);
+        (route != null)
+            ? Navigator.pushReplacement(context, route)
+            : Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'invalid-email') {
@@ -186,6 +194,7 @@ class AuthService {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       ) as GoogleAuthCredential;
+
       print(userSignInMethods);
       //* Link with Email & Password account
       if (userSignInMethods.isEmpty ||
@@ -193,7 +202,9 @@ class AuthService {
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithCredential(pendingCredential);
         checkUser(userData: userCredential);
-        Navigator.pushReplacement(context, route);
+        (route != null)
+            ? Navigator.pushReplacement(context, route)
+            : Navigator.pop(context);
       } else if (userSignInMethods.first == 'password') {
         await linkAccountPopup(
           context: context,
@@ -230,7 +241,9 @@ class AuthService {
             checkUser(userData: userData);
 
             Navigator.pop(context);
-            Navigator.pushReplacement(context, route);
+            (route != null)
+                ? Navigator.pushReplacement(context, route)
+                : Navigator.pop(context);
           },
         );
       }
@@ -256,7 +269,9 @@ class AuthService {
             .signInWithCredential(facebookAuthCredential);
 
         checkUser(userData: userCredential);
-        Navigator.pushReplacement(context, route);
+        (route != null)
+            ? Navigator.pushReplacement(context, route)
+            : Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           // The account already exists with a different credential
@@ -314,7 +329,9 @@ class AuthService {
                 checkUser(userData: userData);
 
                 Navigator.pop(context);
-                Navigator.pushReplacement(context, route);
+                (route != null)
+                    ? Navigator.pushReplacement(context, route)
+                    : Navigator.pop(context);
               },
             );
           }
@@ -344,7 +361,9 @@ class AuthService {
             'email': userData.user.email,
             'phone-number': userData.user.phoneNumber,
             'account-created': DateTime.now(),
-            'last-signin': DateTime.now()
+            'last-signin': DateTime.now(),
+            'display-picture':
+                (userData.user.photoURL != null) ? userData.user.photoURL : ''
           });
         } else {
           print('heree');

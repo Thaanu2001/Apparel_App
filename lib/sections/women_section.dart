@@ -210,9 +210,12 @@ class _WomenSectionState extends State<WomenSection>
                                     Text(
                                       document["product-name"],
                                       style: TextStyle(
-                                          fontFamily: 'sf',
-                                          fontSize: 16,
-                                          color: Colors.black),
+                                        fontFamily: 'sf',
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     SizedBox(height: 2),
                                     Text(
