@@ -8,12 +8,14 @@ class ProductMiniCard extends StatelessWidget {
   final int quantity;
   final String category;
   final String size;
+  final int shippingPrice;
   const ProductMiniCard(
       {Key? key,
       required this.productData,
       required this.quantity,
       required this.category,
-      required this.size})
+      required this.size,
+      required this.shippingPrice})
       : super(key: key);
 
   @override
@@ -76,6 +78,19 @@ class ProductMiniCard extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                SizedBox(height: 1),
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  child: Text(
+                                    productData['store-name'],
+                                    style: TextStyle(
+                                      fontFamily: 'sf',
+                                      fontSize: 14,
+                                      color: Color(0xff808080),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
                                 SizedBox(height: 5),
                                 //* Product size
                                 Text(
@@ -85,8 +100,10 @@ class ProductMiniCard extends StatelessWidget {
                                       fontSize: 15,
                                       color: Color(0xff808080),
                                       fontWeight: FontWeight.w500),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: 5),
+                                // SizedBox(height: 2),
                                 //* Quantity
                                 Text(
                                   'Quantity  ' + quantity.toString(),
@@ -150,35 +167,20 @@ class ProductMiniCard extends StatelessWidget {
                                         decoration: TextDecoration.lineThrough),
                                   ),
                                 //* Shipping price
-                                // Container(
-                                //   alignment:
-                                //       Alignment
-                                //           .topRight,
-                                //   child: Text(
-                                //     (index == 0 ||
-                                //             _cartItemsList!.values.elementAt(index)[6].toString() !=
-                                //                 _cartItemsList!.values
-                                //                     .elementAt(index - 1)[
-                                //                         6]
-                                //                     .toString())
-                                //         ? '+ ' +
-                                //             _cartItemsList!
-                                //                 .values
-                                //                 .elementAt(index)[5]
-                                //                 .toString()
-                                //         : 'Free shipping',
-                                //     style: TextStyle(
-                                //         fontFamily:
-                                //             'sf',
-                                //         fontSize:
-                                //             12,
-                                //         color: Color(
-                                //             0xff505050),
-                                //         fontWeight:
-                                //             FontWeight
-                                //                 .w400),
-                                //   ),
-                                // ),
+                                Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    (shippingPrice != 0)
+                                        ? '+ Delivery ' +
+                                            shippingPrice.toString()
+                                        : 'Calculating',
+                                    style: TextStyle(
+                                        fontFamily: 'sf',
+                                        fontSize: 12,
+                                        color: Color(0xff505050),
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
                               ],
                             ),
                           ],

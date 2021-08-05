@@ -32,12 +32,52 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   late String userId;
   bool isCashOnDelivery = true;
+  Map userDocument = {};
+  int? shippingPrice = 0;
+  String? storeLocation;
+  int fixedWeightPrice = 50;
 
   @override
   void initState() {
     userId = AuthService().getUser();
     print(userId);
     super.initState();
+  }
+
+  //* Get shipping price -----------------------------------------------------------------
+  Future getShipping() async {
+    var firestore = FirebaseFirestore.instance;
+    DocumentSnapshot ds1;
+    DocumentSnapshot ds2;
+    double totalWeight;
+
+    //* Get store location
+    ds1 = await firestore
+        .collection('stores')
+        .doc(widget.productData['store-id'])
+        .get();
+
+    storeLocation = (ds1.data() as Map)['location'];
+
+    //* Get shipping price according to city
+    ds2 = await firestore
+        .collection('shipping')
+        .doc(userDocument['shipping']['province'])
+        .collection(userDocument['shipping']['province'])
+        .doc(userDocument['shipping']['district'])
+        .collection(userDocument['shipping']['district'])
+        .doc(userDocument['shipping']['city'])
+        .get();
+
+    setState(() {
+      totalWeight = double.parse(
+          (widget.productData['weight'] * widget.quantity!).toStringAsFixed(2));
+
+      shippingPrice = ((ds2.data() as Map)[storeLocation]) +
+          ((totalWeight.ceil() - 1) * fixedWeightPrice);
+    });
+
+    return shippingPrice;
   }
 
   @override
@@ -99,7 +139,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   .doc(userId)
                                   .snapshots(),
                               builder: (context, snapshot) {
-                                Map userDocument = {};
                                 if (snapshot.hasData)
                                   userDocument = snapshot.data!.data() as Map;
                                 if (userDocument.containsKey('shipping')) {
@@ -179,6 +218,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               }),
                           onTap: () {
                             shippingUpdateModal(context, userId);
+                            setState(() {});
                           },
                         ),
                       ),
@@ -301,14 +341,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             fontWeight: FontWeight.w700),
                       ),
                       SizedBox(height: 8),
-                      (widget.isBuyNow)
-                          ? ProductMiniCard(
-                              productData: widget.productData,
-                              quantity: widget.quantity as int,
-                              category: widget.category as String,
-                              size: widget.selectedSize as String,
-                            )
-                          : Container(),
+                      //* Product Cards list
+                      FutureBuilder(
+                        future: getShipping(),
+                        builder: (context, snapshot) {
+                          return (widget.isBuyNow)
+                              ? ProductMiniCard(
+                                  productData: widget.productData,
+                                  quantity: widget.quantity as int,
+                                  category: widget.category as String,
+                                  size: widget.selectedSize as String,
+                                  shippingPrice: shippingPrice as int,
+                                )
+                              : Container();
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -377,12 +424,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            "Rs. 323",
-                            //+ NumberFormat('###,000')
-                            //     .format((delivery == 0)
-                            //         ? _totalDelivery
-                            //         : delivery)
-                            //     .toString(),
+                            (shippingPrice != 0)
+                                ? "Rs. " +
+                                    NumberFormat('###,000')
+                                        .format(shippingPrice)
+                                        .toString()
+                                : 'Calculating',
                             style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 15,
@@ -412,18 +459,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             "Rs. " +
                                 NumberFormat('###,000')
                                     .format((int.parse(widget.productData['discount'].toString()) != 0)
-                                        ? ((int.parse(widget.productData['price']
-                                                    .toString())) *
-                                                ((100 -
-                                                        int.parse(widget
-                                                            .productData[
-                                                                'discount']
-                                                            .toString())) /
-                                                    100)) *
-                                            int.parse(
-                                                widget.quantity.toString())
+                                        ? ((int.parse(widget.productData['price'].toString())) *
+                                                    ((100 -
+                                                            int.parse(widget
+                                                                .productData[
+                                                                    'discount']
+                                                                .toString())) /
+                                                        100)) *
+                                                int.parse(widget.quantity
+                                                    .toString()) +
+                                            (shippingPrice as int)
                                         : int.parse(widget.productData['price'].toString()) *
-                                            int.parse(widget.quantity.toString()))
+                                                int.parse(widget.quantity.toString()) +
+                                            (shippingPrice as int))
                                     .toString(),
                             style: TextStyle(
                               fontFamily: 'sf',
