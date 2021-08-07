@@ -548,22 +548,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     if (widget.isBuyNow != true) {
                       List itemData = [
                         widget.productData.id.toString(),
-                        widget.productData['product-name'],
-                        widget.productData['images'][0],
-                        widget.productData['price'],
-                        widget.productData['discount'],
-                        widget.productData['delivery-price'],
-                        widget.productData['store-name'],
                         widget.productData['store-id'],
                         _quantity,
                         selectedSize,
-                        widget.productData["size"]["qty"][widget
-                            .productData["size"]["size"]
-                            .indexOf(selectedSize)],
                         widget.category,
                       ];
-                      CartItems()
-                          .cartItems(itemData: itemData, quantity: _quantity);
+                      CartItems().addCartProducts(
+                          itemData: itemData, quantity: _quantity);
 
                       print(itemData.length);
 

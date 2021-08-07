@@ -1,10 +1,14 @@
+import 'package:Apparel_App/calculations/cart_total_price.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/services/cart_items.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingCartList extends StatefulWidget {
   @override
@@ -12,7 +16,8 @@ class ShoppingCartList extends StatefulWidget {
 }
 
 class _ShoppingCartListState extends State<ShoppingCartList> {
-  Map? _cartItemsList;
+  List? _cartItemsList;
+  List? shippingCostList;
   ValueNotifier<int> _totalPriceNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> _totalDeliveryNotifier = ValueNotifier<int>(0);
   DocumentSnapshot? productData;
@@ -21,73 +26,107 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
 
   @override
   void initState() {
-    print('awa');
     _cartItemsList = null;
     _totalPrice = 0;
+    _totalPriceNotifier.value = 0;
     super.initState();
   }
 
-  //* Get total price and delivery of checkout items ------------------------------------------------
-  getTotal() {
-    _totalPrice = 0;
-    _cartItemsList!.values.forEach((item) => _totalPrice += ((item[4] != 0)
-            ? (item[3] * ((100 - item[4]) / 100)) * item[8]
-            : item[3] * item[8])
-        .round() as int);
+  //* Get shipping price -----------------------------------------------------------------
+  getShipping() async {
+    var firestore = FirebaseFirestore.instance;
+    DocumentSnapshot ds1;
+    DocumentSnapshot? ds2;
+    DocumentSnapshot userDoc;
+    Map userLocation;
+    List totalWeight = [];
+    List storeLocation = [];
+    List shippingPrice = [];
+    String userId;
+    int fixedWeightPrice = 50;
+    int storeCount = 0;
 
-    _totalDelivery = 0;
-    for (int count = 0; count < _cartItemsList!.length; count++) {
-      if (count == 0 ||
-          _cartItemsList!.values.elementAt(count)[6].toString() !=
-              _cartItemsList!.values.elementAt(count - 1)[6].toString()) {
-        _totalDelivery += _cartItemsList!.values.elementAt(count)[5] as int;
+    //* Get user shipping details
+    userId = await AuthService().getUser();
+
+    userDoc = await firestore.collection('users').doc(userId).get();
+    userLocation = (((userDoc.data() as Map)['shipping']) != null)
+        ? (userDoc.data() as Map)['shipping']
+        : {'province': 'Western', 'district': 'Colombo', 'city': 'Nugegoda'}; //* Add Nugegoda as default
+
+    for (var i = 0; i < _cartItemsList!.length; i++) {
+      // * Get store location
+      ds1 = await firestore.collection('stores').doc(_cartItemsList![i]['productDoc'].data()['store-id']).get();
+
+      // if(){
+
+      // }
+      // storeLocation.insert(i, (ds1.data() as Map)['location']); //* Add store locations to array
+
+      ds2 = await firestore
+          .collection('shipping')
+          .doc(userLocation['province'])
+          .collection(userLocation['province'])
+          .doc(userLocation['district'])
+          .collection(userLocation['district'])
+          .doc(userLocation['city'])
+          .get();
+
+      totalWeight.insert(
+          i,
+          double.parse((_cartItemsList![i]['productDoc'].data()['weight'] * _cartItemsList![i]['selectedQuantity']!)
+              .toStringAsFixed(2)));
+
+      //* Get number of different stores
+      if (i == 0 ||
+          _cartItemsList![i]['productDoc'].data()['store-name'] !=
+              _cartItemsList![i - 1]['productDoc'].data()['store-name']) {
+        storeCount++;
+        storeLocation.add((ds1.data() as Map)['location']); //* Add store locations
       }
     }
 
-    _totalPriceNotifier.value = _totalPrice;
-    _totalDeliveryNotifier.value = _totalDelivery;
-  }
+    //* Calculate the shipping prices
+    int i = 0;
+    for (var c = 0; c < storeCount; c++) {
+      double storeWeight = 0;
+      int productsPerStore = 1;
+      storeWeight = totalWeight[i];
 
-  //* Get document data of scpecific product
-  getItemDocument(index) async {
-    await FirebaseFirestore.instance
-        .collection('products')
-        .doc(_cartItemsList!.values.elementAt(index)[11])
-        .collection(_cartItemsList!.values.elementAt(index)[11])
-        .doc(_cartItemsList!.values.elementAt(index)[0])
-        .get()
-        .then((value) {
-      print(value.data()!["product-name"]);
-      productData = value;
-      return value;
-    });
+      //* Get sum of products in one store
+      while (_cartItemsList!.length - 1 > i &&
+          _cartItemsList![i]['productDoc'].data()['store-name'] ==
+              _cartItemsList![i + 1]['productDoc'].data()['store-name']) {
+        storeWeight += totalWeight[i + 1];
+        i++;
+        productsPerStore++;
+      }
+      //* Add shipping prices to the array
+      shippingPrice.add(((ds2!.data() as Map)[storeLocation[c]]) + ((storeWeight.ceil() - 1) * fixedWeightPrice));
+      for (var x = 1; x < productsPerStore; x++) {
+        shippingPrice.add(0);
+      }
+      i++;
+    }
+    print(shippingPrice);
+
+    _totalDeliveryNotifier.value = shippingPrice.reduce((value, element) => value + element);
+    return shippingPrice;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: CartItems().getCartItemsList(),
+      future: CartItems().getCartProductList(),
       builder: (_, AsyncSnapshot snapshot) {
-        if (_cartItemsList == null) _cartItemsList = snapshot.data;
+        if (_cartItemsList == null) {
+          _cartItemsList = snapshot.data;
+          _totalPriceNotifier.value =
+              CartCalculations().getTotal(cartItemsList: _cartItemsList, totalPrice: _totalPrice);
+        }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         } else {
-          //* Get total price
-          _cartItemsList!.values.forEach((item) => _totalPrice +=
-              ((item[4] != 0)
-                      ? (item[3] * ((100 - item[4]) / 100)) * item[8]
-                      : item[3] * item[8])
-                  .round() as int);
-
-          //* Get total delivery price
-          for (int count = 0; count < _cartItemsList!.length; count++) {
-            if (count == 0 ||
-                _cartItemsList!.values.elementAt(count)[6].toString() !=
-                    _cartItemsList!.values.elementAt(count - 1)[6].toString()) {
-              _totalDelivery +=
-                  _cartItemsList!.values.elementAt(count)[5] as int;
-            }
-          }
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -105,26 +144,31 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: _cartItemsList!.length,
                         itemBuilder: (_, int index) {
-                          int? _quantity =
-                              _cartItemsList!.values.elementAt(index)[8];
-                          print(_totalPrice);
+                          //* selected _quantity
+                          int? _quantity = _cartItemsList![index]['selectedQuantity'];
+
+                          //* Get size index according to documentSnapshot
+                          int? sizeIndex = _cartItemsList![index]['productDoc']
+                              .data()['size']['size']
+                              .indexOf(_cartItemsList![index]['selectedSize']);
+
+                          //* Get max stocks available
+                          int? maxQuantity = _cartItemsList![index]['productDoc'].data()['size']['qty'][sizeIndex];
+
+                          // var productData = _cartItemsList![index]['productDoc'];
+                          // getShipping();
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //* Store name -----------------------------------------------------
                               if (index == 0 ||
-                                  _cartItemsList!.values
-                                          .elementAt(index)[6]
-                                          .toString() !=
-                                      _cartItemsList!.values
-                                          .elementAt(index - 1)[6]
-                                          .toString())
+                                  _cartItemsList![index]['productDoc'].data()['store-name'] !=
+                                      _cartItemsList![index - 1]['productDoc'].data()['store-name'])
                                 Container(
                                   padding: EdgeInsets.only(top: 7),
                                   child: Text(
-                                    _cartItemsList!.values
-                                        .elementAt(index)[6]
-                                        .toString(),
+                                    _cartItemsList![index]['productDoc'].data()['store-name'].toString(),
                                     style: TextStyle(
                                       fontFamily: 'sf',
                                       fontSize: 16,
@@ -157,40 +201,31 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                 child: Card(
                                   margin: EdgeInsets.zero,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
                                   ),
                                   color: Colors.white,
                                   elevation: 0,
                                   child: Container(
                                     padding: EdgeInsets.all(15),
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           //* Product Image
                                           child: InkWell(
                                             child: Image.network(
-                                              _cartItemsList!.values
-                                                  .elementAt(index)[2]
-                                                  .toString(),
+                                              _cartItemsList![index]['productDoc'].data()['images'][0].toString(),
                                               height: 90,
                                               fit: BoxFit.cover,
                                             ),
                                             //* Navigate to product page
                                             onTap: () async {
-                                              await getItemDocument(index);
-                                              print('tapped');
                                               Route route = SlideLeftTransition(
                                                 widget: ProductDetailsScreen(
-                                                    productData: productData,
-                                                    category: _cartItemsList!
-                                                        .values
-                                                        .elementAt(index)[11]),
+                                                    productData: _cartItemsList![index]['productDoc'],
+                                                    category: _cartItemsList![index]['category']),
                                               );
-                                              Navigator.pushReplacement(
-                                                  context, route);
+                                              Navigator.push(context, route);
                                             },
                                           ),
                                         ),
@@ -198,243 +233,205 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                         Flexible(
                                           //* Product details
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               //* Product name
                                               InkWell(
                                                 child: Text(
-                                                  _cartItemsList!.values
-                                                      .elementAt(index)[1]
+                                                  _cartItemsList![index]['productDoc']
+                                                      .data()['product-name']
                                                       .toString(),
-                                                  style: TextStyle(
-                                                      fontFamily: 'sf',
-                                                      fontSize: 15,
-                                                      color: Colors.black),
+                                                  style: TextStyle(fontFamily: 'sf', fontSize: 15, color: Colors.black),
                                                 ),
                                                 //* Navigate to product page
                                                 onTap: () async {
-                                                  await getItemDocument(index);
-                                                  print('tapped');
-                                                  Route route =
-                                                      SlideLeftTransition(
-                                                    widget: ProductDetailsScreen(
-                                                        productData:
-                                                            productData,
-                                                        category:
-                                                            _cartItemsList!
-                                                                .values
-                                                                .elementAt(
-                                                                    index)[11]),
-                                                  );
-                                                  Navigator.pushReplacement(
-                                                      context, route);
+                                                  Route route = SlideLeftTransition(
+                                                      widget: ProductDetailsScreen(
+                                                          productData: _cartItemsList![index]['productDoc'],
+                                                          category: _cartItemsList![index]['category']));
+                                                  Navigator.push(context, route);
                                                 },
                                               ),
                                               StatefulBuilder(
-                                                builder: (BuildContext context,
-                                                    StateSetter setState) {
+                                                builder: (BuildContext context, StateSetter setState) {
                                                   return Container(
                                                     width: double.infinity,
                                                     child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
                                                       children: [
-                                                        //* Quantity Section
+                                                        //* quantity Section
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             //* Product size
                                                             Text(
-                                                              _cartItemsList!
-                                                                  .values
-                                                                  .elementAt(
-                                                                      index)[9]
-                                                                  .toString(),
+                                                              _cartItemsList![index]['selectedSize'].toString(),
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      'sf',
+                                                                  fontFamily: 'sf',
                                                                   fontSize: 14,
-                                                                  color: Color(
-                                                                      0xff808080),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                  color: Color(0xff808080),
+                                                                  fontWeight: FontWeight.w500),
                                                             ),
                                                             SizedBox(height: 2),
                                                             Container(
-                                                              width: 55,
+                                                              // width: 55,
                                                               child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
+                                                                mainAxisAlignment: MainAxisAlignment.start,
                                                                 children: [
                                                                   //* Minus Button
                                                                   InkWell(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .remove_circle_outline_rounded,
-                                                                        size:
-                                                                            17),
+                                                                    child: Icon(Icons.remove_circle_outline_rounded,
+                                                                        size: 20),
                                                                     onTap: () {
-                                                                      if (_quantity! >
-                                                                          1) {
-                                                                        setState(
-                                                                            () {
-                                                                          _quantity =
-                                                                              _quantity! - 1;
+                                                                      if (_quantity! > 1) {
+                                                                        setState(() {
+                                                                          _quantity = _quantity! - 1;
                                                                         });
-                                                                        _cartItemsList!
-                                                                            .values
-                                                                            .elementAt(index)[8] -= 1;
+                                                                        _cartItemsList![index]['selectedQuantity'] -= 1;
                                                                         CartItems().updateCart(
-                                                                            itemDataMap:
-                                                                                _cartItemsList,
-                                                                            quantityDiff:
-                                                                                -1);
-                                                                        getTotal();
+                                                                            itemIndex: index, quantityDiff: -1);
+                                                                        _totalPriceNotifier.value = CartCalculations()
+                                                                            .getTotal(
+                                                                                cartItemsList: _cartItemsList,
+                                                                                totalPrice: _totalPrice);
                                                                       }
                                                                     },
                                                                   ),
-                                                                  //* Quantity
+                                                                  SizedBox(width: 5),
+                                                                  //* _quantity
                                                                   Text(
-                                                                    _quantity
-                                                                        .toString(),
+                                                                    (_quantity! <= (maxQuantity as int))
+                                                                        ? _quantity.toString()
+                                                                        : maxQuantity.toString(),
                                                                     style: TextStyle(
-                                                                        fontFamily:
-                                                                            'sf',
-                                                                        fontSize:
-                                                                            15,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
+                                                                        fontFamily: 'sf',
+                                                                        fontSize: 18,
+                                                                        color: Colors.black,
+                                                                        fontWeight: FontWeight.w400),
                                                                   ),
+                                                                  SizedBox(width: 5),
                                                                   //* Add button
                                                                   InkWell(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .add_circle_outline_rounded,
-                                                                        size:
-                                                                            17),
+                                                                    child: Icon(Icons.add_circle_outline_rounded,
+                                                                        size: 20),
                                                                     onTap: () {
-                                                                      if (_quantity! <
-                                                                          int.parse(_cartItemsList!
-                                                                              .values
-                                                                              .elementAt(index)[10]
-                                                                              .toString())) {
-                                                                        setState(
-                                                                            () {
-                                                                          _quantity =
-                                                                              _quantity! + 1;
+                                                                      if (_quantity! < (maxQuantity)) {
+                                                                        setState(() {
+                                                                          _quantity = _quantity! + 1;
                                                                         });
-                                                                        _cartItemsList!
-                                                                            .values
-                                                                            .elementAt(index)[8] += 1;
+                                                                        _cartItemsList![index]['selectedQuantity'] += 1;
                                                                         CartItems().updateCart(
-                                                                            itemDataMap:
-                                                                                _cartItemsList,
-                                                                            quantityDiff:
-                                                                                1);
-                                                                        getTotal();
+                                                                            itemIndex: index, quantityDiff: 1);
+                                                                        _totalPriceNotifier.value = CartCalculations()
+                                                                            .getTotal(
+                                                                                cartItemsList: _cartItemsList,
+                                                                                totalPrice: _totalPrice);
                                                                       }
                                                                     },
                                                                   ),
                                                                 ],
                                                               ),
                                                             ),
+                                                            if (_quantity == maxQuantity)
+                                                              Text(
+                                                                'Only $maxQuantity stocks left',
+                                                                style: TextStyle(
+                                                                    fontFamily: 'sf',
+                                                                    fontSize: 12,
+                                                                    color: Colors.red,
+                                                                    fontWeight: FontWeight.w400),
+                                                              ),
                                                           ],
                                                         ),
                                                         Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .end,
+                                                          crossAxisAlignment: CrossAxisAlignment.end,
                                                           children: [
                                                             //* Discounted price
                                                             Text(
                                                               "Rs. " +
-                                                                  NumberFormat(
-                                                                          '###,000')
-                                                                      .format((int.parse(_cartItemsList!.values.elementAt(index)[4].toString()) != 0)
-                                                                          ? ((int.parse(_cartItemsList!.values.elementAt(index)[3].toString())) * ((100 - int.parse(_cartItemsList!.values.elementAt(index)[4].toString())) / 100)) *
+                                                                  NumberFormat('###,000')
+                                                                      .format((int.parse(_cartItemsList![index]
+                                                                                      ['productDoc']
+                                                                                  .data()['discount']
+                                                                                  .toString()) !=
+                                                                              0)
+                                                                          ? ((int.parse(_cartItemsList![index]
+                                                                                          ['productDoc']
+                                                                                      .data()['price']
+                                                                                      .toString())) *
+                                                                                  ((100 -
+                                                                                          int.parse(_cartItemsList![index]
+                                                                                                  ['productDoc']
+                                                                                              .data()['discount']
+                                                                                              .toString())) /
+                                                                                      100)) *
                                                                               _quantity!
-                                                                          : int.parse(_cartItemsList!.values.elementAt(index)[3].toString()) *
+                                                                          : int.parse(_cartItemsList![index]['productDoc'].data()['price'].toString()) *
                                                                               _quantity!)
                                                                       .toString(),
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      'sf',
+                                                                  fontFamily: 'sf',
                                                                   fontSize: 14,
-                                                                  color: Color(
-                                                                      0xff808080),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700),
+                                                                  color: Color(0xff808080),
+                                                                  fontWeight: FontWeight.w700),
                                                             ),
                                                             //* Real price
-                                                            if (int.parse(snapshot
-                                                                    .data.values
-                                                                    .elementAt(
-                                                                        index)[4]
+                                                            if (int.parse(_cartItemsList![index]['productDoc']
+                                                                    .data()['discount']
                                                                     .toString()) !=
                                                                 0)
                                                               Text(
                                                                 "Rs. " +
-                                                                    NumberFormat(
-                                                                            '###,000')
-                                                                        .format(int.parse(_cartItemsList!.values.elementAt(index)[3].toString()) *
+                                                                    NumberFormat('###,000')
+                                                                        .format(int.parse(_cartItemsList![index]
+                                                                                    ['productDoc']
+                                                                                .data()['price']
+                                                                                .toString()) *
                                                                             _quantity!)
                                                                         .toString(),
                                                                 style: TextStyle(
-                                                                    fontFamily:
-                                                                        'sf',
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Color(
-                                                                        0xaa808080),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    decoration:
-                                                                        TextDecoration
-                                                                            .lineThrough),
+                                                                    fontFamily: 'sf',
+                                                                    fontSize: 12,
+                                                                    color: Color(0xaa808080),
+                                                                    fontWeight: FontWeight.w500,
+                                                                    decoration: TextDecoration.lineThrough),
                                                               ),
                                                             //* Shipping price
-                                                            Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topRight,
-                                                              child: Text(
-                                                                (index == 0 ||
-                                                                        _cartItemsList!.values.elementAt(index)[6].toString() !=
-                                                                            _cartItemsList!.values
-                                                                                .elementAt(index - 1)[
-                                                                                    6]
-                                                                                .toString())
-                                                                    ? '+ ' +
-                                                                        _cartItemsList!
-                                                                            .values
-                                                                            .elementAt(index)[5]
-                                                                            .toString()
-                                                                    : 'Free shipping',
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'sf',
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Color(
-                                                                        0xff505050),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400),
-                                                              ),
-                                                            ),
+                                                            FutureBuilder(
+                                                              future: getShipping(),
+                                                              builder: (context, snapshot) {
+                                                                if (snapshot.hasData) {
+                                                                  shippingCostList = snapshot.data as List?;
+                                                                  return Container(
+                                                                    alignment: Alignment.topRight,
+                                                                    child: Text(
+                                                                      (shippingCostList![index] != 0)
+                                                                          ? '+ Delivery ' +
+                                                                              shippingCostList![index].toString()
+                                                                          : 'Free Delivery',
+                                                                      style: TextStyle(
+                                                                          fontFamily: 'sf',
+                                                                          fontSize: 12,
+                                                                          color: Color(0xff505050),
+                                                                          fontWeight: FontWeight.w400),
+                                                                    ),
+                                                                  );
+                                                                } else {
+                                                                  return Container(
+                                                                    alignment: Alignment.topRight,
+                                                                    child: Text(
+                                                                      'Calculating',
+                                                                      style: TextStyle(
+                                                                          fontFamily: 'sf',
+                                                                          fontSize: 12,
+                                                                          color: Color(0xff505050),
+                                                                          fontWeight: FontWeight.w400),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                            )
                                                           ],
                                                         ),
                                                       ],
@@ -453,26 +450,17 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                         fontFamily: 'sf',
                                                         fontSize: 12,
                                                         color: Colors.red,
-                                                        fontWeight:
-                                                            FontWeight.w400),
+                                                        fontWeight: FontWeight.w400),
                                                   ),
                                                   onTap: () {
                                                     setState(() {
-                                                      _cartItemsList!.remove(
-                                                          _cartItemsList!.keys
-                                                              .elementAt(
-                                                                  index));
+                                                      _cartItemsList!.removeAt(index);
                                                     });
-                                                    CartItems().updateCart(
-                                                        itemDataMap:
-                                                            _cartItemsList,
-                                                        quantity: _quantity);
-                                                    // print('items' +
-                                                    //     _cartItemsList
-                                                    //         .toString());
-                                                    if (_cartItemsList!.isEmpty)
+                                                    CartItems().updateCart(itemIndex: index, quantity: _quantity);
+                                                    if (_cartItemsList!.isEmpty) {
                                                       Navigator.pop(context);
-                                                    getTotal();
+                                                      cartQuantity.value = 0;
+                                                    }
                                                   },
                                                 ),
                                               ),
@@ -511,17 +499,10 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                             Text(
                               'Total',
                               style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500),
+                                  fontFamily: 'sf', fontSize: 15, color: Colors.black, fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              "Rs. " +
-                                  NumberFormat('###,000')
-                                      .format(
-                                          (price == 0) ? _totalPrice : price)
-                                      .toString(),
+                              "Rs. " + NumberFormat('###,000').format((price == 0) ? _totalPrice : price).toString(),
                               style: TextStyle(
                                 fontFamily: 'sf',
                                 fontSize: 15,
@@ -534,13 +515,11 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                         SizedBox(height: 2),
                         ValueListenableBuilder<int>(
                           valueListenable: _totalDeliveryNotifier,
-                          builder: (BuildContext context, int delivery,
-                              Widget? child) {
+                          builder: (BuildContext context, int delivery, Widget? child) {
                             return Column(children: [
                               //* Total price of delivery
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Delivery',
@@ -553,9 +532,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                   Text(
                                     "Rs. " +
                                         NumberFormat('###,000')
-                                            .format((delivery == 0)
-                                                ? _totalDelivery
-                                                : delivery)
+                                            .format((delivery == 0) ? _totalDelivery : delivery)
                                             .toString(),
                                     style: TextStyle(
                                       fontFamily: 'sf',
@@ -572,8 +549,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                               ),
                               //* Sub total of cart (Total product price + Delivery price)
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Subtotal',
@@ -586,12 +562,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                   Text(
                                     "Rs. " +
                                         NumberFormat('###,000')
-                                            .format(((price == 0)
-                                                    ? _totalPrice
-                                                    : price) +
-                                                ((delivery == 0)
-                                                    ? _totalDelivery
-                                                    : delivery))
+                                            .format(((price == 0) ? _totalPrice : price) +
+                                                ((delivery == 0) ? _totalDelivery : delivery))
                                             .toString(),
                                     style: TextStyle(
                                       fontFamily: 'sf',
@@ -623,14 +595,14 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                     primary: Colors.grey,
                     backgroundColor: Colors.black,
                   ),
-                  onPressed: () async {},
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.remove('cartItems');
+                    prefs.remove('cartItem_quantity');
+                  },
                   child: Text(
                     "Go to checkout",
-                    style: TextStyle(
-                        fontFamily: 'sf',
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

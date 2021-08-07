@@ -1,67 +1,153 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 ValueNotifier<int?> cartQuantity = ValueNotifier<int?>(0);
 
 class CartItems {
   //* Add cart items to share preferences --------------------------------------------------------------
-  cartItems({itemData, quantity}) async {
+  addCartProducts({itemData, quantity}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    //* Add first item to list
     if (prefs.getString('cartItems') == null) {
-      //* Add first item to map
-      Map<String, dynamic> itemDataMap = {'1': itemData};
-      String encodedItemData = json.encode(itemDataMap);
-      await prefs.setString('cartItems', encodedItemData);
+      List productDataList = [itemData];
+      String encodedProductData =
+          json.encode(productDataList); //* Encode List to String
+
+      await prefs.setString('cartItems', encodedProductData);
+
+      //* count total quantity
       await prefs.setInt('cartItemQuantity', quantity);
       cartQuantity.value = quantity;
+
+      //* Adding items from 2nd onwards to the list
     } else {
-      //* Adding items from 2nd onwards to the map
-      String encodedItemData = prefs.getString('cartItems')!;
-      Map<String, dynamic> itemDataMap = json.decode(encodedItemData);
-      int mapLength = itemDataMap.length;
-      itemDataMap[(mapLength + 1).toString()] = itemData;
-      encodedItemData = json.encode(itemDataMap);
-      await prefs.setString('cartItems', encodedItemData);
+      bool similarProduct = false;
+      List productDataList =
+          await jsonDecode(prefs.getString('cartItems') as String);
 
-      int totalQuantity = prefs.getInt('cartItemQuantity')!;
-      totalQuantity += quantity as int;
-      await prefs.setInt('cartItemQuantity', totalQuantity);
+      //* Add similar products quantity only
+      for (var i = 0; i < productDataList.length; i++) {
+        if (productDataList[i][0] == itemData[0] &&
+            productDataList[i][3] == itemData[3]) {
+          productDataList[i][2] = productDataList[i][2] + itemData[2];
+          similarProduct = true;
+          break;
+        }
+      }
+
+      if (!similarProduct) {
+        productDataList.add(itemData);
+      }
+
+      productDataList.sort(
+          (a, b) => a[1].compareTo(b[1])); //* Sort according to store order
+
+      String encodedProductData =
+          json.encode(productDataList); //* Encode List to String
+      await prefs.setString('cartItems', encodedProductData);
+
+      //* Add to total quantity
+      int totalQuantity = prefs.getInt('cartItemQuantity')! + quantity as int;
       cartQuantity.value = totalQuantity;
-
-      print(encodedItemData);
-      print(mapLength);
-      print(totalQuantity);
+      await prefs.setInt('cartItemQuantity', totalQuantity);
     }
   }
 
   //* Get cart item list from shared preferences
-  getCartItemsList() async {
+  getCartProductList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedItemData = prefs.getString('cartItems')!;
-    Map<String, dynamic> itemDataMap = json.decode(encodedItemData);
-    var sortedItemData = Map.fromEntries(itemDataMap.entries.toList()
-      ..sort((a, b) =>
-          a.value[6].toLowerCase().compareTo(b.value[6].toLowerCase())));
-    return sortedItemData;
+    String encodedProductData = prefs.getString('cartItems')!;
+    List productDataList = json.decode(encodedProductData);
+    List<Map> productFullDetails = [];
+    int totalQuantity = 0;
+    bool dataChanged = false;
+
+    for (var i = 0; i < productDataList.length; i++) {
+      //* Get full data according to shared preferences
+      var firestore = FirebaseFirestore.instance;
+      DocumentSnapshot ds1 = await firestore
+          .collection('products')
+          .doc(productDataList[i][4])
+          .collection(productDataList[i][4])
+          .doc(productDataList[i][0])
+          .get();
+
+      //* Add product DocumentSnapshot to map
+      productFullDetails.add({'productDoc': ds1});
+
+      //* Add quantity and other data to the map
+      productFullDetails[i]['selectedSize'] = productDataList[i][3];
+      productFullDetails[i]['category'] = productDataList[i][4];
+      productFullDetails[i]['productId'] = productDataList[i][0];
+
+      //* Get size index according to documentSnapshot
+      int? sizeIndex = productFullDetails[i]['productDoc']
+          .data()['size']['size']
+          .indexOf(productFullDetails[i]['selectedSize']);
+
+      //* Get max stocks available
+      int? maxQuantity =
+          productFullDetails[i]['productDoc'].data()['size']['qty'][sizeIndex];
+
+      //* If selected quantity is higher than max stocks available, it fix here
+      if (productDataList[i][2]! > maxQuantity) {
+        productFullDetails[i]['selectedQuantity'] = maxQuantity;
+
+        //* Add to total quantity
+        totalQuantity = prefs.getInt('cartItemQuantity')! -
+            (productDataList[i][2] - maxQuantity) as int;
+        cartQuantity.value = totalQuantity;
+        productDataList[i][2] = maxQuantity;
+        dataChanged = true;
+      } else {
+        productFullDetails[i]['selectedQuantity'] = productDataList[i][2];
+      }
+    }
+
+    //* Update shared preferences if data have changed
+    if (dataChanged) {
+      encodedProductData =
+          json.encode(productDataList); //* Encode List to String
+      await prefs.setString('cartItems', encodedProductData);
+      await prefs.setInt('cartItemQuantity', totalQuantity);
+    }
+    return productFullDetails;
   }
 
   //* Update changes of the cart to shared preferences
-  updateCart({required itemDataMap, quantity, quantityDiff}) async {
+  updateCart({itemIndex, quantity, quantityDiff}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> formattedData = {};
-    for (int count = 0; count < itemDataMap.length; count++) {
-      formattedData[(count + 1).toString()] =
-          itemDataMap.values.elementAt(count);
-    }
-    String encodedItemData = json.encode(formattedData);
-    await prefs.setString('cartItems', encodedItemData);
-    if (quantity != null) {
-      cartQuantity.value = (quantity as int) - 1;
-      await prefs.setInt('cartItemQuantity', cartQuantity.value!);
+
+    List productDataList =
+        await jsonDecode(prefs.getString('cartItems') as String);
+
+    if (quantityDiff != null) {
+      //* Add quantity difference
+      productDataList[itemIndex][2] += quantityDiff;
+
+      //* Encode List to String
+      String encodedProductData = json.encode(productDataList);
+      await prefs.setString('cartItems', encodedProductData);
+
+      //* Add to total quantity
+      int totalQuantity =
+          prefs.getInt('cartItemQuantity')! + quantityDiff as int;
+      cartQuantity.value = totalQuantity;
+      await prefs.setInt('cartItemQuantity', totalQuantity);
     } else {
-      cartQuantity.value = (quantityDiff as int) + 1;
-      await prefs.setInt('cartItemQuantity', cartQuantity.value!);
+      //* remove product from cart
+      int totalQuantity = prefs.getInt('cartItemQuantity')! -
+          (productDataList[itemIndex][2]) as int;
+      cartQuantity.value = totalQuantity;
+      await prefs.setInt('cartItemQuantity', totalQuantity);
+
+      productDataList.removeAt(itemIndex);
+
+      String encodedProductData = json.encode(productDataList);
+      await prefs.setString('cartItems', encodedProductData);
     }
   }
 
