@@ -13,8 +13,7 @@ class CartItems {
     //* Add first item to list
     if (prefs.getString('cartItems') == null) {
       List productDataList = [itemData];
-      String encodedProductData =
-          json.encode(productDataList); //* Encode List to String
+      String encodedProductData = json.encode(productDataList); //* Encode List to String
 
       await prefs.setString('cartItems', encodedProductData);
 
@@ -25,13 +24,11 @@ class CartItems {
       //* Adding items from 2nd onwards to the list
     } else {
       bool similarProduct = false;
-      List productDataList =
-          await jsonDecode(prefs.getString('cartItems') as String);
+      List productDataList = await jsonDecode(prefs.getString('cartItems') as String);
 
       //* Add similar products quantity only
       for (var i = 0; i < productDataList.length; i++) {
-        if (productDataList[i][0] == itemData[0] &&
-            productDataList[i][3] == itemData[3]) {
+        if (productDataList[i][0] == itemData[0] && productDataList[i][3] == itemData[3]) {
           productDataList[i][2] = productDataList[i][2] + itemData[2];
           similarProduct = true;
           break;
@@ -42,11 +39,9 @@ class CartItems {
         productDataList.add(itemData);
       }
 
-      productDataList.sort(
-          (a, b) => a[1].compareTo(b[1])); //* Sort according to store order
+      productDataList.sort((a, b) => a[1].compareTo(b[1])); //* Sort according to store order
 
-      String encodedProductData =
-          json.encode(productDataList); //* Encode List to String
+      String encodedProductData = json.encode(productDataList); //* Encode List to String
       await prefs.setString('cartItems', encodedProductData);
 
       //* Add to total quantity
@@ -58,6 +53,8 @@ class CartItems {
 
   //* Get cart item list from shared preferences
   getCartProductList() async {
+    Stopwatch stopwatch = new Stopwatch()..start();
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String encodedProductData = prefs.getString('cartItems')!;
     List productDataList = json.decode(encodedProductData);
@@ -84,21 +81,18 @@ class CartItems {
       productFullDetails[i]['productId'] = productDataList[i][0];
 
       //* Get size index according to documentSnapshot
-      int? sizeIndex = productFullDetails[i]['productDoc']
-          .data()['size']['size']
-          .indexOf(productFullDetails[i]['selectedSize']);
+      int? sizeIndex =
+          productFullDetails[i]['productDoc'].data()['size']['size'].indexOf(productFullDetails[i]['selectedSize']);
 
       //* Get max stocks available
-      int? maxQuantity =
-          productFullDetails[i]['productDoc'].data()['size']['qty'][sizeIndex];
+      int? maxQuantity = productFullDetails[i]['productDoc'].data()['size']['qty'][sizeIndex];
 
       //* If selected quantity is higher than max stocks available, it fix here
       if (productDataList[i][2]! > maxQuantity) {
         productFullDetails[i]['selectedQuantity'] = maxQuantity;
 
         //* Add to total quantity
-        totalQuantity = prefs.getInt('cartItemQuantity')! -
-            (productDataList[i][2] - maxQuantity) as int;
+        totalQuantity = prefs.getInt('cartItemQuantity')! - (productDataList[i][2] - maxQuantity) as int;
         cartQuantity.value = totalQuantity;
         productDataList[i][2] = maxQuantity;
         dataChanged = true;
@@ -109,11 +103,12 @@ class CartItems {
 
     //* Update shared preferences if data have changed
     if (dataChanged) {
-      encodedProductData =
-          json.encode(productDataList); //* Encode List to String
+      encodedProductData = json.encode(productDataList); //* Encode List to String
       await prefs.setString('cartItems', encodedProductData);
       await prefs.setInt('cartItemQuantity', totalQuantity);
     }
+    print('aaaaa() executed in ${stopwatch.elapsed}');
+
     return productFullDetails;
   }
 
@@ -121,8 +116,7 @@ class CartItems {
   updateCart({itemIndex, quantity, quantityDiff}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    List productDataList =
-        await jsonDecode(prefs.getString('cartItems') as String);
+    List productDataList = await jsonDecode(prefs.getString('cartItems') as String);
 
     if (quantityDiff != null) {
       //* Add quantity difference
@@ -133,14 +127,12 @@ class CartItems {
       await prefs.setString('cartItems', encodedProductData);
 
       //* Add to total quantity
-      int totalQuantity =
-          prefs.getInt('cartItemQuantity')! + quantityDiff as int;
+      int totalQuantity = prefs.getInt('cartItemQuantity')! + quantityDiff as int;
       cartQuantity.value = totalQuantity;
       await prefs.setInt('cartItemQuantity', totalQuantity);
     } else {
       //* remove product from cart
-      int totalQuantity = prefs.getInt('cartItemQuantity')! -
-          (productDataList[itemIndex][2]) as int;
+      int totalQuantity = prefs.getInt('cartItemQuantity')! - (productDataList[itemIndex][2]) as int;
       cartQuantity.value = totalQuantity;
       await prefs.setInt('cartItemQuantity', totalQuantity);
 
