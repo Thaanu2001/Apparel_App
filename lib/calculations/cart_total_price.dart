@@ -20,9 +20,8 @@ class CartCalculations {
   }
 
   //* Get shipping price -----------------------------------------------------------------
-  getShipping({required cartItemsList}) async {
+  getShipping({required List cartItemsList}) async {
     var firestore = FirebaseFirestore.instance;
-    DocumentSnapshot ds1;
     DocumentSnapshot? ds2;
     DocumentSnapshot userDoc;
     Map userLocation;
@@ -33,14 +32,18 @@ class CartCalculations {
     int fixedWeightPrice = 50;
     int storeCount = 0;
 
-    //* Get user shipping details
+    Stopwatch stopwatch = new Stopwatch()..start();
+
+    //* Get user details
     userId = await AuthService().getUser();
 
+    //* Get user shipping details
     userDoc = await firestore.collection('users').doc(userId).get();
     userLocation = (((userDoc.data() as Map)['shipping']) != null)
         ? (userDoc.data() as Map)['shipping']
         : {'province': 'Western', 'district': 'Colombo', 'city': 'Nugegoda'}; //* Add Nugegoda as default
 
+    //*Get shipping price
     ds2 = await firestore
         .collection('shipping')
         .doc(userLocation['province'])
@@ -50,21 +53,26 @@ class CartCalculations {
         .doc(userLocation['city'])
         .get();
 
-    for (var i = 0; i < cartItemsList!.length; i++) {
-      // * Get store location
-      ds1 = await firestore.collection('stores').doc(cartItemsList![i]['productDoc'].data()['store-id']).get();
+    //* Get a list of future operations
+    final List<Future<DocumentSnapshot>> documentSnapshotFutureList = cartItemsList
+        .map((cartItem) => firestore.collection('stores').doc(cartItem['productDoc'].data()['store-id']).get())
+        .toList();
 
+    //* Get data from all the async operations
+    final List<dynamic> documentSnapshotList = await Future.wait(documentSnapshotFutureList);
+
+    for (var i = 0; i < cartItemsList.length; i++) {
       totalWeight.insert(
           i,
-          double.parse((cartItemsList![i]['productDoc'].data()['weight'] * cartItemsList![i]['selectedQuantity']!)
+          double.parse((cartItemsList[i]['productDoc'].data()['weight'] * cartItemsList[i]['selectedQuantity']!)
               .toStringAsFixed(2)));
 
       //* Get number of different stores
       if (i == 0 ||
-          cartItemsList![i]['productDoc'].data()['store-name'] !=
-              cartItemsList![i - 1]['productDoc'].data()['store-name']) {
+          cartItemsList[i]['productDoc'].data()['store-name'] !=
+              cartItemsList[i - 1]['productDoc'].data()['store-name']) {
         storeCount++;
-        storeLocation.add((ds1.data() as Map)['location']); //* Add store locations
+        storeLocation.add((documentSnapshotList[i].data() as Map)['location']); //* Add store locations
       }
     }
 
@@ -76,9 +84,9 @@ class CartCalculations {
       storeWeight = totalWeight[i];
 
       //* Get sum of products in one store
-      while (cartItemsList!.length - 1 > i &&
-          cartItemsList![i]['productDoc'].data()['store-name'] ==
-              cartItemsList![i + 1]['productDoc'].data()['store-name']) {
+      while (cartItemsList.length - 1 > i &&
+          cartItemsList[i]['productDoc'].data()['store-name'] ==
+              cartItemsList[i + 1]['productDoc'].data()['store-name']) {
         storeWeight += totalWeight[i + 1];
         i++;
         productsPerStore++;
@@ -90,8 +98,8 @@ class CartCalculations {
       }
       i++;
     }
-    print(shippingPrice);
 
+    print('getShipping() executed in ${stopwatch.elapsed}');
     return shippingPrice;
   }
 }

@@ -332,9 +332,6 @@ class _StoresSectionState extends State<StoresSection>
 
   //* Store feature products
   featureProducts(storeId, index) {
-    print(storeId);
-    print(_storeProducts.length.toString());
-
     _getStoreProducts(storeId);
 
     //* Recent Products -----------------------------------------------------------------------------

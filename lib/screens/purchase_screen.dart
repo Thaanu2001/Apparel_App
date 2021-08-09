@@ -37,11 +37,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   //* Get Size list for Drop down
   getSizeList() {
-    print(widget.productData['size-table']);
-    print(widget.productData["size"].length);
-    var sortedKeys = widget.productData["size"].keys.toList()..sort();
-    print(sortedKeys);
-
     for (int count = 0;
         count < widget.productData['size']["size"].length;
         count++) {
@@ -52,7 +47,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             " (Sold out)");
       }
     }
-    print(sizeList);
   }
 
   //* Table topic text widget
@@ -556,8 +550,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       CartItems().addCartProducts(
                           itemData: itemData, quantity: _quantity);
 
-                      print(itemData.length);
-
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -575,8 +567,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         ),
                       );
                     } else {
-                      print(_quantity);
-                      print(widget.isBuyNow);
                       Route route = SlideLeftTransition(
                         widget: CheckoutScreen(
                           productData: widget.productData,

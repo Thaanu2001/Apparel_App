@@ -93,7 +93,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                       transitionDuration: Duration(milliseconds: 500)),
                 );
-                print(result);
                 setState(() {
                   item = result;
                 });
@@ -217,8 +216,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         if (direction == HeroFlightDirection.pop &&
                             _scrollController.position.pixels >=
                                 MediaQuery.of(context).size.width * 0.5) {
-                          print(_scrollController.position.pixels);
-                          print(MediaQuery.of(context).size.width * 0.5);
                           return FadeTransition(
                             opacity: AlwaysStoppedAnimation(0),
                             child: toHero.child,

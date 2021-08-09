@@ -1,6 +1,5 @@
 import 'package:Apparel_App/calculations/cart_total_price.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
-import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/services/cart_items.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
@@ -24,13 +23,14 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
   ValueNotifier<List> _shippingNotifier = ValueNotifier<List>([]);
   DocumentSnapshot? productData;
   int _totalPrice = 0;
-  int _totalDelivery = 0;
 
   @override
   void initState() {
     _cartItemsList = null;
     _totalPrice = 0;
     _totalPriceNotifier.value = 0;
+    _totalDeliveryNotifier.value = 0;
+
     super.initState();
   }
 
@@ -201,7 +201,6 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                 ),
                                                                 SizedBox(height: 2),
                                                                 Container(
-                                                                  // width: 55,
                                                                   child: Row(
                                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                                     children: [
@@ -327,8 +326,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                   ),
                                                                 //* Shipping price
                                                                 FutureBuilder(
-                                                                  future: CartCalculations()
-                                                                      .getShipping(cartItemsList: _cartItemsList),
+                                                                  future: CartCalculations().getShipping(
+                                                                      cartItemsList: _cartItemsList as List),
                                                                   builder: (context, snapshot) {
                                                                     if (snapshot.hasData) {
                                                                       List snapData = snapshot.data as List;
@@ -340,7 +339,6 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                             (value, element) => value + element);
                                                                       });
 
-                                                                      print(_shippingNotifier.value.isEmpty);
                                                                       return ValueListenableBuilder<List>(
                                                                           valueListenable: _shippingNotifier,
                                                                           builder: (BuildContext context, List shipping,
@@ -482,10 +480,9 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    "Rs. " +
-                                        NumberFormat('###,000')
-                                            .format((delivery == 0) ? _totalDelivery : delivery)
-                                            .toString(),
+                                    (delivery != 0)
+                                        ? "Rs. " + NumberFormat('###,000').format(delivery).toString()
+                                        : 'Calculating',
                                     style: TextStyle(
                                       fontFamily: 'sf',
                                       fontSize: 15,
@@ -514,8 +511,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                   Text(
                                     "Rs. " +
                                         NumberFormat('###,000')
-                                            .format(((price == 0) ? _totalPrice : price) +
-                                                ((delivery == 0) ? _totalDelivery : delivery))
+                                            .format(((price == 0) ? _totalPrice : price) + (delivery))
                                             .toString(),
                                     style: TextStyle(
                                       fontFamily: 'sf',

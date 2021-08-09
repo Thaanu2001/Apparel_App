@@ -53,28 +53,27 @@ class CartItems {
 
   //* Get cart item list from shared preferences
   getCartProductList() async {
-    Stopwatch stopwatch = new Stopwatch()..start();
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String encodedProductData = prefs.getString('cartItems')!;
     List productDataList = json.decode(encodedProductData);
-    List<Map> productFullDetails = [];
+    List<Map<String, dynamic>> productFullDetails = [];
     int totalQuantity = 0;
     bool dataChanged = false;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    //* Get a list of future operations
+    final List<Future<DocumentSnapshot>> documentSnapshotFutureList = productDataList
+        .map((productData) =>
+            firestore.collection('products').doc(productData[4]).collection(productData[4]).doc(productData[0]).get())
+        .toList();
+
+    //* Get data from all the async operations
+    final List<dynamic> documentSnapshotList = await Future.wait(documentSnapshotFutureList);
+
+    //* Add product DocumentSnapshot to map
+    productFullDetails = documentSnapshotList.map((documentSnapshot) => {'productDoc': documentSnapshot}).toList();
 
     for (var i = 0; i < productDataList.length; i++) {
-      //* Get full data according to shared preferences
-      var firestore = FirebaseFirestore.instance;
-      DocumentSnapshot ds1 = await firestore
-          .collection('products')
-          .doc(productDataList[i][4])
-          .collection(productDataList[i][4])
-          .doc(productDataList[i][0])
-          .get();
-
-      //* Add product DocumentSnapshot to map
-      productFullDetails.add({'productDoc': ds1});
-
       //* Add quantity and other data to the map
       productFullDetails[i]['selectedSize'] = productDataList[i][3];
       productFullDetails[i]['category'] = productDataList[i][4];
@@ -107,7 +106,6 @@ class CartItems {
       await prefs.setString('cartItems', encodedProductData);
       await prefs.setInt('cartItemQuantity', totalQuantity);
     }
-    print('aaaaa() executed in ${stopwatch.elapsed}');
 
     return productFullDetails;
   }

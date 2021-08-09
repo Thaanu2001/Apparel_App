@@ -160,7 +160,6 @@ shippingUpdateModal(context, userId) {
                             onChanged: (dynamic value) {
                               selectedProvince = value;
                               setState(() {});
-                              print('$provinceId $selectedProvince');
                             },
                             onTap: () => dismissKeyboard(context),
                           );
@@ -240,7 +239,6 @@ shippingUpdateModal(context, userId) {
                               onChanged: (dynamic value) {
                                 selectedDistrict = value;
                                 setState(() {});
-                                print('$districtId $selectedDistrict');
                               },
                               onTap: () => dismissKeyboard(context),
                             );

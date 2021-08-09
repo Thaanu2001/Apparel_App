@@ -366,7 +366,6 @@ class AuthService {
                 (userData.user.photoURL != null) ? userData.user.photoURL : ''
           });
         } else {
-          print('heree');
           await FirebaseFirestore.instance
               .collection("users")
               .doc(userData.user.uid)

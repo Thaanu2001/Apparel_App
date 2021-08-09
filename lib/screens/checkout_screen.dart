@@ -40,7 +40,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     userId = AuthService().getUser();
-    print(userId);
     super.initState();
   }
 

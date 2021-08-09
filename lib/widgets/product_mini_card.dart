@@ -29,7 +29,6 @@ class ProductMiniCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         onTap: () {
-          print('tapped');
           Route route = SlideLeftTransition(
             widget: ProductDetailsScreen(
               productData: productData,
