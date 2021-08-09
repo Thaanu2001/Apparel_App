@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CartCalculations {
@@ -31,7 +30,7 @@ class CartCalculations {
     int fixedWeightPrice = 50;
     int storeCount = 0;
 
-    Stopwatch stopwatch = new Stopwatch()..start();
+    // Stopwatch stopwatch = new Stopwatch()..start();
 
     //* Get user details
     // userId = await AuthService().getUser();
@@ -98,7 +97,7 @@ class CartCalculations {
       i++;
     }
 
-    print('getShipping() executed in ${stopwatch.elapsed}');
+    // print('getShipping() executed in ${stopwatch.elapsed}');
     return [shippingPrice, userLocation];
   }
 }

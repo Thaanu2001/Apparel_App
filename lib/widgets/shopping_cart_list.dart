@@ -1,5 +1,6 @@
 import 'package:Apparel_App/calculations/cart_total_price.dart';
 import 'package:Apparel_App/models/shipping_update_modal.dart';
+import 'package:Apparel_App/screens/checkout_screen.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
 import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/services/cart_items.dart';
@@ -8,9 +9,9 @@ import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingCartList extends StatefulWidget {
   @override
@@ -63,7 +64,10 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                   });
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container();
+                    return Container(
+                      alignment: Alignment.topCenter,
+                      child: CupertinoActivityIndicator(),
+                    );
                   } else {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
@@ -155,7 +159,21 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                         productData: _cartItemsList![index]['productDoc'],
                                                         category: _cartItemsList![index]['category']),
                                                   );
-                                                  Navigator.push(context, route);
+                                                  await Navigator.push(context, route);
+
+                                                  //* Check for new shopping card addings
+                                                  var newData = await CartItems().getCartProductList();
+                                                  _cartItemsList = newData;
+                                                  var newShipping = await CartCalculations().getShipping(
+                                                      cartItemsList: _cartItemsList as List, userId: userId as String);
+                                                  _shippingNotifier.value = newShipping[0];
+
+                                                  if (this.mounted) {
+                                                    setState(() {
+                                                      _totalPriceNotifier.value = CartCalculations().getTotal(
+                                                          cartItemsList: _cartItemsList, totalPrice: _totalPrice);
+                                                    });
+                                                  }
                                                 },
                                               ),
                                             ),
@@ -180,7 +198,22 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                           widget: ProductDetailsScreen(
                                                               productData: _cartItemsList![index]['productDoc'],
                                                               category: _cartItemsList![index]['category']));
-                                                      Navigator.push(context, route);
+                                                      Navigator.pushReplacement(context, route);
+
+                                                      //* Check for new shopping card addings
+                                                      var newData = await CartItems().getCartProductList();
+                                                      _cartItemsList = newData;
+                                                      var newShipping = await CartCalculations().getShipping(
+                                                          cartItemsList: _cartItemsList as List,
+                                                          userId: userId as String);
+                                                      _shippingNotifier.value = newShipping[0];
+
+                                                      if (this.mounted) {
+                                                        setState(() {
+                                                          _totalPriceNotifier.value = CartCalculations().getTotal(
+                                                              cartItemsList: _cartItemsList, totalPrice: _totalPrice);
+                                                        });
+                                                      }
                                                     },
                                                   ),
                                                   StatefulBuilder(
@@ -574,10 +607,15 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                   primary: Colors.grey,
                   backgroundColor: Colors.black,
                 ),
-                onPressed: () async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  prefs.remove('cartItems');
-                  prefs.remove('cartItem_quantity');
+                onPressed: () {
+                  Route route = SlideLeftTransition(
+                    widget: CheckoutScreen(
+                      productData: _cartItemsList,
+                      isBuyNow: false,
+                      totalProductPrice: _totalPriceNotifier.value,
+                    ),
+                  );
+                  Navigator.push(context, route);
                 },
                 child: Text(
                   "Go to checkout",

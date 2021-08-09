@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:Apparel_App/calculations/cart_total_price.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -16,6 +18,7 @@ class CheckoutScreen extends StatefulWidget {
   String? category;
   int? quantity;
   String? selectedSize;
+  int? totalProductPrice;
   CheckoutScreen({
     Key? key,
     required this.productData,
@@ -23,6 +26,7 @@ class CheckoutScreen extends StatefulWidget {
     this.category,
     this.quantity,
     this.selectedSize,
+    this.totalProductPrice,
   }) : super(key: key);
 
   @override
@@ -51,10 +55,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     double totalWeight;
 
     //* Get store location
-    ds1 = await firestore
-        .collection('stores')
-        .doc(widget.productData['store-id'])
-        .get();
+    ds1 = await firestore.collection('stores').doc(widget.productData['store-id']).get();
 
     storeLocation = (ds1.data() as Map)['location'];
 
@@ -69,11 +70,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         .get();
 
     setState(() {
-      totalWeight = double.parse(
-          (widget.productData['weight'] * widget.quantity!).toStringAsFixed(2));
+      totalWeight = double.parse((widget.productData['weight'] * widget.quantity!).toStringAsFixed(2));
 
-      shippingPrice = ((ds2.data() as Map)[storeLocation]) +
-          ((totalWeight.ceil() - 1) * fixedWeightPrice);
+      shippingPrice = ((ds2.data() as Map)[storeLocation]) + ((totalWeight.ceil() - 1) * fixedWeightPrice);
     });
 
     return shippingPrice;
@@ -91,8 +90,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 0, 10),
+              padding: EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 0, 10),
               child: Stack(
                 children: [
                   InkWell(
@@ -133,13 +131,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         child: InkWell(
                           //* Shipping Address Section -------------------------------------------------------
                           child: StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(userId)
-                                  .snapshots(),
+                              stream: FirebaseFirestore.instance.collection('users').doc(userId).snapshots(),
                               builder: (context, snapshot) {
-                                if (snapshot.hasData)
-                                  userDocument = snapshot.data!.data() as Map;
+                                if (snapshot.hasData) userDocument = snapshot.data!.data() as Map;
                                 if (userDocument.containsKey('shipping')) {
                                   //* Shows shipping address if available
                                   return Row(
@@ -147,8 +141,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       Flexible(
                                         fit: FlexFit.tight,
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             //* Topic
                                             Text(
@@ -194,8 +187,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   return Container(
                                     alignment: Alignment.center,
                                     width: double.infinity,
-                                    padding:
-                                        EdgeInsets.only(top: 25, bottom: 25),
+                                    padding: EdgeInsets.only(top: 25, bottom: 25),
                                     margin: EdgeInsets.only(bottom: 5),
                                     decoration: BoxDecoration(
                                         border: Border.all(
@@ -216,7 +208,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 }
                               }),
                           onTap: () {
-                            shippingUpdateModal(context, userId, (){});
+                            shippingUpdateModal(context, userId, () => setState(() {}));
                             setState(() {});
                           },
                         ),
@@ -229,11 +221,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       //* Payment method section ----------------------------------------------------
                       Text(
                         "Payment Method",
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700),
+                        style:
+                            TextStyle(fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                       ),
                       Row(
                         children: [
@@ -244,9 +233,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: (isCashOnDelivery)
-                                    ? Colors.black
-                                    : Color(0xffF3F3F3),
+                                color: (isCashOnDelivery) ? Colors.black : Color(0xffF3F3F3),
                               ),
                               //* Cash on delivery button
                               child: InkWell(
@@ -254,9 +241,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   children: [
                                     Icon(
                                       Customicons.delivery,
-                                      color: (isCashOnDelivery)
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: (isCashOnDelivery) ? Colors.white : Colors.black,
                                       size: 30,
                                     ),
                                     SizedBox(height: 5),
@@ -265,9 +250,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 16,
-                                          color: (isCashOnDelivery)
-                                              ? Colors.white
-                                              : Colors.black,
+                                          color: (isCashOnDelivery) ? Colors.white : Colors.black,
                                           fontWeight: FontWeight.w700),
                                     ),
                                   ],
@@ -287,9 +270,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: (isCashOnDelivery)
-                                    ? Color(0xffF3F3F3)
-                                    : Colors.black,
+                                color: (isCashOnDelivery) ? Color(0xffF3F3F3) : Colors.black,
                               ),
                               //* Card payment button
                               child: InkWell(
@@ -297,9 +278,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   children: [
                                     Icon(
                                       Customicons.card,
-                                      color: (isCashOnDelivery)
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color: (isCashOnDelivery) ? Colors.black : Colors.white,
                                       size: 30,
                                     ),
                                     SizedBox(height: 5),
@@ -308,9 +287,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 16,
-                                          color: (isCashOnDelivery)
-                                              ? Colors.black
-                                              : Colors.white,
+                                          color: (isCashOnDelivery) ? Colors.black : Colors.white,
                                           fontWeight: FontWeight.w700),
                                     ),
                                   ],
@@ -333,18 +310,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       //* Products Section --------------------------------------------------
                       Text(
                         "Products",
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700),
+                        style:
+                            TextStyle(fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                       ),
                       SizedBox(height: 8),
                       //* Product Cards list
                       FutureBuilder(
-                        future: getShipping(),
+                        future: (widget.isBuyNow)
+                            ? getShipping()
+                            : CartCalculations().getShipping(cartItemsList: widget.productData as List, userId: userId),
                         builder: (context, snapshot) {
+                          List snapData = [];
+                          if (snapshot.hasData && !widget.isBuyNow) {
+                            snapData = snapshot.data as List;
+                            SchedulerBinding.instance!.addPostFrameCallback((_) {
+                              setState(() {
+                                shippingPrice = snapData[0].reduce((value, element) => value + element);
+                              });
+                            });
+                          }
                           return (widget.isBuyNow)
+                              //* Single product purchase
                               ? ProductMiniCard(
                                   productData: widget.productData,
                                   quantity: widget.quantity as int,
@@ -352,9 +338,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   size: widget.selectedSize as String,
                                   shippingPrice: shippingPrice as int,
                                 )
-                              : Container();
+                              //* List of products from shopping cart
+                              : ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: widget.productData.length,
+                                  itemBuilder: (_, int index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 15),
+                                      child: ProductMiniCard(
+                                        productData: widget.productData[index]['productDoc'],
+                                        quantity: widget.productData[index]['selectedQuantity'] as int,
+                                        category: widget.productData[index]['category'] as String,
+                                        size: widget.productData[index]['selectedSize'] as String,
+                                        shippingPrice: (snapData.length != 0) ? snapData[0][index] : 0,
+                                      ),
+                                    );
+                                  },
+                                );
                         },
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -374,30 +378,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     children: [
                       Text(
                         'Total',
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
+                        style:
+                            TextStyle(fontFamily: 'sf', fontSize: 15, color: Colors.black, fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        "Rs. " +
-                            NumberFormat('###,000')
-                                .format((int.parse(widget.productData['discount']
-                                            .toString()) !=
-                                        0)
-                                    ? ((int.parse(widget.productData['price']
-                                                .toString())) *
-                                            ((100 -
-                                                    int.parse(widget
-                                                        .productData['discount']
-                                                        .toString())) /
-                                                100)) *
-                                        int.parse(widget.quantity.toString())
-                                    : int.parse(
-                                            widget.productData['price'].toString()) *
-                                        int.parse(widget.quantity.toString()))
-                                .toString(),
+                        (widget.isBuyNow)
+                            ? "Rs. " +
+                                NumberFormat('###,000')
+                                    .format((int.parse(widget.productData['discount'].toString()) != 0)
+                                        ? ((int.parse(widget.productData['price'].toString())) *
+                                                ((100 - int.parse(widget.productData['discount'].toString())) / 100)) *
+                                            int.parse(widget.quantity.toString())
+                                        : int.parse(widget.productData['price'].toString()) *
+                                            int.parse(widget.quantity.toString()))
+                                    .toString()
+                            : "Rs. " + NumberFormat('###,000').format(widget.totalProductPrice).toString(),
                         style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 15,
@@ -417,17 +412,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           Text(
                             'Delivery',
                             style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 15,
-                                color: Color(0xff606060),
-                                fontWeight: FontWeight.w500),
+                                fontFamily: 'sf', fontSize: 15, color: Color(0xff606060), fontWeight: FontWeight.w500),
                           ),
                           Text(
                             (shippingPrice != 0)
-                                ? "Rs. " +
-                                    NumberFormat('###,000')
-                                        .format(shippingPrice)
-                                        .toString()
+                                ? "Rs. " + NumberFormat('###,000').format(shippingPrice).toString()
                                 : 'Calculating',
                             style: TextStyle(
                               fontFamily: 'sf',
@@ -449,29 +438,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           Text(
                             'Subtotal',
                             style: TextStyle(
-                                fontFamily: 'sf',
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
+                                fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "Rs. " +
-                                NumberFormat('###,000')
-                                    .format((int.parse(widget.productData['discount'].toString()) != 0)
-                                        ? ((int.parse(widget.productData['price'].toString())) *
-                                                    ((100 -
-                                                            int.parse(widget
-                                                                .productData[
-                                                                    'discount']
-                                                                .toString())) /
-                                                        100)) *
-                                                int.parse(widget.quantity
-                                                    .toString()) +
-                                            (shippingPrice as int)
-                                        : int.parse(widget.productData['price'].toString()) *
-                                                int.parse(widget.quantity.toString()) +
-                                            (shippingPrice as int))
-                                    .toString(),
+                            (widget.isBuyNow)
+                                ? "Rs. " +
+                                    NumberFormat('###,000')
+                                        .format((int.parse(widget.productData['discount'].toString()) != 0)
+                                            ? ((int.parse(widget.productData['price'].toString())) *
+                                                        ((100 - int.parse(widget.productData['discount'].toString())) /
+                                                            100)) *
+                                                    int.parse(widget.quantity.toString()) +
+                                                (shippingPrice as int)
+                                            : int.parse(widget.productData['price'].toString()) *
+                                                    int.parse(widget.quantity.toString()) +
+                                                (shippingPrice as int))
+                                        .toString()
+                                : "Rs. " +
+                                    NumberFormat('###,000').format(widget.totalProductPrice! + (shippingPrice as int)),
                             style: TextStyle(
                               fontFamily: 'sf',
                               fontSize: 16,
@@ -502,11 +486,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 onPressed: () async {},
                 child: Text(
                   (isCashOnDelivery) ? 'Place Order' : 'Proceed to Pay',
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

@@ -29,13 +29,14 @@ class ProductMiniCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         onTap: () {
+          Navigator.pop(context);
           Route route = SlideLeftTransition(
             widget: ProductDetailsScreen(
               productData: productData,
               category: category,
             ),
           );
-          Navigator.push(context, route);
+          Navigator.pushReplacement(context, route);
         },
         child: Container(
           padding: EdgeInsets.all(15),
@@ -124,21 +125,11 @@ class ProductMiniCard extends StatelessWidget {
                                 Text(
                                   "Rs. " +
                                       NumberFormat('###,000')
-                                          .format((int.parse(
-                                                      productData['discount']
-                                                          .toString()) !=
-                                                  0)
-                                              ? ((int.parse(productData['price']
-                                                          .toString())) *
-                                                      ((100 -
-                                                              int.parse(productData[
-                                                                      'discount']
-                                                                  .toString())) /
-                                                          100)) *
+                                          .format((int.parse(productData['discount'].toString()) != 0)
+                                              ? ((int.parse(productData['price'].toString())) *
+                                                      ((100 - int.parse(productData['discount'].toString())) / 100)) *
                                                   quantity
-                                              : int.parse(productData['price']
-                                                      .toString()) *
-                                                  quantity)
+                                              : int.parse(productData['price'].toString()) * quantity)
                                           .toString(),
                                   style: TextStyle(
                                       fontFamily: 'sf',
@@ -147,16 +138,11 @@ class ProductMiniCard extends StatelessWidget {
                                       fontWeight: FontWeight.w700),
                                 ),
                                 //* Real price
-                                if (int.parse(
-                                        productData['discount'].toString()) !=
-                                    0)
+                                if (int.parse(productData['discount'].toString()) != 0)
                                   Text(
                                     "Rs. " +
                                         NumberFormat('###,000')
-                                            .format(int.parse(
-                                                    productData['price']
-                                                        .toString()) *
-                                                quantity)
+                                            .format(int.parse(productData['price'].toString()) * quantity)
                                             .toString(),
                                     style: TextStyle(
                                         fontFamily: 'sf',
@@ -169,10 +155,7 @@ class ProductMiniCard extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topRight,
                                   child: Text(
-                                    (shippingPrice != 0)
-                                        ? '+ Delivery ' +
-                                            shippingPrice.toString()
-                                        : 'Calculating',
+                                    (shippingPrice != 0) ? '+ Delivery ' + shippingPrice.toString() : 'Free Delivery',
                                     style: TextStyle(
                                         fontFamily: 'sf',
                                         fontSize: 12,
