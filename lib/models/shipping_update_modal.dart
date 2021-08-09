@@ -4,7 +4,7 @@ import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-shippingUpdateModal(context, userId) {
+shippingUpdateModal(context, userId, Function onPress) {
   final fullName = TextEditingController();
   final mobile = TextEditingController();
   final address = TextEditingController();
@@ -27,24 +27,19 @@ shippingUpdateModal(context, userId) {
           minHeight: MediaQuery.of(context).size.height * 0.8,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
         ),
-        child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+        child: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
           return Container(
             decoration: new BoxDecoration(
                 color: Colors.white,
-                borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(10.0),
-                    topRight: const Radius.circular(10.0))),
+                borderRadius:
+                    new BorderRadius.only(topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0))),
             padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
             margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: ScrollGlowDisabler(
               child: SingleChildScrollView(
-                reverse: (MediaQuery.of(context).viewInsets.bottom == 0)
-                    ? false
-                    : scrollReverse,
+                reverse: (MediaQuery.of(context).viewInsets.bottom == 0) ? false : scrollReverse,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
@@ -59,10 +54,7 @@ shippingUpdateModal(context, userId) {
                         child: Text(
                           "Edit Shipping Address",
                           style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700),
+                              fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
                         ),
                       ),
                       SizedBox(height: 15),
@@ -92,15 +84,11 @@ shippingUpdateModal(context, userId) {
                       SizedBox(height: 15),
                       //* Province Selecting Dropdown ----------------------------------------------------
                       StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('shipping')
-                            .orderBy('province')
-                            .snapshots(),
+                        stream: FirebaseFirestore.instance.collection('shipping').orderBy('province').snapshots(),
                         builder: (context, snapshot) {
                           return DropdownButtonFormField(
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                  left: 12, top: 0, bottom: 0, right: 8),
+                              contentPadding: EdgeInsets.only(left: 12, top: 0, bottom: 0, right: 8),
                               labelStyle: TextStyle(
                                 color: Colors.black,
                                 fontFamily: 'sf',
@@ -111,12 +99,10 @@ shippingUpdateModal(context, userId) {
                               border: OutlineInputBorder(),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
-                                borderSide: new BorderSide(
-                                    color: Colors.black, width: 1.5),
+                                borderSide: new BorderSide(color: Colors.black, width: 1.5),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: new BorderSide(
-                                    color: Colors.black, width: 2),
+                                borderSide: new BorderSide(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                             ),
@@ -125,8 +111,7 @@ shippingUpdateModal(context, userId) {
                             iconEnabledColor: Colors.black,
                             isDense: true,
                             items: (snapshot.hasData)
-                                ? snapshot.data!.docs
-                                    .map((DocumentSnapshot doc) {
+                                ? snapshot.data!.docs.map((DocumentSnapshot doc) {
                                     return new DropdownMenuItem<String>(
                                       value: doc['province'],
                                       child: Text(
@@ -178,8 +163,7 @@ shippingUpdateModal(context, userId) {
                           builder: (context, snapshot) {
                             return DropdownButtonFormField(
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    left: 12, top: 0, bottom: 0, right: 8),
+                                contentPadding: EdgeInsets.only(left: 12, top: 0, bottom: 0, right: 8),
                                 labelStyle: TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'sf',
@@ -190,12 +174,10 @@ shippingUpdateModal(context, userId) {
                                 border: OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
-                                  borderSide: new BorderSide(
-                                      color: Colors.black, width: 1.5),
+                                  borderSide: new BorderSide(color: Colors.black, width: 1.5),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: new BorderSide(
-                                      color: Colors.black, width: 2),
+                                  borderSide: new BorderSide(color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ),
@@ -204,8 +186,7 @@ shippingUpdateModal(context, userId) {
                               iconEnabledColor: Colors.black,
                               isDense: true,
                               items: (snapshot.hasData)
-                                  ? snapshot.data!.docs
-                                      .map((DocumentSnapshot doc) {
+                                  ? snapshot.data!.docs.map((DocumentSnapshot doc) {
                                       return new DropdownMenuItem<String>(
                                         value: doc['district'],
                                         child: Text(
@@ -259,8 +240,7 @@ shippingUpdateModal(context, userId) {
                           builder: (context, snapshot) {
                             return DropdownButtonFormField(
                               decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    left: 12, top: 0, bottom: 0, right: 8),
+                                contentPadding: EdgeInsets.only(left: 12, top: 0, bottom: 0, right: 8),
                                 labelStyle: TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'sf',
@@ -271,12 +251,10 @@ shippingUpdateModal(context, userId) {
                                 border: OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
-                                  borderSide: new BorderSide(
-                                      color: Colors.black, width: 1.5),
+                                  borderSide: new BorderSide(color: Colors.black, width: 1.5),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: new BorderSide(
-                                      color: Colors.black, width: 2),
+                                  borderSide: new BorderSide(color: Colors.black, width: 2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ),
@@ -285,8 +263,7 @@ shippingUpdateModal(context, userId) {
                               iconEnabledColor: Colors.black,
                               isDense: true,
                               items: (snapshot.hasData)
-                                  ? snapshot.data!.docs
-                                      .map((DocumentSnapshot doc) {
+                                  ? snapshot.data!.docs.map((DocumentSnapshot doc) {
                                       return new DropdownMenuItem<String>(
                                         value: doc['city'],
                                         child: Text(
@@ -342,10 +319,7 @@ shippingUpdateModal(context, userId) {
                               child: Text(
                                 'Please enter all details correctly',
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 14,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w400),
+                                    fontFamily: 'sf', fontSize: 14, color: Colors.red, fontWeight: FontWeight.w400),
                               ),
                             )
                           : SizedBox(height: 15),
@@ -382,9 +356,7 @@ shippingUpdateModal(context, userId) {
                             //* Button on press function
                             onPressed: () async {
                               if (!onProgress) {
-                                if (fullName.text != '' &&
-                                    mobile.text != '' &&
-                                    address.text != '') {
+                                if (fullName.text != '' && mobile.text != '' && address.text != '') {
                                   setState(() {
                                     errorVisible = false;
                                     onProgress = true;
@@ -403,8 +375,9 @@ shippingUpdateModal(context, userId) {
                                         }
                                       })
                                       .then((value) => Navigator.pop(context))
-                                      .catchError((error) => print(
-                                          "Failed to update user: $error"));
+                                      .catchError((error) => print("Failed to update user: $error"));
+
+                                  onPress();
                                 } else {
                                   setState(() {
                                     errorVisible = true;
@@ -428,4 +401,5 @@ shippingUpdateModal(context, userId) {
       );
     },
   );
+  // return fullName;
 }

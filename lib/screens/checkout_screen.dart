@@ -216,7 +216,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 }
                               }),
                           onTap: () {
-                            shippingUpdateModal(context, userId);
+                            shippingUpdateModal(context, userId, (){});
                             setState(() {});
                           },
                         ),

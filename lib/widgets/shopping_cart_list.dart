@@ -1,5 +1,7 @@
 import 'package:Apparel_App/calculations/cart_total_price.dart';
+import 'package:Apparel_App/models/shipping_update_modal.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
+import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/services/cart_items.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
@@ -18,14 +20,17 @@ class ShoppingCartList extends StatefulWidget {
 class _ShoppingCartListState extends State<ShoppingCartList> {
   List? _cartItemsList;
   List? shippingCostList;
+  Map? userLocation;
   ValueNotifier<int> _totalPriceNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> _totalDeliveryNotifier = ValueNotifier<int>(0);
   ValueNotifier<List> _shippingNotifier = ValueNotifier<List>([]);
   DocumentSnapshot? productData;
+  String? userId;
   int _totalPrice = 0;
 
   @override
   void initState() {
+    userId = AuthService().getUser();
     _cartItemsList = null;
     _totalPrice = 0;
     _totalPriceNotifier.value = 0;
@@ -327,16 +332,20 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                 //* Shipping price
                                                                 FutureBuilder(
                                                                   future: CartCalculations().getShipping(
-                                                                      cartItemsList: _cartItemsList as List),
+                                                                      cartItemsList: _cartItemsList as List,
+                                                                      userId: userId as String),
                                                                   builder: (context, snapshot) {
                                                                     if (snapshot.hasData) {
                                                                       List snapData = snapshot.data as List;
+                                                                      userLocation = snapData[1];
+
                                                                       //* Calculate total price after state builds
                                                                       SchedulerBinding.instance!
                                                                           .addPostFrameCallback((_) {
-                                                                        _shippingNotifier.value = snapData;
-                                                                        _totalDeliveryNotifier.value = snapData.reduce(
-                                                                            (value, element) => value + element);
+                                                                        _shippingNotifier.value = snapData[0];
+                                                                        _totalDeliveryNotifier.value = snapData[0]
+                                                                            .reduce(
+                                                                                (value, element) => value + element);
                                                                       });
 
                                                                       return ValueListenableBuilder<List>(
@@ -471,14 +480,35 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Delivery',
-                                    style: TextStyle(
-                                        fontFamily: 'sf',
-                                        fontSize: 15,
-                                        color: Color(0xff606060),
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                  InkWell(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: 'Delivery ',
+                                          style: TextStyle(
+                                              fontFamily: 'sf',
+                                              fontSize: 15,
+                                              color: Color(0xff606060),
+                                              fontWeight: FontWeight.w500),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: (userLocation != null)
+                                                  ? '${userLocation!['city']}, ${userLocation!['district']} (change)'
+                                                  : '',
+                                              style: TextStyle(
+                                                fontFamily: 'sf',
+                                                fontSize: 14,
+                                                color: Colors.red[400],
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        shippingUpdateModal(context, userId, () {
+                                          setState(() {});
+                                        });
+                                      }),
                                   Text(
                                     (delivery != 0)
                                         ? "Rs. " + NumberFormat('###,000').format(delivery).toString()

@@ -1,4 +1,4 @@
-import 'package:Apparel_App/services/auth_service.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CartCalculations {
@@ -20,7 +20,7 @@ class CartCalculations {
   }
 
   //* Get shipping price -----------------------------------------------------------------
-  getShipping({required List cartItemsList}) async {
+  getShipping({required List cartItemsList, required String userId}) async {
     var firestore = FirebaseFirestore.instance;
     DocumentSnapshot? ds2;
     DocumentSnapshot userDoc;
@@ -28,14 +28,13 @@ class CartCalculations {
     List totalWeight = [];
     List storeLocation = [];
     List shippingPrice = [];
-    String userId;
     int fixedWeightPrice = 50;
     int storeCount = 0;
 
     Stopwatch stopwatch = new Stopwatch()..start();
 
     //* Get user details
-    userId = await AuthService().getUser();
+    // userId = await AuthService().getUser();
 
     //* Get user shipping details
     userDoc = await firestore.collection('users').doc(userId).get();
@@ -100,6 +99,6 @@ class CartCalculations {
     }
 
     print('getShipping() executed in ${stopwatch.elapsed}');
-    return shippingPrice;
+    return [shippingPrice, userLocation];
   }
 }
