@@ -65,8 +65,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       children: <Widget>[
                         //* Drawer header
                         Container(
-                          padding: EdgeInsets.fromLTRB(
-                              30, (Platform.isAndroid) ? 35 : 50, 16, 12),
+                          padding: EdgeInsets.fromLTRB(30, (Platform.isAndroid) ? 35 : 50, 16, 12),
                           width: double.infinity,
                           child: (userName != null)
                               ? Row(
@@ -74,11 +73,9 @@ class _SideDrawerState extends State<SideDrawer> {
                                     ClipOval(
                                       child: FadeInImage.assetNetwork(
                                         height: 40,
-                                        fadeInDuration:
-                                            Duration(milliseconds: 100),
+                                        fadeInDuration: Duration(milliseconds: 100),
                                         image: displayPicture as String,
-                                        placeholder:
-                                            'lib/assets/dp_placeholder.jpg',
+                                        placeholder: 'lib/assets/dp_placeholder.jpg',
                                       ),
                                     ),
                                     // Image.asset('lib/assets/dp_placeholder.jpg'),
@@ -104,8 +101,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                   style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                          color: Colors.black, width: 2),
+                                      side: BorderSide(color: Colors.black, width: 2),
                                     ),
                                     primary: Colors.grey,
                                     backgroundColor: Colors.white,
@@ -145,10 +141,7 @@ class _SideDrawerState extends State<SideDrawer> {
                             child: Text(
                               'My Orders',
                               style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400),
+                                  fontFamily: 'sf', fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400),
                             ),
                           ),
                           onTap: () {},
@@ -164,10 +157,7 @@ class _SideDrawerState extends State<SideDrawer> {
                             child: Text(
                               'Wish List',
                               style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400),
+                                  fontFamily: 'sf', fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400),
                             ),
                           ),
                           onTap: () {},
@@ -184,10 +174,7 @@ class _SideDrawerState extends State<SideDrawer> {
                             child: Text(
                               'Settings',
                               style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400),
+                                  fontFamily: 'sf', fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400),
                             ),
                           ),
                           onTap: () {},
@@ -202,8 +189,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                   Icons.logout,
                                   color: Colors.black,
                                 ),
-                                contentPadding: EdgeInsets.fromLTRB(
-                                    30, 0, 0, (Platform.isAndroid) ? 10 : 25),
+                                contentPadding: EdgeInsets.fromLTRB(30, 0, 0, (Platform.isAndroid) ? 10 : 25),
                                 title: Transform.translate(
                                   offset: Offset(-15, 0),
                                   child: Text(

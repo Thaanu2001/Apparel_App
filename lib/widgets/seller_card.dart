@@ -1,3 +1,4 @@
+import 'package:Apparel_App/global_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -56,9 +57,7 @@ storeCard(storeId) {
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          topLeft: Radius.circular(10)),
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10)),
                       //* Store cover stack --------------------------------------------------------
                       child: Stack(
                         children: [
@@ -148,7 +147,7 @@ storeCard(storeId) {
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 2)),
+                              side: BorderSide(color: mainAccentColor, width: 2)),
                           primary: Colors.grey,
                           backgroundColor: Colors.white,
                         ),
@@ -156,10 +155,7 @@ storeCard(storeId) {
                         child: Text(
                           "View Store Profile",
                           style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              fontFamily: 'sf', fontSize: 18, color: mainAccentColor, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -173,7 +169,7 @@ storeCard(storeId) {
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 2)),
+                              side: BorderSide(color: mainAccentColor, width: 2)),
                           primary: Colors.grey,
                           backgroundColor: Colors.white,
                         ),
@@ -181,10 +177,7 @@ storeCard(storeId) {
                         child: Text(
                           "Contact Seller",
                           style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              fontFamily: 'sf', fontSize: 18, color: mainAccentColor, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:Apparel_App/calculations/cart_total_price.dart';
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/models/shipping_update_modal.dart';
 import 'package:Apparel_App/screens/checkout_screen.dart';
 import 'package:Apparel_App/screens/product_details_screen.dart';
@@ -605,7 +606,7 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   primary: Colors.grey,
-                  backgroundColor: Colors.black,
+                  backgroundColor: mainAccentColor,
                 ),
                 onPressed: () {
                   Route route = SlideLeftTransition(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/screens/checkout_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:flutter/material.dart';
@@ -530,7 +531,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   primary: Colors.grey,
-                  backgroundColor: Colors.black,
+                  backgroundColor: mainAccentColor,
                 ),
                 onPressed: () async {
                   if (_quantity == 0 || selectedSize == null) {

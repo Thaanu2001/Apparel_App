@@ -1,3 +1,4 @@
+import 'package:Apparel_App/global_variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,7 @@ linkAccountPopup(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           primary: Colors.grey,
-                          backgroundColor: Colors.black,
+                          backgroundColor: mainAccentColor,
                         ),
                         onPressed: (isPassword)
                             ? () async {

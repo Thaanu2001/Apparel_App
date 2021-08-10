@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/screens/auth/email_sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -30,8 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(
-                  0, (Platform.isAndroid) ? 35 : 50, 20, 10),
+              padding: EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 20, 10),
               margin: EdgeInsets.fromLTRB(20, 0, 10, 0),
               child: InkWell(
                 child: Icon(
@@ -48,11 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
               child: Text(
                 'Sign in',
-                style: TextStyle(
-                    fontFamily: 'sf',
-                    fontSize: 26,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(fontFamily: 'sf', fontSize: 26, color: Colors.black, fontWeight: FontWeight.w700),
               ),
             ),
             //* Main image ----------------------------------------------------------------------------
@@ -76,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           primary: Colors.grey,
-                          backgroundColor: Colors.black,
+                          backgroundColor: mainAccentColor,
                         ),
                         onPressed: () {
                           Route route = SlideLeftTransition(
@@ -87,10 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Text(
                           "Sign in with Email",
                           style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
+                              fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -107,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 2)),
+                              side: BorderSide(color: mainAccentColor, width: 2)),
                           primary: Colors.grey,
                           backgroundColor: Colors.white,
                         ),
@@ -116,8 +109,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             authOnProgressGoogle = true;
                           });
 
-                          await AuthService()
-                              .signInWithGoogle(context, widget.route);
+                          await AuthService().signInWithGoogle(context, widget.route);
 
                           setState(() {
                             authOnProgressGoogle = false;
@@ -140,7 +132,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     style: TextStyle(
                                         fontFamily: 'sf',
                                         fontSize: 18,
-                                        color: Colors.black,
+                                        color: mainAccentColor,
                                         fontWeight: FontWeight.w600),
                                     //width: double.infinity,
                                   ),
@@ -164,7 +156,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black, width: 2)),
+                              side: BorderSide(color: mainAccentColor, width: 2)),
                           primary: Colors.grey,
                           backgroundColor: Colors.white,
                         ),
@@ -173,8 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             authOnProgressFacebook = true;
                           });
 
-                          await AuthService()
-                              .signInWithFacebook(context, widget.route);
+                          await AuthService().signInWithFacebook(context, widget.route);
 
                           setState(() {
                             authOnProgressFacebook = false;
@@ -197,7 +188,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     style: TextStyle(
                                         fontFamily: 'sf',
                                         fontSize: 18,
-                                        color: Colors.black,
+                                        color: mainAccentColor,
                                         fontWeight: FontWeight.w600),
                                     //width: double.infinity,
                                   ),
@@ -215,8 +206,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Container(
                       //* Sign Up Button ----------------------------------------------------------------------------------
                       alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.fromLTRB(
-                          30, 5, 30, (Platform.isAndroid) ? 15 : 30),
+                      margin: EdgeInsets.fromLTRB(30, 5, 30, (Platform.isAndroid) ? 15 : 30),
                       child: InkWell(
                         child: Container(
                           padding: EdgeInsets.fromLTRB(30, 5, 30, 8),

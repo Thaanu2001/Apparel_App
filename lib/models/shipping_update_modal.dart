@@ -1,3 +1,4 @@
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:Apparel_App/widgets/custom_text_field.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
@@ -335,7 +336,7 @@ shippingUpdateModal(context, userId, Function onPress) {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               primary: Colors.grey,
-                              backgroundColor: Colors.black,
+                              backgroundColor: mainAccentColor,
                             ),
                             child: (!onProgress)
                                 ? Text(

@@ -1,3 +1,4 @@
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -60,8 +61,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         context: context,
         category: widget.category,
         color: widget.productData.data()["product-details"]["color"],
-        clothingStyle: widget.productData.data()["product-details"]
-            ["clothing-style"],
+        clothingStyle: widget.productData.data()["product-details"]["clothing-style"],
         productId: widget.productData.id);
 
     //* Seller Data Card
@@ -86,8 +86,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 var result = await Navigator.push(
                   context,
                   PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          ImageZoom(
+                      pageBuilder: (context, animation1, animation2) => ImageZoom(
                             imageLink: item,
                             detailedHeroId: widget.productData.id,
                           ),
@@ -159,14 +158,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: TextField(
                       cursorColor: Color(0xff646464),
                       style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Color(0xff646464),
-                          fontWeight: FontWeight.w500),
+                          fontFamily: 'sf', fontSize: 18, color: Color(0xff646464), fontWeight: FontWeight.w500),
                       decoration: new InputDecoration(
                         isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 0),
                         suffixIcon: Icon(
                           Icons.search,
                           size: 28,
@@ -201,8 +196,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   Container(
                     child: Hero(
-                      placeholderBuilder: (_scrollPosition >=
-                              MediaQuery.of(context).size.width * 0.5)
+                      placeholderBuilder: (_scrollPosition >= MediaQuery.of(context).size.width * 0.5)
                           ? (context, heroSize, child) {
                               return Opacity(opacity: 1, child: child);
                             }
@@ -210,12 +204,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               return Opacity(opacity: 0, child: child);
                             },
                       transitionOnUserGestures: true,
-                      flightShuttleBuilder:
-                          (context, anim, direction, fromContext, toContext) {
+                      flightShuttleBuilder: (context, anim, direction, fromContext, toContext) {
                         final Hero toHero = toContext.widget as Hero;
                         if (direction == HeroFlightDirection.pop &&
-                            _scrollController.position.pixels >=
-                                MediaQuery.of(context).size.width * 0.5) {
+                            _scrollController.position.pixels >= MediaQuery.of(context).size.width * 0.5) {
                           return FadeTransition(
                             opacity: AlwaysStoppedAnimation(0),
                             child: toHero.child,
@@ -246,8 +238,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             height: MediaQuery.of(context).size.width,
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
                               color: Colors.white54,
                               elevation: 0,
@@ -259,8 +250,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     return Container(
                                       width: 8.0,
                                       height: 8.0,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 0.0, horizontal: 2.0),
+                                      margin: EdgeInsets.symmetric(vertical: 0.0, horizontal: 2.0),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: _current == index
@@ -292,28 +282,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             children: [
                               Text(
                                 widget.productData.data()["product-name"],
-                                style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
+                                style: TextStyle(fontFamily: 'sf', fontSize: 18, fontWeight: FontWeight.w400),
                               ),
                               SizedBox(height: 3),
                               //* Price
                               Text(
                                 "Rs. " +
                                     NumberFormat('###,000')
-                                        .format((widget.productData
-                                                    .data()["discount"] !=
-                                                0)
-                                            ? ((widget.productData
-                                                    .data()["price"]) *
-                                                ((100 -
-                                                        widget.productData
-                                                                .data()[
-                                                            "discount"]) /
-                                                    100))
-                                            : widget.productData
-                                                .data()["price"])
+                                        .format((widget.productData.data()["discount"] != 0)
+                                            ? ((widget.productData.data()["price"]) *
+                                                ((100 - widget.productData.data()["discount"]) / 100))
+                                            : widget.productData.data()["price"])
                                         .toString(),
                                 style: TextStyle(
                                     fontFamily: 'sf',
@@ -328,25 +307,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Text(
                                       "Rs. " +
-                                          NumberFormat('###,000')
-                                              .format(widget.productData
-                                                  .data()["price"])
-                                              .toString(),
+                                          NumberFormat('###,000').format(widget.productData.data()["price"]).toString(),
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 14,
                                           color: Color(0xffacacac),
                                           fontWeight: FontWeight.w500,
-                                          decoration:
-                                              TextDecoration.lineThrough),
+                                          decoration: TextDecoration.lineThrough),
                                     ),
                                     SizedBox(width: 4),
                                     Text(
-                                      "-" +
-                                          widget.productData
-                                              .data()["discount"]
-                                              .toString() +
-                                          "%",
+                                      "-" + widget.productData.data()["discount"].toString() + "%",
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 12,
@@ -373,8 +344,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Text(
                                     "Rs. " +
                                         NumberFormat('###,000')
-                                            .format((widget.productData
-                                                .data()["delivery-price"]))
+                                            .format((widget.productData.data()["delivery-price"]))
                                             .toString(),
                                     style: TextStyle(
                                         fontFamily: 'sf',
@@ -395,8 +365,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   children: [
                                     Flexible(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Product Details",
@@ -413,8 +382,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 fit: FlexFit.tight,
                                                 flex: 4,
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     //* Brand Title
                                                     Text(
@@ -423,10 +391,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
-                                                          color:
-                                                              Color(0xff808080),
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          color: Color(0xff808080),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                     //* Type Title
                                                     Text(
@@ -435,10 +401,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
-                                                          color:
-                                                              Color(0xff808080),
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          color: Color(0xff808080),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                     //* Material Type
                                                     Text(
@@ -447,10 +411,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
-                                                          color:
-                                                              Color(0xff808080),
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          color: Color(0xff808080),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                   ],
                                                 ),
@@ -459,47 +421,37 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 fit: FlexFit.tight,
                                                 flex: 9,
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     //* Brand
                                                     Text(
-                                                      widget.productData.data()[
-                                                              "product-details"]
-                                                          ["brand"],
+                                                      widget.productData.data()["product-details"]["brand"],
                                                       style: TextStyle(
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
                                                           color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                     //* Type
                                                     Text(
-                                                      widget.productData.data()[
-                                                              "product-details"]
-                                                          ["type"],
+                                                      widget.productData.data()["product-details"]["type"],
                                                       style: TextStyle(
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
                                                           color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                     //* Material
                                                     Text(
-                                                      widget.productData.data()[
-                                                              "product-details"]
-                                                          ["material"],
+                                                      widget.productData.data()["product-details"]["material"],
                                                       style: TextStyle(
                                                           fontFamily: 'sf',
                                                           fontSize: 14,
                                                           height: 1.4,
                                                           color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                          fontWeight: FontWeight.w500),
                                                     ),
                                                   ],
                                                 ),
@@ -517,8 +469,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ],
                                 ),
                                 onTap: () {
-                                  productDetailsModal(
-                                      context, widget.productData);
+                                  productDetailsModal(context, widget.productData);
                                 },
                               ),
                               Divider(
@@ -529,13 +480,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               //* Product Description Section ------------------------------------------------------
                               InkWell(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           //* Product Description Topic
                                           Text(
@@ -549,8 +498,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           SizedBox(height: 4),
                                           //* Product Description
                                           Text(
-                                            widget.productData
-                                                .data()["description"],
+                                            widget.productData.data()["description"],
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -574,8 +522,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ],
                                 ),
                                 onTap: () {
-                                  productDescriptionModal(
-                                      context, widget.productData);
+                                  productDescriptionModal(context, widget.productData);
                                 },
                               ),
                               SizedBox(height: 5),
@@ -594,12 +541,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     primary: Colors.grey,
-                                    backgroundColor: Colors.black,
+                                    backgroundColor: mainAccentColor,
                                   ),
                                   onPressed: () async {
-                                    if (FirebaseAuth
-                                            .instance.currentUser?.uid ==
-                                        null) {
+                                    if (FirebaseAuth.instance.currentUser?.uid == null) {
                                       Route route = SlideTopTransition(
                                         widget: SignInScreen(
                                           route: SlideTopTransition(
@@ -642,15 +587,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        side: BorderSide(
-                                            color: Colors.black, width: 2)),
+                                        side: BorderSide(color: mainAccentColor, width: 2)),
                                     primary: Colors.grey,
                                     backgroundColor: Colors.white,
                                   ),
                                   onPressed: () {
-                                    if (FirebaseAuth
-                                            .instance.currentUser?.uid ==
-                                        null) {
+                                    if (FirebaseAuth.instance.currentUser?.uid == null) {
                                       Route route = SlideTopTransition(
                                         widget: SignInScreen(
                                           route: SlideTopTransition(
@@ -679,7 +621,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     style: TextStyle(
                                         fontFamily: 'sf',
                                         fontSize: 18,
-                                        color: Colors.black,
+                                        color: mainAccentColor,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
@@ -702,10 +644,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Text(
                                 "Similar Products",
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
+                                    fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                               ),
                             ),
                             SizedBox(height: 4),
@@ -728,10 +667,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Text(
                                 "About the Seller",
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
+                                    fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                               ),
                               SizedBox(height: 4),
                               //* About the Seller Card
@@ -754,10 +690,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Text(
                                 "Seller's Other Products",
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700),
+                                    fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                               ),
                             ),
                             SizedBox(height: 4),

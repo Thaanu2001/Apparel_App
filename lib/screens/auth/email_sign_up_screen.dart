@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +51,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(
-                  0, (Platform.isAndroid) ? 35 : 50, 20, 10),
+              padding: EdgeInsets.fromLTRB(0, (Platform.isAndroid) ? 35 : 50, 20, 10),
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: InkWell(
                 child: Icon(
@@ -68,11 +68,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
               padding: EdgeInsets.fromLTRB(20, 10, 0, 15),
               child: Text(
                 'Create an account',
-                style: TextStyle(
-                    fontFamily: 'sf',
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600),
+                style: TextStyle(fontFamily: 'sf', fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
               ),
             ),
             Flexible(
@@ -86,25 +82,19 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       controller: firstName,
                       autofillHints: [AutofillHints.givenName],
                       textInputAction: TextInputAction.next,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
                         labelText: 'First Name',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        labelStyle: TextStyle(fontFamily: 'sf', color: Colors.black),
                         // filled: true,
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderSide: new BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
+                          borderSide: new BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
@@ -116,25 +106,19 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       controller: lastName,
                       autofillHints: [AutofillHints.familyName],
                       textInputAction: TextInputAction.next,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
                         labelText: 'Last Name',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        labelStyle: TextStyle(fontFamily: 'sf', color: Colors.black),
                         // filled: true,
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderSide: new BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
+                          borderSide: new BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
@@ -147,25 +131,19 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       autofillHints: [AutofillHints.email],
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
                         labelText: 'Email',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        labelStyle: TextStyle(fontFamily: 'sf', color: Colors.black),
                         // filled: true,
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderSide: new BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
+                          borderSide: new BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
@@ -178,34 +156,26 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       autofillHints: [AutofillHints.newPassword],
                       textInputAction: TextInputAction.next,
                       obscureText: _obscurePassword,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
                         labelText: 'Password',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        labelStyle: TextStyle(fontFamily: 'sf', color: Colors.black),
                         // filled: true,
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderSide: new BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
+                          borderSide: new BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
                         suffixIcon: InkWell(
                           onTap: _showPassword,
                           child: Icon(
-                            _obscurePassword
-                                ? Customicons.eye_off
-                                : Customicons.eye,
+                            _obscurePassword ? Customicons.eye_off : Customicons.eye,
                             size: 18,
                             color: Colors.black,
                           ),
@@ -223,25 +193,19 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       autofillHints: [AutofillHints.password],
                       textInputAction: TextInputAction.done,
                       obscureText: true,
-                      style: TextStyle(
-                          fontFamily: 'sf',
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
+                      style:
+                          TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                       decoration: new InputDecoration(
                         labelText: 'Re-Type Password',
-                        labelStyle:
-                            TextStyle(fontFamily: 'sf', color: Colors.black),
+                        labelStyle: TextStyle(fontFamily: 'sf', color: Colors.black),
                         // filled: true,
                         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 1.5),
+                          borderSide: new BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              new BorderSide(color: Colors.black, width: 2),
+                          borderSide: new BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         isDense: true,
@@ -255,10 +219,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                             child: Text(
                               errorMessage,
                               style: TextStyle(
-                                  fontFamily: 'sf',
-                                  fontSize: 14,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w400),
+                                  fontFamily: 'sf', fontSize: 14, color: Colors.red, fontWeight: FontWeight.w400),
                             ),
                           )
                         : Container(),
@@ -293,14 +254,11 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           primary: Colors.grey,
-                          backgroundColor: Colors.black,
+                          backgroundColor: mainAccentColor,
                         ),
                         onPressed: () async {
                           dismissKeyboard(context);
-                          if (firstName.text == '' ||
-                              lastName.text == '' ||
-                              email.text == '' ||
-                              password.text == '') {
+                          if (firstName.text == '' || lastName.text == '' || email.text == '' || password.text == '') {
                             errorMessage = 'Please fill all the details';
                             error = true;
                           } else if (password.text != rePassword.text) {
@@ -326,10 +284,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                             ? Text(
                                 "Sign Up",
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                    fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
                               )
                             : SizedBox(
                                 height: 20,
@@ -345,8 +300,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                       child: Container(
                         alignment: Alignment.bottomCenter,
                         //* Create Account Button ----------------------------------------------------------------------------------
-                        margin: EdgeInsets.fromLTRB(
-                            30, 5, 30, (Platform.isAndroid) ? 30 : 50),
+                        margin: EdgeInsets.fromLTRB(30, 5, 30, (Platform.isAndroid) ? 30 : 50),
                         child: InkWell(
                           child: Text(
                             'Already have an account? Log in',

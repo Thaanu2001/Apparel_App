@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Apparel_App/calculations/cart_total_price.dart';
+import 'package:Apparel_App/global_variables.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -233,7 +234,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: (isCashOnDelivery) ? Colors.black : Color(0xffF3F3F3),
+                                color: (isCashOnDelivery) ? mainAccentColor : Color(0xffF3F3F3),
                               ),
                               //* Cash on delivery button
                               child: InkWell(
@@ -241,7 +242,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   children: [
                                     Icon(
                                       Customicons.delivery,
-                                      color: (isCashOnDelivery) ? Colors.white : Colors.black,
+                                      color: (isCashOnDelivery) ? Colors.white : mainAccentColor,
                                       size: 30,
                                     ),
                                     SizedBox(height: 5),
@@ -250,7 +251,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 16,
-                                          color: (isCashOnDelivery) ? Colors.white : Colors.black,
+                                          color: (isCashOnDelivery) ? Colors.white : mainAccentColor,
                                           fontWeight: FontWeight.w700),
                                     ),
                                   ],
@@ -270,7 +271,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               padding: EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: (isCashOnDelivery) ? Color(0xffF3F3F3) : Colors.black,
+                                color: (isCashOnDelivery) ? Color(0xffF3F3F3) : mainAccentColor,
                               ),
                               //* Card payment button
                               child: InkWell(
@@ -278,7 +279,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   children: [
                                     Icon(
                                       Customicons.card,
-                                      color: (isCashOnDelivery) ? Colors.black : Colors.white,
+                                      color: (isCashOnDelivery) ? mainAccentColor : Colors.white,
                                       size: 30,
                                     ),
                                     SizedBox(height: 5),
@@ -287,7 +288,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       style: TextStyle(
                                           fontFamily: 'sf',
                                           fontSize: 16,
-                                          color: (isCashOnDelivery) ? Colors.black : Colors.white,
+                                          color: (isCashOnDelivery) ? mainAccentColor : Colors.white,
                                           fontWeight: FontWeight.w700),
                                     ),
                                   ],
@@ -481,7 +482,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   primary: Colors.grey,
-                  backgroundColor: Colors.black,
+                  backgroundColor: mainAccentColor,
                 ),
                 onPressed: () async {},
                 child: Text(
