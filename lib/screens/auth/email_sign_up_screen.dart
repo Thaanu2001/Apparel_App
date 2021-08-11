@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/services/customicons_icons.dart';
 import 'package:Apparel_App/services/dismiss_keyboard.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -309,8 +310,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                           ),
                           onTap: () {
                             Navigator.pop(context);
-                            Route route = SlideLeftTransition(
-                              widget: SignInScreen(route: widget.route),
+                            Route route = CupertinoPageRoute(
+                              builder: (context) => SignInScreen(route: widget.route),
                             );
                             Navigator.pushReplacement(context, route);
                           },

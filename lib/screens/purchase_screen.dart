@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/screens/checkout_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,10 +14,7 @@ class PurchaseScreen extends StatefulWidget {
   final productData;
   final isBuyNow;
   final category;
-  PurchaseScreen(
-      {required this.productData,
-      required this.isBuyNow,
-      required this.category});
+  PurchaseScreen({required this.productData, required this.isBuyNow, required this.category});
 
   @override
   _PurchaseScreenState createState() => _PurchaseScreenState();
@@ -38,30 +36,23 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   //* Get Size list for Drop down
   getSizeList() {
-    for (int count = 0;
-        count < widget.productData['size']["size"].length;
-        count++) {
+    for (int count = 0; count < widget.productData['size']["size"].length; count++) {
       if (size['qty']![count] != 0) {
         sizeList.add(widget.productData['size']["size"][count]);
       } else {
-        sizeList.add(widget.productData['size']["size"][count].toString() +
-            " (Sold out)");
+        sizeList.add(widget.productData['size']["size"][count].toString() + " (Sold out)");
       }
     }
   }
 
   //* Table topic text widget
-  tableTopicWidget(
-      {required text, required isBold, textAlign = TextAlign.center}) {
+  tableTopicWidget({required text, required isBold, textAlign = TextAlign.center}) {
     return Container(
-      padding: EdgeInsets.only(
-          top: 4, bottom: 4, left: (textAlign == TextAlign.left) ? 4 : 0),
+      padding: EdgeInsets.only(top: 4, bottom: 4, left: (textAlign == TextAlign.left) ? 4 : 0),
       child: Text(
         text,
         textAlign: textAlign,
-        style: TextStyle(
-            fontFamily: 'sf',
-            fontWeight: (isBold) ? FontWeight.w700 : FontWeight.w400),
+        style: TextStyle(fontFamily: 'sf', fontWeight: (isBold) ? FontWeight.w700 : FontWeight.w400),
       ),
     );
   }
@@ -110,10 +101,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         //* Name
                         Text(
                           widget.productData["product-name"],
-                          style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400),
+                          style: TextStyle(fontFamily: 'sf', fontSize: 18, fontWeight: FontWeight.w400),
                         ),
                         SizedBox(height: 3),
                         //* Price
@@ -121,18 +109,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           "Rs. " +
                               NumberFormat('###,000')
                                   .format((widget.productData["discount"] != 0)
-                                      ? ((widget.productData["price"]) *
-                                          ((100 -
-                                                  widget.productData[
-                                                      "discount"]) /
-                                              100))
+                                      ? ((widget.productData["price"]) * ((100 - widget.productData["discount"]) / 100))
                                       : widget.productData["price"])
                                   .toString(),
                           style: TextStyle(
-                              fontFamily: 'sf',
-                              fontSize: 20,
-                              color: Color(0xff808080),
-                              fontWeight: FontWeight.w800),
+                              fontFamily: 'sf', fontSize: 20, color: Color(0xff808080), fontWeight: FontWeight.w800),
                         ),
                         //* Discount old price
                         if (widget.productData["discount"] != 0)
@@ -140,10 +121,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Rs. " +
-                                    NumberFormat('###,000')
-                                        .format(widget.productData["price"])
-                                        .toString(),
+                                "Rs. " + NumberFormat('###,000').format(widget.productData["price"]).toString(),
                                 style: TextStyle(
                                     fontFamily: 'sf',
                                     fontSize: 12,
@@ -153,14 +131,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                "-" +
-                                    widget.productData["discount"].toString() +
-                                    "%",
+                                "-" + widget.productData["discount"].toString() + "%",
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 10,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500),
+                                    fontFamily: 'sf', fontSize: 10, color: Colors.black87, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -174,8 +147,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                             children: [
                               //* Minus Button
                               InkWell(
-                                child: Icon(Icons.remove_circle_outline_rounded,
-                                    size: 23),
+                                child: Icon(Icons.remove_circle_outline_rounded, size: 23),
                                 onTap: () {
                                   if (_quantity! > 1) {
                                     setState(() {
@@ -189,30 +161,24 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               Text(
                                 (_quantity == 0) ? 'Qty' : _quantity.toString(),
                                 style: TextStyle(
-                                    fontFamily: 'sf',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400),
+                                    fontFamily: 'sf', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
                               ),
                               //* Add button
                               InkWell(
-                                child: Icon(Icons.add_circle_outline_rounded,
-                                    size: 23),
+                                child: Icon(Icons.add_circle_outline_rounded, size: 23),
                                 onTap: () {
                                   if (selectedSize == null ||
                                       _quantity! <
-                                          widget.productData["size"]["qty"][
-                                              widget.productData["size"]["size"]
-                                                  .indexOf(selectedSize)]) {
+                                          widget.productData["size"]["qty"]
+                                              [widget.productData["size"]["size"].indexOf(selectedSize)]) {
                                     setState(() {
                                       _errorVisible = false;
                                       _quantity = _quantity! + 1;
                                     });
                                     if (selectedSize == null) {
                                     } else if (_quantity ==
-                                        widget.productData["size"]["qty"][widget
-                                            .productData["size"]["size"]
-                                            .indexOf(selectedSize)]) {
+                                        widget.productData["size"]["qty"]
+                                            [widget.productData["size"]["size"].indexOf(selectedSize)]) {
                                       setState(() {
                                         _errorVisible = true;
                                         _errorMsg = 'Maximum quantity reached';
@@ -237,8 +203,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
               width: double.infinity,
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 12, top: 0, bottom: 0, right: 8),
+                  contentPadding: EdgeInsets.only(left: 12, top: 0, bottom: 0, right: 8),
                   labelStyle: TextStyle(
                     color: Colors.black,
                     fontFamily: 'sf',
@@ -263,9 +228,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 18,
-                          color: (!value.contains('(Sold out)'))
-                              ? Colors.black
-                              : Color(0xffacacac),
+                          color: (!value.contains('(Sold out)')) ? Colors.black : Color(0xffacacac),
                           fontWeight: FontWeight.w400),
                     ),
                   );
@@ -275,13 +238,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 onChanged: (dynamic value) {
                   if ((!value.contains('(Sold out)'))) {
                     if (_quantity! >
-                        widget.productData["size"]["qty"][widget
-                            .productData["size"]["size"]
-                            .indexOf(value)]) {
+                        widget.productData["size"]["qty"][widget.productData["size"]["size"].indexOf(value)]) {
                       setState(() {
                         selectedSize = value;
-                        _quantity = widget.productData["size"]["qty"]
-                            [widget.productData["size"]["size"].indexOf(value)];
+                        _quantity =
+                            widget.productData["size"]["qty"][widget.productData["size"]["size"].indexOf(value)];
                         _errorVisible = true;
                         _errorMsg = 'Maximum quantity reached';
                       });
@@ -375,19 +336,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 padding: EdgeInsets.only(top: 4, left: 20),
                 child: Text(
                   _errorMsg,
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 14,
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(fontFamily: 'sf', fontSize: 14, color: Colors.red, fontWeight: FontWeight.w500),
                 ),
               ),
             //* Size Chart Section
             Theme(
               data: Theme.of(context).copyWith(
-                  dividerColor: Colors.transparent,
-                  unselectedWidgetColor: Colors.grey,
-                  accentColor: Colors.grey),
+                  dividerColor: Colors.transparent, unselectedWidgetColor: Colors.grey, accentColor: Colors.grey),
               child: ListTileTheme(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
@@ -397,11 +352,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   //* View Size chart topic
                   title: Text(
                     "View size chart",
-                    style: TextStyle(
-                        fontFamily: 'sf',
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400),
+                    style: TextStyle(fontFamily: 'sf', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
                   ),
                   children: <Widget>[
                     //* Size chart content
@@ -432,80 +383,44 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                                   //* Table Topics
                                   TableRow(
                                     children: [
-                                      tableTopicWidget(
-                                          text: 'Topic',
-                                          isBold: true,
-                                          textAlign: TextAlign.left),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('XXS'))
-                                        tableTopicWidget(
-                                            text: 'XXS', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('XS'))
-                                        tableTopicWidget(
-                                            text: 'XS', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('S'))
-                                        tableTopicWidget(
-                                            text: 'S', isBold: true),
+                                      tableTopicWidget(text: 'Topic', isBold: true, textAlign: TextAlign.left),
+                                      if (widget.productData['size-table'][0].containsKey('XXS'))
+                                        tableTopicWidget(text: 'XXS', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('XS'))
+                                        tableTopicWidget(text: 'XS', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('S'))
+                                        tableTopicWidget(text: 'S', isBold: true),
                                       tableTopicWidget(text: 'M', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('L'))
-                                        tableTopicWidget(
-                                            text: 'L', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('XL'))
-                                        tableTopicWidget(
-                                            text: 'XL', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('XXL'))
-                                        tableTopicWidget(
-                                            text: 'XXL', isBold: true),
-                                      if (widget.productData['size-table'][0]
-                                          .containsKey('XXXL'))
-                                        tableTopicWidget(
-                                            text: 'XXXL', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('L'))
+                                        tableTopicWidget(text: 'L', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('XL'))
+                                        tableTopicWidget(text: 'XL', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('XXL'))
+                                        tableTopicWidget(text: 'XXL', isBold: true),
+                                      if (widget.productData['size-table'][0].containsKey('XXXL'))
+                                        tableTopicWidget(text: 'XXXL', isBold: true),
                                     ],
                                   ),
                                   //* Table Content
-                                  for (var item
-                                      in widget.productData['size-table'])
+                                  for (var item in widget.productData['size-table'])
                                     TableRow(
                                       children: [
-                                        tableTopicWidget(
-                                            text: item['Topic'],
-                                            isBold: true,
-                                            textAlign: TextAlign.left),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('XXS'))
-                                          tableTopicWidget(
-                                              text: item['XXS'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('XS'))
-                                          tableTopicWidget(
-                                              text: item['XS'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('S'))
-                                          tableTopicWidget(
-                                              text: item['S'], isBold: false),
-                                        tableTopicWidget(
-                                            text: item['M'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('L'))
-                                          tableTopicWidget(
-                                              text: item['L'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('XL'))
-                                          tableTopicWidget(
-                                              text: item['XL'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('XXL'))
-                                          tableTopicWidget(
-                                              text: item['XXL'], isBold: false),
-                                        if (widget.productData['size-table'][0]
-                                            .containsKey('XXXL'))
-                                          tableTopicWidget(
-                                              text: item['XXL'], isBold: false),
+                                        tableTopicWidget(text: item['Topic'], isBold: true, textAlign: TextAlign.left),
+                                        if (widget.productData['size-table'][0].containsKey('XXS'))
+                                          tableTopicWidget(text: item['XXS'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('XS'))
+                                          tableTopicWidget(text: item['XS'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('S'))
+                                          tableTopicWidget(text: item['S'], isBold: false),
+                                        tableTopicWidget(text: item['M'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('L'))
+                                          tableTopicWidget(text: item['L'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('XL'))
+                                          tableTopicWidget(text: item['XL'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('XXL'))
+                                          tableTopicWidget(text: item['XXL'], isBold: false),
+                                        if (widget.productData['size-table'][0].containsKey('XXXL'))
+                                          tableTopicWidget(text: item['XXL'], isBold: false),
                                       ],
                                     )
                                 ],
@@ -548,8 +463,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         selectedSize,
                         widget.category,
                       ];
-                      CartItems().addCartProducts(
-                          itemData: itemData, quantity: _quantity);
+                      CartItems().addCartProducts(itemData: itemData, quantity: _quantity);
 
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -568,8 +482,8 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         ),
                       );
                     } else {
-                      Route route = SlideLeftTransition(
-                        widget: CheckoutScreen(
+                      Route route = CupertinoPageRoute(
+                        builder: (context) => CheckoutScreen(
                           productData: widget.productData,
                           isBuyNow: widget.isBuyNow,
                           category: widget.category,
@@ -583,11 +497,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 },
                 child: Text(
                   (widget.isBuyNow == true) ? "Buy Now" : "Add to Cart",
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
                 ),
               ),
             ),

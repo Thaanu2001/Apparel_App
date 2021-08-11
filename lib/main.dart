@@ -21,19 +21,21 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.dark.copyWith(
           statusBarColor: Colors.white, // Color for Android
-          statusBarBrightness:
-              Brightness.light // Dark == white status bar -- for IOS.
+          statusBarBrightness: Brightness.light // Dark == white status bar -- for IOS.
           ),
     );
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color(0xff646464),
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        canvasColor: Colors.transparent,
-      ),
+          primaryColor: Color(0xff646464),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          canvasColor: Colors.transparent,
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          })),
       home: HomeScreen(),
     );
   }

@@ -106,7 +106,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       //* Floating shopping cart button ---------------------------------------------------------------------------
       floatingActionButton: ShoppingCartButton(),
       //* Side drawer ---------------------------------------------------------------------------------------------
-      drawer: SideDrawer(),
+      // drawer: SideDrawer(),
       backgroundColor: Color(0xffF3F3F3),
       body: Column(
         children: [

@@ -1,5 +1,6 @@
 import 'package:Apparel_App/screens/product_details_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -30,8 +31,8 @@ class ProductMiniCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          Route route = SlideLeftTransition(
-            widget: ProductDetailsScreen(
+          Route route = CupertinoPageRoute(
+            builder: (context) => ProductDetailsScreen(
               productData: productData,
               category: category,
             ),

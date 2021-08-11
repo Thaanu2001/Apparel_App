@@ -1,5 +1,6 @@
 import 'package:Apparel_App/screens/product_details_screen.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -85,28 +86,17 @@ otherProductsList({context, category, storeId, productId}) {
                                   snapshot.data[index].data()["product-name"],
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 14,
-                                      color: Colors.black),
+                                  style: TextStyle(fontFamily: 'sf', fontSize: 14, color: Colors.black),
                                 ),
                                 SizedBox(height: 4),
                                 //* Product price
                                 Text(
                                   "Rs. " +
                                       NumberFormat('###,000')
-                                          .format((snapshot.data[index]
-                                                      .data()["discount"] !=
-                                                  0)
-                                              ? ((snapshot.data[index]
-                                                      .data()["price"]) *
-                                                  ((100 -
-                                                          snapshot.data[index]
-                                                                  .data()[
-                                                              "discount"]) /
-                                                      100))
-                                              : snapshot.data[index]
-                                                  .data()["price"])
+                                          .format((snapshot.data[index].data()["discount"] != 0)
+                                              ? ((snapshot.data[index].data()["price"]) *
+                                                  ((100 - snapshot.data[index].data()["discount"]) / 100))
+                                              : snapshot.data[index].data()["price"])
                                           .toString(),
                                   style: TextStyle(
                                       fontFamily: 'sf',
@@ -117,25 +107,18 @@ otherProductsList({context, category, storeId, productId}) {
                                 SizedBox(height: 2),
                                 //* Product sold quantity
                                 Text(
-                                  snapshot.data[index]
-                                          .data()["sold"]
-                                          .toString() +
-                                      " Sold",
+                                  snapshot.data[index].data()["sold"].toString() + " Sold",
                                   style: TextStyle(
-                                      fontFamily: 'sf',
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w300),
+                                      fontFamily: 'sf', fontSize: 12, color: Colors.black, fontWeight: FontWeight.w300),
                                 ),
                               ],
                             ),
                           ),
                           //* Navigate to product details page
                           onTap: () {
-                            Route route = SlideLeftTransition(
-                              widget: ProductDetailsScreen(
-                                  productData: snapshot.data[index],
-                                  category: category),
+                            Route route = CupertinoPageRoute(
+                              builder: (context) =>
+                                  ProductDetailsScreen(productData: snapshot.data[index], category: category),
                             );
                             Navigator.push(context, route);
                           },

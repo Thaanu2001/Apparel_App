@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/screens/auth/email_sign_up_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -75,8 +76,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           backgroundColor: mainAccentColor,
                         ),
                         onPressed: () {
-                          Route route = SlideLeftTransition(
-                            widget: EmailSignUpScreen(route: widget.route),
+                          Route route = CupertinoPageRoute(
+                            builder: (context) => EmailSignUpScreen(route: widget.route),
                           );
                           Navigator.push(context, route);
                         },
@@ -218,8 +219,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         onTap: () {
-                          Route route = SlideLeftTransition(
-                            widget: SignInScreen(route: widget.route),
+                          Route route = CupertinoPageRoute(
+                            builder: (context) => SignInScreen(route: widget.route),
                           );
                           Navigator.pushReplacement(context, route);
                         },

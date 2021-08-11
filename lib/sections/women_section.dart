@@ -13,15 +13,13 @@ class WomenSection extends StatefulWidget {
   _WomenSectionState createState() => _WomenSectionState();
 }
 
-class _WomenSectionState extends State<WomenSection>
-    with TickerProviderStateMixin {
+class _WomenSectionState extends State<WomenSection> with TickerProviderStateMixin {
   // var scaffoldKey = GlobalKey<ScaffoldState>();
   ScrollController? controller;
   DocumentSnapshot? _lastVisible;
   late bool _isLoading;
   List<DocumentSnapshot> _data = <DocumentSnapshot>[];
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
   late AnimationController _anicontroller, _scaleController;
   bool keepAlive = false;
 
@@ -96,10 +94,8 @@ class _WomenSectionState extends State<WomenSection>
   @override
   void initState() {
     //* Flutter pull to refresh
-    _anicontroller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2000));
-    _scaleController =
-        AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
+    _anicontroller = AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _scaleController = AnimationController(value: 0.0, vsync: this, upperBound: 1.0);
     _refreshController.headerMode!.addListener(() {
       if (_refreshController.headerStatus == RefreshStatus.idle) {
         _scaleController.value = 0.0;
@@ -138,8 +134,7 @@ class _WomenSectionState extends State<WomenSection>
         children: [
           Text(
             'Recent',
-            style: TextStyle(
-                fontFamily: 'sf', fontSize: 26, fontWeight: FontWeight.w700),
+            style: TextStyle(fontFamily: 'sf', fontSize: 26, fontWeight: FontWeight.w700),
           ),
           //* Recent Products -----------------------------------------------------------------------------
           Container(
@@ -232,14 +227,8 @@ class _WomenSectionState extends State<WomenSection>
                                         Text(
                                           "Rs. " +
                                               NumberFormat('###,000')
-                                                  .format((document[
-                                                              "discount"] !=
-                                                          0)
-                                                      ? ((document["price"]) *
-                                                          ((100 -
-                                                                  document[
-                                                                      "discount"]) /
-                                                              100))
+                                                  .format((document["discount"] != 0)
+                                                      ? ((document["price"]) * ((100 - document["discount"]) / 100))
                                                       : document["price"])
                                                   .toString(),
                                           style: TextStyle(
@@ -251,17 +240,13 @@ class _WomenSectionState extends State<WomenSection>
                                         SizedBox(width: 5),
                                         if (document["discount"] != 0)
                                           Text(
-                                            "Rs. " +
-                                                NumberFormat('###,000')
-                                                    .format(document["price"])
-                                                    .toString(),
+                                            "Rs. " + NumberFormat('###,000').format(document["price"]).toString(),
                                             style: TextStyle(
                                                 fontFamily: 'sf',
                                                 fontSize: 12,
                                                 color: Color(0xaa808080),
                                                 fontWeight: FontWeight.w500,
-                                                decoration:
-                                                    TextDecoration.lineThrough),
+                                                decoration: TextDecoration.lineThrough),
                                           ),
                                       ],
                                     ),
@@ -282,9 +267,8 @@ class _WomenSectionState extends State<WomenSection>
                         ),
                         //* Navigate to product details screen ----------------------------------------------------------------------------
                         onTap: () {
-                          Route route = SlideLeftTransition(
-                            widget: ProductDetailsScreen(
-                                productData: document, category: "women"),
+                          Route route = CupertinoPageRoute(
+                            builder: (context) => ProductDetailsScreen(productData: document, category: "women"),
                           );
                           Navigator.push(context, route);
                         },
@@ -311,8 +295,7 @@ class _WomenSectionState extends State<WomenSection>
       header: CustomHeader(
         refreshStyle: RefreshStyle.Behind,
         onOffsetChange: (offset) {
-          if (_refreshController.headerMode!.value != RefreshStatus.refreshing)
-            _scaleController.value = offset / 80.0;
+          if (_refreshController.headerMode!.value != RefreshStatus.refreshing) _scaleController.value = offset / 80.0;
         },
         height: 20,
         builder: (c, m) {

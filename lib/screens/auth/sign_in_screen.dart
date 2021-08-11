@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Apparel_App/global_variables.dart';
 import 'package:Apparel_App/screens/auth/email_sign_in_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Apparel_App/services/auth_service.dart';
@@ -75,10 +76,12 @@ class _SignInScreenState extends State<SignInScreen> {
                           backgroundColor: mainAccentColor,
                         ),
                         onPressed: () {
-                          Route route = SlideLeftTransition(
-                            widget: EmailSignInScreen(route: widget.route),
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => EmailSignInScreen(route: widget.route),
+                            ),
                           );
-                          Navigator.push(context, route);
                         },
                         child: Text(
                           "Sign in with Email",
@@ -217,8 +220,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                         onTap: () {
-                          Route route = SlideLeftTransition(
-                            widget: SignUpScreen(route: widget.route),
+                          Route route = CupertinoPageRoute(
+                            builder: (context) => SignUpScreen(route: widget.route),
                           );
                           Navigator.pushReplacement(context, route);
                         },

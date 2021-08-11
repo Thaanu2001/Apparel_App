@@ -5,6 +5,7 @@ import 'package:Apparel_App/screens/order_placed_screen.dart';
 import 'package:Apparel_App/services/cart_items.dart';
 import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -651,7 +652,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   setState(() {
                     orderInProgress = false;
                   });
-                  Route route = SlideLeftTransition(widget: OrderPlacedScreen());
+                  Route route = CupertinoPageRoute(builder: (context) => OrderPlacedScreen());
                   Navigator.push(context, route);
                 },
                 child: (!orderInProgress)

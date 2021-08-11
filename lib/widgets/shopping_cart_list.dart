@@ -155,8 +155,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                 ),
                                                 //* Navigate to product page
                                                 onTap: () async {
-                                                  Route route = SlideLeftTransition(
-                                                    widget: ProductDetailsScreen(
+                                                  Route route = CupertinoPageRoute(
+                                                    builder: (context) => ProductDetailsScreen(
                                                         productData: _cartItemsList![index]['productDoc'],
                                                         category: _cartItemsList![index]['category']),
                                                   );
@@ -195,8 +195,8 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                     ),
                                                     //* Navigate to product page
                                                     onTap: () async {
-                                                      Route route = SlideLeftTransition(
-                                                          widget: ProductDetailsScreen(
+                                                      Route route = CupertinoPageRoute(
+                                                          builder: (context) => ProductDetailsScreen(
                                                               productData: _cartItemsList![index]['productDoc'],
                                                               category: _cartItemsList![index]['category']));
                                                       Navigator.pushReplacement(context, route);
@@ -623,14 +623,14 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                   backgroundColor: mainAccentColor,
                 ),
                 onPressed: () {
-                  //* Remove out of stock products from cart temporary 
+                  //* Remove out of stock products from cart temporary
                   List sortedCartItemList = [];
                   _cartItemsList!.forEach((element) {
                     if (element['selectedQuantity'] != 0) sortedCartItemList.add(element);
                   });
 
-                  Route route = SlideLeftTransition(
-                    widget: CheckoutScreen(
+                  Route route = CupertinoPageRoute(
+                    builder: (context) => CheckoutScreen(
                       productData: sortedCartItemList,
                       isBuyNow: false,
                       totalProductPrice: _totalPriceNotifier.value,
