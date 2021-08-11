@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:Apparel_App/calculations/cart_total_price.dart';
 import 'package:Apparel_App/global_variables.dart';
+import 'package:Apparel_App/screens/order_placed_screen.dart';
+import 'package:Apparel_App/services/cart_items.dart';
+import 'package:Apparel_App/transitions/slide_left_transition.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,11 +39,13 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   late String userId;
-  bool isCashOnDelivery = true;
   Map userDocument = {};
-  int? shippingPrice = 0;
+  List? deliveryData;
   String? storeLocation;
+  int? shippingPrice = 0;
   int fixedWeightPrice = 50;
+  bool isCashOnDelivery = true;
+  bool orderInProgress = false;
 
   @override
   void initState() {
@@ -49,7 +54,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   //* Get shipping price -----------------------------------------------------------------
-  Future getShipping() async {
+  Future getSingleProductShipping() async {
     var firestore = FirebaseFirestore.instance;
     DocumentSnapshot ds1;
     DocumentSnapshot ds2;
@@ -77,6 +82,159 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
 
     return shippingPrice;
+  }
+
+  //* Place the order (Cash on Delivery)
+  Future placeCODOrder() async {
+    List productDetails = [];
+    int totalDelivery = 0;
+    int i = 0;
+    int count = 0;
+    List productQty = [];
+
+    if (!widget.isBuyNow) {
+      //* Purchase cart items
+      while (count < widget.productData.length || (count <= widget.productData.length && i != 0)) {
+        //* Add same store products to array
+        if (count < widget.productData.length &&
+            (i == 0 ||
+                widget.productData[count]['productDoc']['store-id'] ==
+                    widget.productData[count - 1]['productDoc']['store-id'])) {
+          productDetails.add({'product-id': widget.productData[count]['productId']});
+          productDetails[i]['selectedSize'] = widget.productData[count]['selectedSize'];
+          productDetails[i]['category'] = widget.productData[count]['category'];
+          productDetails[i]['selectedQuantity'] = widget.productData[count]['selectedQuantity'];
+
+          productDetails[i]['store-id'] = widget.productData[count]['productDoc']['store-id'];
+          productDetails[i]['product-name'] = widget.productData[count]['productDoc']['product-name'];
+          productDetails[i]['store-name'] = widget.productData[count]['productDoc']['store-name'];
+          productDetails[i]['price'] = widget.productData[count]['productDoc']['price'];
+          productDetails[i]['discount'] = widget.productData[count]['productDoc']['discount'];
+          productDetails[i]['image'] = widget.productData[count]['productDoc']['images'][0];
+
+          productDetails[i]['deliveryPrice'] = deliveryData![count];
+          totalDelivery += deliveryData![count] as int;
+
+          //* Change quantity of product
+          int sizeData =
+              widget.productData[count]['productDoc']['size']['size'].indexOf(productDetails[i]['selectedSize']);
+
+          if (i == 0) productQty = widget.productData[count]['productDoc']['size']['qty'];
+
+          productQty[sizeData] =
+              widget.productData[count]['productDoc']['size']['qty'][sizeData] -= productDetails[i]['selectedQuantity'];
+
+          i++;
+          count++;
+        } else {
+          int totalPrice = 0;
+          int totalQty = 0;
+
+          //* Calculate total price of product
+          productDetails.forEach(
+            (element) {
+              totalPrice += (((element['discount'] != 0)
+                          ? (element['price'] * ((100 - element['discount']) / 100))
+                          : (element['price'])) *
+                      element['selectedQuantity'])
+                  .round() as int;
+            },
+          );
+
+          //* Upload data map to firestore
+          await FirebaseFirestore.instance
+              .collection('orders')
+              .add({
+                'user-id': userId,
+                'placed-time': DateTime.now(),
+                'products': productDetails,
+                'shipping': userDocument['shipping'],
+                'store-id': productDetails[i - 1]['store-id'],
+                'price': totalPrice,
+                'delivery': totalDelivery
+              })
+              .then((value) => print("Product Sold"))
+              .catchError((error) => print("Failed to sell product: $error"));
+
+          //* Decrease the quantity of product
+          productDetails.forEach((e) => totalQty += e['selectedQuantity'] as int);
+          print(totalQty);
+          await FirebaseFirestore.instance
+              .collection('products')
+              .doc(productDetails[i - 1]['category'])
+              .collection(productDetails[i - 1]['category'])
+              .doc(productDetails[i - 1]['product-id'])
+              .update({'sold': FieldValue.increment(totalQty), 'size.qty': productQty});
+
+          productDetails = [];
+          totalDelivery = 0;
+          i = 0;
+        }
+      }
+      CartItems().removeCartData();
+    } else {
+      int totalPrice;
+      //* Purchase single items (from Buy Now)
+      productDetails.add({'product-id': widget.productData.id});
+      productDetails[0]['selectedSize'] = widget.selectedSize;
+      productDetails[0]['category'] = widget.category;
+      productDetails[0]['selectedQuantity'] = widget.quantity;
+
+      productDetails[0]['store-id'] = widget.productData['store-id'];
+      productDetails[0]['product-name'] = widget.productData['product-name'];
+      productDetails[0]['store-name'] = widget.productData['store-name'];
+      productDetails[0]['price'] = widget.productData['price'];
+      productDetails[0]['discount'] = widget.productData['discount'];
+      productDetails[0]['image'] = widget.productData['images'][0];
+
+      productDetails[0]['deliveryPrice'] = shippingPrice;
+
+      //* Get total price of product
+      totalPrice = ((int.parse(widget.productData['discount'].toString()) != 0)
+              ? (widget.productData['price'] * ((100 - widget.productData['discount']) / 100)) * widget.quantity
+              : widget.productData['price'] * widget.quantity)
+          .round();
+
+      //* Change quantity of product
+      int sizeData = widget.productData['size']['size'].indexOf(productDetails[0]['selectedSize']);
+
+      //* Decrease the quantity of product
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productDetails[0]['category'])
+          .collection(productDetails[0]['category'])
+          .doc(productDetails[0]['product-id'])
+          .get()
+          .then((DocumentSnapshot ds) {
+        productQty = (ds.data()! as Map)['size']['qty'];
+      });
+
+      print(productQty);
+      productQty[sizeData] = widget.productData['size']['qty'][sizeData] -= productDetails[0]['selectedQuantity'];
+
+      //* Upload data map to firestore
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .add({
+            'user-id': userId,
+            'placed-time': DateTime.now(),
+            'products': productDetails,
+            'shipping': userDocument['shipping'],
+            'store-id': productDetails[0]['store-id'],
+            'price': totalPrice,
+            'delivery': shippingPrice
+          })
+          .then((value) => print("Product Sold"))
+          .catchError((error) => print("Failed to sell product: $error"));
+
+      //* Decrease the quantity of product
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productDetails[0]['category'])
+          .collection(productDetails[0]['category'])
+          .doc(productDetails[0]['product-id'])
+          .update({'sold': FieldValue.increment(productDetails[0]['selectedQuantity']), 'size.qty': productQty});
+    }
   }
 
   @override
@@ -318,12 +476,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       //* Product Cards list
                       FutureBuilder(
                         future: (widget.isBuyNow)
-                            ? getShipping()
+                            ? getSingleProductShipping()
                             : CartCalculations().getShipping(cartItemsList: widget.productData as List, userId: userId),
                         builder: (context, snapshot) {
                           List snapData = [];
                           if (snapshot.hasData && !widget.isBuyNow) {
                             snapData = snapshot.data as List;
+                            deliveryData = snapData[0];
                             SchedulerBinding.instance!.addPostFrameCallback((_) {
                               setState(() {
                                 shippingPrice = snapData[0].reduce((value, element) => value + element);
@@ -484,11 +643,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   primary: Colors.grey,
                   backgroundColor: mainAccentColor,
                 ),
-                onPressed: () async {},
-                child: Text(
-                  (isCashOnDelivery) ? 'Place Order' : 'Proceed to Pay',
-                  style: TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
-                ),
+                onPressed: () async {
+                  setState(() {
+                    orderInProgress = true;
+                  });
+                  await placeCODOrder();
+                  setState(() {
+                    orderInProgress = false;
+                  });
+                  Route route = SlideLeftTransition(widget: OrderPlacedScreen());
+                  Navigator.push(context, route);
+                },
+                child: (!orderInProgress)
+                    ? Text(
+                        (isCashOnDelivery) ? 'Place Order' : 'Proceed to Pay',
+                        style:
+                            TextStyle(fontFamily: 'sf', fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+                      )
+                    : SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.grey,
+                        ),
+                      ),
               ),
             ),
             SizedBox(height: (Platform.isAndroid) ? 20 : 40),

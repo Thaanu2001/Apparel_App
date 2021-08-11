@@ -240,73 +240,87 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                                                                 ),
                                                                 SizedBox(height: 2),
                                                                 Container(
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                    children: [
-                                                                      //* Minus Button
-                                                                      InkWell(
-                                                                        child: Icon(Icons.remove_circle_outline_rounded,
-                                                                            size: 20),
-                                                                        onTap: () {
-                                                                          if (_quantity! > 1) {
-                                                                            setState(() {
-                                                                              _quantity = _quantity! - 1;
-                                                                            });
-                                                                            _cartItemsList![index]
-                                                                                ['selectedQuantity'] -= 1;
-                                                                            CartItems().updateCart(
-                                                                                itemIndex: index, quantityDiff: -1);
-                                                                            _totalPriceNotifier.value =
-                                                                                CartCalculations().getTotal(
-                                                                                    cartItemsList: _cartItemsList,
-                                                                                    totalPrice: _totalPrice);
-                                                                          }
-                                                                        },
-                                                                      ),
-                                                                      SizedBox(width: 5),
-                                                                      //* _quantity
-                                                                      Text(
-                                                                        (_quantity! <= (maxQuantity as int))
-                                                                            ? _quantity.toString()
-                                                                            : maxQuantity.toString(),
-                                                                        style: TextStyle(
-                                                                            fontFamily: 'sf',
-                                                                            fontSize: 18,
-                                                                            color: Colors.black,
-                                                                            fontWeight: FontWeight.w400),
-                                                                      ),
-                                                                      SizedBox(width: 5),
-                                                                      //* Add button
-                                                                      InkWell(
-                                                                        child: Icon(Icons.add_circle_outline_rounded,
-                                                                            size: 20),
-                                                                        onTap: () {
-                                                                          if (_quantity! < (maxQuantity)) {
-                                                                            setState(() {
-                                                                              _quantity = _quantity! + 1;
-                                                                            });
-                                                                            _cartItemsList![index]
-                                                                                ['selectedQuantity'] += 1;
-                                                                            CartItems().updateCart(
-                                                                                itemIndex: index, quantityDiff: 1);
-                                                                            _totalPriceNotifier.value =
-                                                                                CartCalculations().getTotal(
-                                                                                    cartItemsList: _cartItemsList,
-                                                                                    totalPrice: _totalPrice);
-                                                                          }
-                                                                        },
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                  child: (_quantity != 0)
+                                                                      ? Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          children: [
+                                                                            //* Minus Button
+                                                                            InkWell(
+                                                                              child: Icon(
+                                                                                  Icons.remove_circle_outline_rounded,
+                                                                                  size: 20),
+                                                                              onTap: () {
+                                                                                if (_quantity! > 1) {
+                                                                                  setState(() {
+                                                                                    _quantity = _quantity! - 1;
+                                                                                  });
+                                                                                  _cartItemsList![index]
+                                                                                      ['selectedQuantity'] -= 1;
+                                                                                  CartItems().updateCart(
+                                                                                      itemIndex: index,
+                                                                                      quantityDiff: -1);
+                                                                                  _totalPriceNotifier.value =
+                                                                                      CartCalculations().getTotal(
+                                                                                          cartItemsList: _cartItemsList,
+                                                                                          totalPrice: _totalPrice);
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                            SizedBox(width: 5),
+                                                                            //* _quantity
+                                                                            Text(
+                                                                              (_quantity! <= (maxQuantity as int))
+                                                                                  ? _quantity.toString()
+                                                                                  : maxQuantity.toString(),
+                                                                              style: TextStyle(
+                                                                                  fontFamily: 'sf',
+                                                                                  fontSize: 18,
+                                                                                  color: Colors.black,
+                                                                                  fontWeight: FontWeight.w400),
+                                                                            ),
+                                                                            SizedBox(width: 5),
+                                                                            //* Add button
+                                                                            InkWell(
+                                                                              child: Icon(
+                                                                                  Icons.add_circle_outline_rounded,
+                                                                                  size: 20),
+                                                                              onTap: () {
+                                                                                if (_quantity! < (maxQuantity)) {
+                                                                                  setState(() {
+                                                                                    _quantity = _quantity! + 1;
+                                                                                  });
+                                                                                  _cartItemsList![index]
+                                                                                      ['selectedQuantity'] += 1;
+                                                                                  CartItems().updateCart(
+                                                                                      itemIndex: index,
+                                                                                      quantityDiff: 1);
+                                                                                  _totalPriceNotifier.value =
+                                                                                      CartCalculations().getTotal(
+                                                                                          cartItemsList: _cartItemsList,
+                                                                                          totalPrice: _totalPrice);
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : Text(
+                                                                          'Out of stock',
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'sf',
+                                                                              fontSize: 12,
+                                                                              color: Colors.red,
+                                                                              fontWeight: FontWeight.w400),
+                                                                        ),
                                                                 ),
-                                                                if (_quantity == maxQuantity)
+                                                                if (_quantity == maxQuantity && _quantity != 0)
                                                                   Text(
                                                                     'Only $maxQuantity stocks left',
                                                                     style: TextStyle(
-                                                                        fontFamily: 'sf',
-                                                                        fontSize: 12,
-                                                                        color: Colors.red,
-                                                                        fontWeight: FontWeight.w400),
+                                                                      fontFamily: 'sf',
+                                                                      fontSize: 12,
+                                                                      color: Colors.red,
+                                                                      fontWeight: FontWeight.w400,
+                                                                    ),
                                                                   ),
                                                               ],
                                                             ),
@@ -609,9 +623,15 @@ class _ShoppingCartListState extends State<ShoppingCartList> {
                   backgroundColor: mainAccentColor,
                 ),
                 onPressed: () {
+                  //* Remove out of stock products from cart temporary 
+                  List sortedCartItemList = [];
+                  _cartItemsList!.forEach((element) {
+                    if (element['selectedQuantity'] != 0) sortedCartItemList.add(element);
+                  });
+
                   Route route = SlideLeftTransition(
                     widget: CheckoutScreen(
-                      productData: _cartItemsList,
+                      productData: sortedCartItemList,
                       isBuyNow: false,
                       totalProductPrice: _totalPriceNotifier.value,
                     ),

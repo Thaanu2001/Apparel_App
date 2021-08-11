@@ -58,7 +58,7 @@ class CartItems {
     List productDataList = json.decode(encodedProductData);
     List<Map<String, dynamic>> productFullDetails = [];
     int totalQuantity = 0;
-    bool dataChanged = false;
+    // bool dataChanged = false;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     //* Get a list of future operations
@@ -94,18 +94,18 @@ class CartItems {
         totalQuantity = prefs.getInt('cartItemQuantity')! - (productDataList[i][2] - maxQuantity) as int;
         cartQuantity.value = totalQuantity;
         productDataList[i][2] = maxQuantity;
-        dataChanged = true;
+        // dataChanged = true;
       } else {
         productFullDetails[i]['selectedQuantity'] = productDataList[i][2];
       }
     }
 
     //* Update shared preferences if data have changed
-    if (dataChanged) {
-      encodedProductData = json.encode(productDataList); //* Encode List to String
-      await prefs.setString('cartItems', encodedProductData);
-      await prefs.setInt('cartItemQuantity', totalQuantity);
-    }
+    // if (dataChanged) {
+    //   encodedProductData = json.encode(productDataList); //* Encode List to String
+    //   await prefs.setString('cartItems', encodedProductData);
+    //   await prefs.setInt('cartItemQuantity', totalQuantity);
+    // }
 
     return productFullDetails;
   }
@@ -150,15 +150,9 @@ class CartItems {
 
   //* Delete share preferences data --------------------------------------------------------------------
   removeCartData() async {
-    // Map m = {
-    //   '1': ['2', 33],
-    //   '2': ['32', 55]
-    // };
-    // var c = 0;
-    // m.values.forEach((item) => c += item[1]);
-    // print(c);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('cartItems');
     await prefs.remove('cartItemQuantity');
+    cartQuantity.value = 0;
   }
 }
