@@ -6,9 +6,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:Apparel_App/sections/men_section.dart';
 import 'package:Apparel_App/sections/stores_section.dart';
 import 'package:Apparel_App/sections/women_section.dart';
-import 'package:Apparel_App/services/Customicons_icons.dart';
 import 'package:Apparel_App/widgets/scroll_glow_disabler.dart';
-import 'package:Apparel_App/services/auth_service.dart';
 import 'package:Apparel_App/widgets/shopping_cart_button.dart';
 
 var scaffoldKey = GlobalKey<ScaffoldState>();
